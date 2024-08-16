@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar Example</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: black;
+}
+
+.nav-link.active {
+    color: green;
+}
+
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+            <li><a href="services.html" class="nav-link">Services</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+    <script>
+        // Get the current URL path
+const currentPath = window.location.pathname;
+
+// Get all nav links
+const navLinks = document.querySelectorAll('.nav-link');
+
+// Loop through each nav link
+navLinks.forEach(link => {
+    // Check if the link's href matches the current path
+    if (link.getAttribute('href') === currentPath) {
+        // Add the 'active' class to the matching link
+        link.classList.add('active');
+    }
+});
+
+    </script>
+</body>
+</html>
