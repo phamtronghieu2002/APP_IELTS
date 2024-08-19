@@ -1,41 +1,30 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, TextInput, Text, ScrollView } from 'react-native';
-import configs from '../../configs';
-import { Button } from 'react-native';
+import PropTypes from 'prop-types'
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+SafeAreaView,
+  FlatList,
+  SectionList,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
+import Item from '../../components/Item/Item';
 
-const Home = ({ navigation }) => {
-  const [text, onChangeText] = React.useState('Useless Text');
-
-
+const Home = () => {
   return (
-    <SafeAreaView className="p-10">
-
-      <ScrollView>
-        {
-          [1, 2, 3, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 3, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2].map((item, index) => {
-            return (
-              <Text className="border-b border-red-50" key={index}>in NativeStackNavigator (created by MyStack)</Text>
-            )
-          })
-        }
-
-        <Button title='profile screen' className="" onPress={() => {
-          navigation.navigate(configs.screenName.profile, {});
-        }}>
-
-        </Button>
-      </ScrollView>
-    </SafeAreaView>
+    <View className=''>
+      <Item 
+      
+      
+       />
+</View>
   );
 };
 
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-});
-
+Home.propTypes = {
+};
 export default Home;

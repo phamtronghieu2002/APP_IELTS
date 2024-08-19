@@ -9,13 +9,16 @@ import {
     TextInput,
     TouchableOpacity,
     Pressable,
+    SafeAreaView
 } from 'react-native';
 
 const Profile = ({ navigation, route }) => {
     return (
-        <SafeAreaView> style={{ flex: 1 }}
-            <ScrollView className=''>
-                    
+        <SafeAreaView style={{ flex: 1 }}> 
+            <ScrollView>
+                    <Text className="">
+                      this is profile screen
+                    </Text>
             </ScrollView>
         </SafeAreaView>
     );

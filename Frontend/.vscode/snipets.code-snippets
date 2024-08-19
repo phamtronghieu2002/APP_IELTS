@@ -11,7 +11,7 @@
 	},
 	"React Native Functional Component with All Tags": {
 		"scope": "javascript,typescript",
-		"prefix": "ffc",
+		"prefix": "FC",
 		"body": [
 			"import React from 'react';",
 			"import {",
@@ -19,6 +19,7 @@
 			"  Text,",
 			"  Image,",
 			"  ScrollView,",
+			"SafeAreaView,",
 			"  FlatList,",
 			"  SectionList,",
 			"  TextInput,",
@@ -85,6 +86,16 @@
 			"<Button className=\"$1\" onPress={()=>{}}>",
 			"  $3",
 			"</Button>"
+		],
+		"description": "Create a React Native Button component"
+	},
+	"React Native Pressable Tag": {
+		"scope": "javascript,typescript",
+		"prefix": "P",
+		"body": [
+			"<Pressable className=\"$1\" onPress={()=>{}}>",
+			"  $3",
+			"</Pressable>"
 		],
 		"description": "Create a React Native Button component"
 	},
