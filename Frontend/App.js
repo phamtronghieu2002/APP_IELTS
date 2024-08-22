@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const App = () => {
   return (
     // nguyen thanh doanh
+    //trong hieu
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MyStack />
     </GestureHandlerRootView>
