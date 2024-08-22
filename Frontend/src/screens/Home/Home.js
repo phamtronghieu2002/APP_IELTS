@@ -5,23 +5,31 @@ import {
   Text,
   Image,
   ScrollView,
-SafeAreaView,
+  SafeAreaView,
   FlatList,
   SectionList,
   TextInput,
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import Item from '../../components/Item/Item';
+import MainLayout from '../../layouts/MainLayout';
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
-    <View className=''>
-      <Item 
-      
-      
-       />
-</View>
+    <MainLayout>
+      <View className=''>
+        <Text className="">
+          Xin chao
+        </Text>
+        <Pressable className="" onPress={()=>{
+               navigation.navigate('profile', {name: 'Jane'})
+        }}>
+            <Text className="">
+              Click here
+            </Text>
+        </Pressable>
+      </View>
+    </MainLayout>
   );
 };
 

@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+
 import MyStack from './src/navigators';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import { Provider } from 'react-redux'
 // import { store } from './app/store'
-import { View,Text } from 'react-native';
+
 const App = () => {
   return (
- 
-     
+
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <MyStack />
-    
+    </GestureHandlerRootView>
+
   );
 };
 
