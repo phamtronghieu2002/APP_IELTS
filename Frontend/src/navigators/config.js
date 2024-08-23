@@ -1,17 +1,43 @@
 import configs from "../configs";
+import Login from "../screens/Login/Login";
 import Profile from "../screens/Profile";
 import Icon from "react-native-vector-icons/FontAwesome";
 import IconM from 'react-native-vector-icons/MaterialIcons';
+import Register from "../screens/Register/Register";
+import Notifycation from "../screens/Notifycation/Notifycation";
+import Term from "../screens/Term/Term";
 
 export const screensStack = [
     {
         name: 'initTab',
         options: { title: "Welcome MyTab", headerShown: false },
-    }, {
+    },
+    {
         name: configs.screenName.profile,
         component: Profile,
-        options: { title: "Welcome Profile", headerShown: true },
-    }
+        options: { title: "Welcome profile", headerShown: true },
+    },
+    {
+        name: configs.screenName.termAndCondition,
+        component: Term,
+        options: { title: "Welcome Notifycation", headerShown: true },
+    },
+    {
+        name: configs.screenName.notifycation,
+        component: Notifycation,
+        options: { title: "Welcome Notifycation", headerShown: false },
+    },
+    {
+        name: configs.screenName.register,
+        component: Register,
+        options: { title: "Welcome Logins", headerShown: false },
+    },
+    {
+        name: configs.screenName.login,
+        component: Login,
+        options: { title: "Welcome Logins", headerShown: false },
+    },
+
 ]
 export const screensDrawer = [
     {
