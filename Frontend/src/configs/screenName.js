@@ -11,6 +11,7 @@ const screenName = {
     signOut: 'signOut',
     feedback: 'feedback',
     share: 'share',
+    notifycation:'notifycation',
 }
 export default screenName;
 

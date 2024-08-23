@@ -29,7 +29,7 @@ const InitStack = () => {
     </Stack.Navigator>
   );
 }
-// Tab Navigator
+// Tab Navigator 
 export const MyTabs = () => {
   return (
     <Tab.Navigator
