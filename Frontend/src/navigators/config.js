@@ -6,11 +6,17 @@ import IconM from 'react-native-vector-icons/MaterialIcons';
 import Register from "../screens/Register/Register";
 import Notifycation from "../screens/Notifycation/Notifycation";
 import Term from "../screens/Term/Term";
+import Setting from "../screens/Setting/Setting";
 
 export const screensStack = [
     {
         name: 'initTab',
         options: { title: "Welcome MyTab", headerShown: false },
+    },
+    {
+        name: configs.screenName.setting,
+        component: Setting,
+        options: { title: "Welcome profile", headerShown: true },
     },
     {
         name: configs.screenName.profile,
