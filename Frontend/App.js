@@ -9,7 +9,8 @@ const App = () => {
   return (
     // nguyen thanh doanh
     //trong hieu
-//const 1234
+//const 1234/
+// test đê
 
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MyStack />
