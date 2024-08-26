@@ -19,7 +19,7 @@ const Setting = () => {
         <MainLayout>
             <View className=''>
                 <Text className="">
-                    setting
+                    setting 23232323
                 </Text>
             </View>
         </MainLayout>

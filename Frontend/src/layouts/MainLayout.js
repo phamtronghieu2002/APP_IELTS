@@ -17,14 +17,13 @@ import MainBackground from '../components/MainBackground/MainBackground';
 const MainLayout = ({ children }) => {
     return (
         <>
-          <SafeAreaView className="p-5 pt-3 relative z-30">
-     
-            <ScrollView >
-                {children}
-            </ScrollView>
-        </SafeAreaView>
+            <SafeAreaView className="relative z-30">
+                <View className="p-5 pt-3">
+                    {children}
+                </View>
+            </SafeAreaView>
         </>
-      
+
     );
 };
 
