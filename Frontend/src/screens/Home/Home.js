@@ -13,8 +13,9 @@ import {
   Pressable,
 } from 'react-native';
 import MainLayout from '../../layouts/MainLayout';
-
+import token from '../../utils/token';
 const Home = ({ navigation }) => {
+  token.setToken('accessToken',"123")
   return (
     <MainLayout>
       <Text className="text-red-600 text-xl font-bold">
@@ -22,8 +23,6 @@ const Home = ({ navigation }) => {
       </Text>
       {/* / */}
       <View
-        //style box shadow
-
         className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
         <Pressable
           style={{
@@ -37,9 +36,6 @@ const Home = ({ navigation }) => {
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
             elevation: 5,
-
-
-
           }}
           className=" rounded-lg w-[47%] h-[150px] items-center flex justify-center bg-white 
           shadow-2xl mb-5">
@@ -205,7 +201,7 @@ const Home = ({ navigation }) => {
         IELTS Prep
       </Text>
       <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
-      <Pressable
+        <Pressable
           style={{
             // shadown bottom
 

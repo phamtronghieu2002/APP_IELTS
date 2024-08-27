@@ -17,11 +17,11 @@ import MainBackground from '../components/MainBackground/MainBackground';
 const MainLayout = ({ children }) => {
     return (
         <>
-            <SafeAreaView className="relative z-30">
-                <View className="p-5 pt-3">
+            <ScrollView className="relative z-30">
+                <View className="p-5 pt-3 flex-1 h-[100vh]"> 
                     {children}
                 </View>
-            </SafeAreaView>
+            </ScrollView>
         </>
 
     );

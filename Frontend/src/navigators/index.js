@@ -80,7 +80,7 @@ export const MyTabs = () => {
 };
 
 
-// Drawer Navigat=or
+// Drawer Navigator
 const MyDrawer = () => {
   return (
     <Drawer.Navigator

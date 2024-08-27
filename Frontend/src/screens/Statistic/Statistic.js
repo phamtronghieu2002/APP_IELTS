@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types'
 import {
     View,
@@ -13,12 +13,24 @@ import {
     Pressable,
 } from 'react-native';
 import MainLayout from '../../layouts/MainLayout';
+import Loading from '../../components/Loading/Loading';
+import token from '../../utils/token';
 
 const Statistic = () => {
+
+
+    useEffect(() => {
+        const getToken = async () => {
+            const res = await token.getToken('accessToken')
+            console.log(res)
+        }
+        getToken()
+    }, [])
     return (
 
         <MainLayout >
-            <View className=''>
+            <View className='flex-1'>
+                <Loading />
                 <Text className="">
                     statistic
                 </Text>
