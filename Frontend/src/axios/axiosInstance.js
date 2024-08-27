@@ -20,37 +20,16 @@ instance.interceptors.response.use(
         config: error.config,
       };
       const status = res.status;
-    //   if (status === 401) {
-    //     axios
-    //       .post(`http://localhost:8080/api/v1/auth/refresh_token`)
-    //       .then((response) => {
 
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //         const path = window.location.pathname;
-    //         if (path !== "/login") {
-    //           window.location.href = "/login";
-    //         }
-    //       });
-    //   }
     }
     return Promise.reject(res || error);
   }
 );
-axios.interceptors.request.use(function (config) {
-    const token = "jwtToken";
-    config.headers.Authorization =  token;
-     
-    return config;
+instance.interceptors.request.use(function (config) {
+  const token = "jwtToken";
+  config.headers.Authorization = `Bearer ${token}`;
+
+  return config;
 });
-// axiosRetry(instance, {
-//   retries: 2, // number of retries
-//   retryDelay: (retryCount) => {
-//     return retryCount * 100; // time interval between retries
-//   },
-//   retryCondition(error) {
-//     return error.status === 401
-//   },
-// });
+
 export default instance;

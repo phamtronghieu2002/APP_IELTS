@@ -15,17 +15,18 @@ import {
 import MainLayout from '../../layouts/MainLayout';
 import Loading from '../../components/Loading/Loading';
 import token from '../../utils/token';
-
+import showToast from '../../components/Toast/Toast';
 const Statistic = () => {
 
 
-    useEffect(() => {
-        const getToken = async () => {
-            const res = await token.getToken('accessToken')
-            console.log(res)
-        }
-        getToken()
-    }, [])
+    // useEffect(() => {
+    //     const getToken = async () => {
+    //         const res = await token.getToken('accessToken')
+    //         console.log(res)
+    //     }
+    //     getToken()
+    //     showToast('success', 'ahihi')
+    // }, [])
     return (
 
         <MainLayout >
