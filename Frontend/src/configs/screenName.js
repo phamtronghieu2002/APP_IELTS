@@ -12,6 +12,7 @@ const screenName = {
     feedback: 'feedback',
     share: 'share',
     notifycation:'notifycation',
+    statistic: 'statistic',
     
 }
 export default screenName;

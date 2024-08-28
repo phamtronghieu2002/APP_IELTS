@@ -7,12 +7,18 @@ import Register from "../screens/Register/Register";
 import Notifycation from "../screens/Notifycation/Notifycation";
 import Term from "../screens/Term/Term";
 import Setting from "../screens/Setting/Setting";
+import statistic from "../screens/Statistic/Statistic";
 
 export const screensStack = [
     {
         name: 'initTab',
         options: { title: "Welcome MyTab", headerShown: false },
     },
+    // {
+    //     name: configs.screenName.statistic,
+    //     component: statistic,
+    //     options: { title: "Welcome MyTab", headerShown: false },
+    // },
     {
         name: configs.screenName.setting,
         component: Setting,

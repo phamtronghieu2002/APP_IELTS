@@ -22,7 +22,7 @@ import MainBackground from '../MainBackground/MainBackground';
 
 const Header = ({ navigation }) => {
     return (
-        <View className="pt-10">
+        <View className="">
         
             {/* <MainBackground/> */}
             <View className='h-14 flex justify-between items-center flex-row pr-4 pl-4'>

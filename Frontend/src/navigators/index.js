@@ -34,7 +34,6 @@ export const MyTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-
         tabBarStyle: { backgroundColor: '#ffffff', paddingBottom: 10, paddingTop: 10, height: 60 }, // Style cho tab bar
         tabBarActiveTintColor: '#e91e63', // Màu cho tab đang được chọn
       }}
@@ -81,7 +80,7 @@ export const MyTabs = () => {
 
 
 // Drawer Navigat=or
-const MyDrawer = () => {
+const MyDrawer = (flag) => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <DrawCustom {...props} />}
