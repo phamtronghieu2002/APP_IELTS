@@ -7,10 +7,46 @@ import Register from "../screens/Register/Register";
 import Notifycation from "../screens/Notifycation/Notifycation";
 import Term from "../screens/Term/Term";
 import Setting from "../screens/Setting/Setting";
+import statistic from "../screens/Statistic/Statistic";
+import About from "../screens/About/About";
+import Tips from "../screens/Tips/Tips";
+import Practice from "../screens/Practice/Practice";
+import PracticeTest from "../screens/PraticeTest/PraticeTest";
+import Calendar from "../screens/Calendar/Calendar";
 
 export const screensStack = [
     {
         name: 'initTab',
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
+    {
+        name: configs.screenName.calendar,
+        component: Calendar,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
+    {
+        name: configs.screenName.PracticeTest,
+        component: PracticeTest,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
+    {
+        name: configs.screenName.practice,
+        component: Practice,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
+    {
+        name: configs.screenName.tips,
+        component: Tips,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.about,
+        component: About,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.statistic,
+        component: statistic,
         options: { title: "Welcome MyTab", headerShown: false },
     },
     {

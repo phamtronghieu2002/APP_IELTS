@@ -33,6 +33,7 @@ const Notifycation = () => {
                     />
                 </View>
                 <Notify
+                    backGround={'bg-gray-200'}
                     rounded={'rounded-full'}
                     Icon={<FontAwesome name="bell-o" size={20} color="#000" />}
                 />

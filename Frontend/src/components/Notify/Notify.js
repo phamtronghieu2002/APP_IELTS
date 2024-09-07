@@ -22,7 +22,7 @@ const convertTimeToHHMM = (date) => {
     return `${hours}:${minutes}`;
 };
 
-const Notify = ({ Icon, rounded, border = 'border', title = 'Notifycation', onHandle }) => {
+const Notify = ({ Icon, rounded, border = 'border', title = 'Notifycation', onHandle, backGround }) => {
     const [time, setTime] = useState(new Date());
     const [show, setShow] = useState(false);
     const [switchValue, setSwitchValue] = useState(false);
@@ -38,7 +38,7 @@ const Notify = ({ Icon, rounded, border = 'border', title = 'Notifycation', onHa
 
     return (
 
-        <View className={`${rounded} ${border}   border-gray-300 w-[100%] h-[67px] flex flex-row items-center justify-between pl-4 pr-4`}>
+        <View className={`${rounded} ${border}  ${backGround}  w-[100%] h-[67px] flex flex-row items-center justify-between pl-4 pr-4`}>
             {Icon}
             <Text className="text-lg">{title}</Text>
 
@@ -54,7 +54,7 @@ const Notify = ({ Icon, rounded, border = 'border', title = 'Notifycation', onHa
             </View>
             {/* switch button here */}
             <Switch
-                backgroundActive={'#4CAF50'}
+                backgroundActive={'#FFFF00'}
                 activeText={''}
                 inActiveText={''}
 

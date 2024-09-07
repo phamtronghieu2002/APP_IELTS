@@ -1,3 +1,5 @@
+import PracticeTest from "../screens/PraticeTest/PraticeTest";
+
 const screenName = {
     home: 'home',
     profile: 'profile',
@@ -12,6 +14,12 @@ const screenName = {
     feedback: 'feedback',
     share: 'share',
     notifycation:'notifycation',
+    statistic: 'statistic',
+    about:'about',
+    tips:'tips',
+    practice:'practice',
+    PracticeTest:'PracticeTest',
+    calendar:'calendar',
     
 }
 export default screenName;
