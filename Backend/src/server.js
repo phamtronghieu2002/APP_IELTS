@@ -42,6 +42,10 @@ initAPIRoutes(app);
 
 //config error handling middleware
 app.use(errorHandlingMiddleware);
+
+
+
+
 if (build_mode === "dev") {
   app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console

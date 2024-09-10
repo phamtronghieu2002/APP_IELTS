@@ -1,10 +1,13 @@
 const productService = require("~/services/productServices");
+const ApiError = require("~/utils/ApiError");
+
 const handleRenderProductPage = async (req, res,next) => {
   try {
-    const products = await productService.getAllProducts();
-    return res.render("productPage.ejs", { products });
+ 
+  
+
   } catch (error) {
-    next(error);
+    next(new ApiError(500, error.message, error.stack));
   }
 };
 

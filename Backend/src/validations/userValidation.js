@@ -15,7 +15,7 @@ module.exports = {
         password: joi.string().min(6).required(),
       });
    
-      // await checkValidation(validData, data);
+      await checkValidation(validData, data);
       next();
     } catch (error) {
       return next(new ApiError(StatusCodes.BAD_REQUEST, error.message, error.stack));
