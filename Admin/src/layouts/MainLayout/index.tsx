@@ -56,7 +56,7 @@ export const MainLayout: React.FC<IProps> = ({
               </div>
               {!useMonitor && !useTab ? (
                 <div className="h-full bg-root_bg_lv1 flex flex-col absolute z-[999] top-0 right-0 left-0">
-                  {useFullScreen ? (
+                  {false ? (
                     children
                   ) : (
                     <Fragment>

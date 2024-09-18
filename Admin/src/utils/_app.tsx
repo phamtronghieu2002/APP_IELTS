@@ -1,9 +1,5 @@
-import { fetchFCM } from "../App"
 import { _const } from "../_constant"
 import { api, history } from "../_helper"
-import { ICmcServer } from "../_types/devServerType"
-import { IMRealTime, IVehicleRealTime } from "../_types/deviceType"
-import { IDriver } from "../_types/driverType"
 import { IServerMenu } from "../_types/interfaceType"
 import { IUserInfo } from "../_types/userType"
 import { store } from "../app/store"
@@ -24,18 +20,7 @@ import {
 } from "../features/user/userSlice"
 // import { getCmcServerService } from "../services/dev_cmcServerServices"
 import { getMenuService } from "../services/interfaceServices"
-// import {
-//   checkDriverService,
-//   deleteDriverService,
-//   disableDriverService,
-//   getDriverListService,
-//   getDriverTreeService,
-// } from "../services/manage_driverServices"
-// import {
-//   getRealtimeAlarmService,
-//   getRealtimeGpsService,
-//   getRealtimeInfoService,
-// } from "../services/realtimeService"
+
 import {
   deleteUserService,
   disableService,

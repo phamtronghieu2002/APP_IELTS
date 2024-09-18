@@ -10,10 +10,9 @@ import { useLocation } from "react-router-dom"
 import { routeConfig } from "../../configs/routeConfig"
 import { _log } from "../../utils/_log"
 import { Switch, Typography } from "antd"
-import { ErrorCom } from "../../conponents/ErrorCom"
 import { BiError } from "react-icons/bi"
 import { TbError404 } from "react-icons/tb"
-
+import { fakeMenu } from "../../items/HEADER_ITEMS"
 const { Paragraph, Text } = Typography
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
@@ -28,11 +27,11 @@ const TitleTab: React.FC<{ title: string }> = ({ title }) => (
 )
 
 const initialItems_ = () => {
-  const menuPathObj = store?.getState?.()?.interface?.menuObj
+  const menuPathObj =fakeMenu
 
   const menuRow: TabsProps["items"] = []
 
-  routes.forEach?.((route) => {
+  routes.forEach?.((route:any) => {
     const r = menuPathObj?.[route?.path]
 
     const label = r?.name
@@ -59,13 +58,13 @@ export const AppMainTab: React.FC = memo(() => {
   const { pathname } = useLocation()
   const [activeKey, setActiveKey] = useState(initialItems_()?.[0]?.key)
   const [items, setItems] = useState(initialItems_())
-  const menuObj = useAppSelector?.((state) => state?.interface?.menuObj)
+  const menuObj = fakeMenu
 
   const onChange = (newActiveKey: string) => {
     history.navigate(newActiveKey)
   }
 
-  const add = (key: string) => {
+  const add = (key: any) => {
     const menuItem = menuObj?.[key]
     const routeItem = routesObj?.[key]
 
@@ -86,23 +85,23 @@ export const AppMainTab: React.FC = memo(() => {
       setActiveKey(key)
     }
 
-    // if (!menuItem || !routeItem) {
-    //   const newTab = {
-    //     label: <TitleTab title={"404"} />,
-    //     children: (
-    //       <div className="flex h-full items-center justify-center">
-    //         <ErrorCom text="Opp! Trang không tồn tại hoặc bạn không có quyền truy cập!" />
-    //       </div>
-    //     ),
-    //     key: "error",
-    //     icon: <TbError404 />,
-    //   }
-    //   const newPanes = [...items]
-    //   newPanes.push(newTab)
+    if (!menuItem || !routeItem) {
+      const newTab = {
+        label: <TitleTab title={"404"} />,
+        children: (
+          <div className="flex h-full items-center justify-center">
+        
+          </div>
+        ),
+        key: "error",
+        icon: <TbError404 />,
+      }
+      const newPanes = [...items]
+      newPanes.push(newTab)
 
-    //   setItems(newPanes)
-    //   setActiveKey("error")
-    // }
+      setItems(newPanes)
+      setActiveKey("error")
+    }
   }
 
   const remove = (targetKey: TargetKey) => {

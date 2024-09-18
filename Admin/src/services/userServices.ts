@@ -4,7 +4,7 @@ import { API_URL } from "./API"
 import { _const } from "../_constant"
 import storage from "../utils/storage"
 import { serverInstance } from "../axios/serverInstance"
-import "./transfer"
+// import "./transfer"
 // import { USER_DATA } from "../data/old/user"
 
 export const loginService = async (body: any) => {

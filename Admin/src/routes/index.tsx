@@ -7,6 +7,11 @@ import { LoginLayout } from "../layouts/LoginLayout"
 
 import { RootPage } from "../pages/Root"
 import ManagerLesson from "../pages/Manager/ManagerLesson/ManagerLesson"
+import Listening from "../pages/Manager/ManagerCategories/Listening/Listening"
+import Reading from "../pages/Manager/ManagerCategories/Reading/Reading"
+import Policy from "../pages/Manager/ManagerPolicy/Policy"
+import Term from "../pages/Manager/ManagerTerm/Term"
+import Users from "../pages/Manager/ManagerUser/Users"
 
 export interface IRoute {
   path: string
@@ -40,7 +45,31 @@ export const routes: IRoute[] = [
     useFullScreen: true,
     useMonitor: true,
   },
-
+  {
+    path: routeConfig?.manager_listening,
+    component: Listening,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_reading,
+    component: Reading,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_policy,
+    component: Policy,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_term,
+    component: Term,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_user,
+    component: Users,
+    layout: MainLayout,
+  },
 ]
 
 export const routesObj: { [key: string]: IRoute } = {}

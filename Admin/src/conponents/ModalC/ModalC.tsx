@@ -12,10 +12,8 @@ import { SaveFilled } from "@ant-design/icons"
 import { useTranslation } from "react-i18next"
 import { ModalProps } from "antd/lib"
 import { TfiClose } from "react-icons/tfi"
-import { api } from "../../_helper"
+
 interface IProps {
-  isValidToOpen?: boolean
-  isShow?: boolean
   button: ReactNode
   children: (action: { closeModal: any }) => ReactNode
   className?: string
@@ -31,21 +29,12 @@ export interface ModalCViewAction {
 
 export const ModalCView = forwardRef<ModalCViewAction, IProps>(
   (
-    {
-      button,
-      children,
-      className,
-      title,
-      modalProps,
-      onClose,
-      disableKey,
-      isValidToOpen = true,
-      isShow = false,
-    },
+    { button, children, className, title, modalProps, onClose, disableKey },
     ref,
   ) => {
     const { t } = useTranslation()
-    const [open, setOpen] = useState<boolean>(isShow || false)
+
+    const [open, setOpen] = useState<boolean>(false)
     const [modalKey, setModalKey] = useState<number>(Math.random())
 
     const handleSave = () => {
@@ -67,27 +56,9 @@ export const ModalCView = forwardRef<ModalCViewAction, IProps>(
       closeModal,
     }))
 
-    useEffect(() => {
-      if (isShow) {
-        setOpen(true)
-      }
-    }, [isShow])
-
     return (
       <>
-        <div
-          onClick={() => {
-            if (isValidToOpen) {
-              setOpen(true)
-            } else {
-              api.message?.error(
-                "Vui lòng chọn xe trước khi tạo thông báo nhắc nhở !!",
-              )
-            }
-          }}
-        >
-          {button}
-        </div>
+        <div onClick={() => setOpen(true)}>{button}</div>
         <Modal
           title={title}
           centered

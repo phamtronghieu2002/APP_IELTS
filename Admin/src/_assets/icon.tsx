@@ -14,7 +14,7 @@ import {
   MdOutlineLocalPolice,
   MdOutlineStackedLineChart,
   MdWaterfallChart,
-  MdOutlineBatteryAlert
+  MdOutlineBatteryAlert,
 } from "react-icons/md"
 import {
   PiChargingStationLight,
@@ -27,8 +27,7 @@ import {
   PiReadCvLogoFill,
   PiSpeedometerLight,
   PiBellRingingBold,
-  PiCarFill
-
+  PiCarFill,
 } from "react-icons/pi"
 import {
   RiChatHistoryFill,
@@ -59,9 +58,28 @@ export * as GrIcon from "react-icons/gr"
 export * as GoIcon from "react-icons/go"
 export * as LiaIcon from "react-icons/lia"
 export * as TfiIcon from "react-icons/tfi"
-
+import { FaHeadphones } from "react-icons/fa"
+import { FaAddressBook } from "react-icons/fa"
+import { FaMicrophone } from "react-icons/fa"
+import { BiCategory } from "react-icons/bi";
+import { FaPen } from "react-icons/fa6"
+import { MdPolicy } from "react-icons/md";
+import { BsFillFileEarmarkRuledFill } from "react-icons/bs";
+import { FaUsers } from "react-icons/fa";
+import { BsFileEarmarkRuledFill } from "react-icons/bs";
+import { SiFacebookgaming } from "react-icons/si";
 const IconLib = {
+  SiFacebookgaming ,
+  BsFileEarmarkRuledFill,
+  FaUsers,
+  BsFillFileEarmarkRuledFill,
+  MdPolicy,
+  BiCategory,
   MdOutlineBatteryAlert,
+  FaPen,
+  FaMicrophone,
+  FaAddressBook,
+  FaHeadphones,
   PiCarFill,
   PiBellRingingBold,
   FaUniversalAccess,

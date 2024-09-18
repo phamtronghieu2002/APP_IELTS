@@ -3,17 +3,12 @@ import { GetProp } from "antd/lib"
 
 export interface IServerMenu {
   component: string
-  created_at: number
   icon: string
   id: number
-  is_deleted: number
   link: string
   lv: number
   name: string
   parent_id: number
-  publish: number
-  sort: number
-  updated_at: number
   child: IServerMenu[]
   type: string
 }

@@ -9,7 +9,7 @@ export const Logo: React.FC<IProps> = ({ style = {} }) => {
 
   const staticURL = pageInterface?.sv_static_file
   const logo = pageInterface?.logo
-  const logoURL = `https://abroadcube.com/assets/images/banners/IELTS.png`
+  const logoURL = `https://res.cloudinary.com/dzpj1y0ww/image/upload/v1726329324/IELTS_ttwgqh.png`
 
   return (
     <div className="h-full items-center flex">

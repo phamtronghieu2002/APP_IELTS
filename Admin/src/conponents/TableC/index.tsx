@@ -13,7 +13,6 @@ import {
   ReactNode,
   RefAttributes,
   SetStateAction,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -36,12 +35,7 @@ import {
   PiPrinterDuotone,
 } from "react-icons/pi"
 import { GroupCheckboxC } from "../CheckBoxC"
-import { log } from "console"
-import {
-  ViahicleProviderContextProps,
-  viahiclesContext,
-} from "../../pages/manager/Remind/providers/ViahicleProvider"
-// import { TablePrintModal } from "../modals/TablePrintModal"
+import { TablePrintModal } from "../modals/TablePrintModal"
 
 interface ITableExportExcel {
   fileName: string
@@ -63,7 +57,6 @@ interface IScroll {
 }
 
 interface IProps {
-  hiddenTitle?: boolean
   props: TableProps<any>
   title?: ReactNode
   right?: ReactNode
@@ -79,8 +72,6 @@ interface IProps {
     isShow: boolean
     styles?: React.CSSProperties
   }
-  checkBox?: boolean
-  setViahicleChecked?: (data: any) => void
 }
 
 interface ISearch {
@@ -120,7 +111,6 @@ const Search: React.FC<ISearch> = ({ search, setQ, styles = {} }) => {
 }
 
 export const TableC: React.FC<IProps> = ({
-  hiddenTitle,
   title,
   right,
   onReload,
@@ -138,41 +128,9 @@ export const TableC: React.FC<IProps> = ({
   useIntervalResize = true,
   exportExcel,
   hiddenColumnPicker = false,
-  checkBox = false,
-  setViahicleChecked,
 }) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-
-  const { viahiclesStore, dispatch } = useContext(
-    viahiclesContext,
-  ) as ViahicleProviderContextProps
-
-  const rowSelection = {
-    selectedRowKeys, // Dùng state để lưu trữ các hàng đang được chọn
-    onChange: (newSelectedRowKeys: React.Key[], selectedRows: any) => {
-      setSelectedRowKeys(newSelectedRowKeys)
-      setViahicleChecked?.(selectedRows)
-    },
-    getCheckboxProps: (record: any) => ({
-      disabled: record.name === "Disabled User", // Vô hiệu hoá checkbox của hàng có điều kiện
-      name: record.name,
-    }),
-  }
-
-  useEffect(() => {
-  
-    // alert('chay vao')
-    deselectAll()
-  }, [viahiclesStore?.type])
-
-  const deselectAll = () => {
-    setSelectedRowKeys([]) // Đặt mảng rỗng để bỏ chọn tất cả các checkbox
-  }
-
   const [q, setQ] = useState<string>("")
-  const [selectionType, setSelectionType] = useState<"checkbox" | "radio">(
-    "checkbox",
-  )
+
   const tableWrapperRef = useRef<HTMLDivElement>(null)
 
   const [tableYScroll, setTableYScroll] = useState<number>(400)
@@ -298,7 +256,7 @@ export const TableC: React.FC<IProps> = ({
   const exportExcelBtn = (style?: React.CSSProperties) =>
     exportExcel ? (
       <>
-        {/* <TablePrintModal
+        <TablePrintModal
           title={
             <div className="flex flex-col justify-center items-center">
               {exportExcel?.title?.map?.((title, index) => {
@@ -329,7 +287,7 @@ export const TableC: React.FC<IProps> = ({
               In
             </Button>
           }
-        /> */}
+        />
 
         <ExportExcel
           title={exportExcel?.title}
@@ -354,7 +312,6 @@ export const TableC: React.FC<IProps> = ({
     <div ref={tableWrapperRef} className="h-full bg-white">
       {title ? (
         <ComponentTitle
-          hiddenTitle={hiddenTitle}
           style={titleStyle}
           title={title}
           right={
@@ -417,14 +374,6 @@ export const TableC: React.FC<IProps> = ({
         </div>
       ) : null}
       <Table
-        rowSelection={
-          checkBox
-            ? {
-                type: selectionType,
-                ...rowSelection,
-              }
-            : undefined
-        }
         pagination={{
           defaultPageSize: 50,
           showTotal(total, range) {
