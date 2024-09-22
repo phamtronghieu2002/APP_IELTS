@@ -1,8 +1,8 @@
 
-import userRoutes from "./UserRoutes";
+import userRoutes from "./AuthRoute";
 
 const initAPIRoutes = (app)=>{
-      app.use("/api/v1/users",userRoutes);
+      app.use("/api/v1/auth",userRoutes);
 }
 
 

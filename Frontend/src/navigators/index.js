@@ -1,25 +1,35 @@
 import * as React from 'react';
+import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer'; // Import Drawer Navigator
-import { Text, View } from 'react-native';
+import { screensStack ,screensDrawer} from './config';
 
-import 'react-native-gesture-handler';
-import { screensDrawer, screensStack } from './config';
+
+import { navigationRef } from './NavigationService';
+import { navigation } from './NavigationService';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Home from '../screens/Home';
+// import Profile from '../screens/Profile';
+import Statistic from '../screens/Statistic/Statistic';
+import Setting from '../screens/Setting/Setting';
+import Header from '../components/Header/HeaderDraw';
+import DrawCustom from '../components/Draw/Draw';
+import configs from '../configs';
+import IconM from 'react-native-vector-icons/MaterialIcons';
+import Profile from '../screens/Profile';
+import Login from '../screens/Login/Login';
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Khởi tạo Drawer Navigator
-import Icon from 'react-native-vector-icons/Ionicons';
-import Home from '../screens/Home';
-import Profile from '../screens/Profile';
-import Statistic from '../screens/Statistic/Statistic';
-import Setting from '../screens/Setting/Setting';
-import Header from '../components/Header/Header';
-import DrawCustom from '../components/Draw/Draw';
-import configs from '../configs';
+
+
+
 //stack navigator
-const InitStack = () => {
+export const InitStack = ({ navigation, route }) => {
+
   return (
     <Stack.Navigator>
       {screensStack.map((screen, index) => (
@@ -29,6 +39,9 @@ const InitStack = () => {
     </Stack.Navigator>
   );
 }
+
+
+
 // Tab Navigator 
 export const MyTabs = () => {
   return (
@@ -80,7 +93,7 @@ export const MyTabs = () => {
 
 
 // Drawer Navigat=or
-const MyDrawer = (flag) => {
+const MyDrawer = () => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <DrawCustom {...props} />}
@@ -89,8 +102,8 @@ const MyDrawer = (flag) => {
           <Header navigation={navigation} />
         ),
       })}
-      initialRouteName="Home">
-      <Drawer.Screen name="Home" component={MyTabs} />
+      initialRouteName={configs?.screenName?.home}>
+      <Drawer.Screen name={configs?.screenName?.home} component={MyTabs} />
       {
         screensDrawer.map((screen, index) => (
           <Drawer.Screen key={index} {...screen} />
@@ -103,7 +116,7 @@ const MyDrawer = (flag) => {
 // Component chính
 const MyStack = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <InitStack />
     </NavigationContainer>
   );

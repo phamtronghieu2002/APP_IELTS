@@ -37,7 +37,6 @@ const DrawCustom = (props) => {
 
             {props.state.routes.map((route, index) => {
                 const screen = screensDrawer.find((item) => item.name === route.name);
-
                 return (
                     <TouchableOpacity
                         className="border-b-2 border-gray-100 font-light"

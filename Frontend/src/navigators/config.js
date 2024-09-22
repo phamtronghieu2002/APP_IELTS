@@ -1,8 +1,7 @@
 import configs from "../configs";
 import Login from "../screens/Login/Login";
 import Profile from "../screens/Profile";
-import Icon from "react-native-vector-icons/FontAwesome";
-import IconM from 'react-native-vector-icons/MaterialIcons';
+
 import Register from "../screens/Register/Register";
 import Notifycation from "../screens/Notifycation/Notifycation";
 import Term from "../screens/Term/Term";
@@ -13,7 +12,7 @@ import Tips from "../screens/Tips/Tips";
 import Practice from "../screens/Practice/Practice";
 import PracticeTest from "../screens/PraticeTest/PraticeTest";
 import Calendar from "../screens/Calendar/Calendar";
-
+import Icon from "react-native-vector-icons/FontAwesome5";
 export const screensStack = [
     {
         name: 'initTab',
@@ -77,79 +76,28 @@ export const screensStack = [
     {
         name: configs.screenName.login,
         component: Login,
-        options: { title: "Welcome Logins", headerShown: false },
+        options: { title: "Welcome Logins", headerShown: true },
     },
 
 ]
+
 export const screensDrawer = [
+    // tôi cần chỗ này 
     {
-        name: configs.screenName.profile,
-        component: Profile,
-        options: {
-            title: "Welcome Profile", headerShown: true,
-            drawerIcon: ({ focused, color, size }) => (
-                <Icon name="user" size={size} color={color} />
-            ),
-        },
-
-
-    },
-    {
-        name: configs.screenName.feedback,
-        component: Profile,
-        options: {
-            title: "Welcome Profile", headerShown: true,
-            drawerIcon: ({ focused, color, size }) => (
-                <IconM name="feedback" size={20} color="#000" />
-            ),
-        },
-
-    },
-    {
-        name: configs.screenName.share,
-        component: Profile,
-        options: {
-            title: "Welcome Profile", headerShown: true,
-            drawerIcon: ({ focused, color, size }) => (
-                <IconM name="share" size={20} color="#000" />
-            ),
-        },
-
+      name: configs.screenName.login,
+      component: Login,
+      options: {
+        title: "Welcome Profile",
+        headerShown: false,
+        drawerIcon: ({ focused, color, size }) => (
+          <Icon name="sign-out" size={20} color="#000" />
+        ),
+        
+      },
+  
+  
     }
-    ,
-    {
-        name: configs.screenName.privacy,
-        component: Profile,
-        options: {
-            title: "Welcome Profile", headerShown: true,
-            drawerIcon: ({ focused, color, size }) => (
-                <IconM name="folder" size={20} color="#000" />
-            ),
-        },
-
-    },
-    {
-        name: configs.screenName.termAndCondition,
-        component: Profile,
-        options: {
-            title: "Welcome Profile", headerShown: true,
-            drawerIcon: ({ focused, color, size }) => (
-                <IconM name="privacy-tip" size={20} color="#000" />
-            ),
-        },
-
-    },
-    {
-        name: configs.screenName.signOut,
-        component: Profile,
-        options: {
-            title: "Welcome Profile", headerShown: true, drawerIcon: ({ focused, color, size }) => (
-                <Icon name="sign-out" size={20} color="#000" />
-            ),
-        },
-
-    }
-
-]
+  
+  ]
 
 

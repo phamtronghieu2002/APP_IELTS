@@ -11,7 +11,7 @@ import {
     TouchableOpacity,
     Pressable,
 } from 'react-native';
-import Header from '../components/Header/Header';
+import Header from '../components/Header/HeaderDraw';
 import MainBackground from '../components/MainBackground/MainBackground';
 
 const MainLayout = ({ children }) => {
