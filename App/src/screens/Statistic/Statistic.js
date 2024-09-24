@@ -1,58 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 import SwitchSelector from 'react-native-switch-selector';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import {
     View,
     Text,
-    Image,
     ScrollView,
-    SafeAreaView,
-    FlatList,
-    SectionList,
-    TextInput,
-    TouchableOpacity,
-    Pressable,
+
 } from 'react-native';
 import ProgressSkill from '../../components/ProgressSkill/ProgressSkill';
 import Weekquestions from '../../components/WeekQuestions/WeekQuestions';
-
+import Gradient from '../../components/Gradient/Gradient';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector,useDispatch } from 'react-redux';
+import { setShowHeaderDraw } from '../../fetures/interfaceSlice';
 const Statistic = () => {
+
+    const [scrollOffset, setScrollOffset] = useState(0);
+     
+    const dispatch = useDispatch()
+
+
+    const handleScroll = (event) => {
+        const currentOffset = event.nativeEvent.contentOffset.y;
+        if (currentOffset > scrollOffset && currentOffset > 50) {
+                dispatch(setShowHeaderDraw(false))
+        } else {
+      
+      
+        }
+        setScrollOffset(currentOffset);
+      };
+
     const [selectedValue, setSelectedValue] = useState(0);
     const options_SwitchSelector = [
         { label: 'Progress', value: 0 },
         { label: 'Activity', value: 1 },
     ];
+
     return (
         <View className="flex-row h-75">
-            <ScrollView className="relative z-30">
-                <LinearGradient
-                    colors={['#FAC6C6', '#F42525']} // Define your colors
-                    start={{ x: 0, y: 0 }} // Top
-                    end={{ x: 0, y: 1 }} // Bottom
-                    style={styles.background}
-                >
-                    <View className="mt-7 mb-2 flex flex-row justify-between flex-wrap">
-                        <View className="flex flex-row items-center">
-                            <AntDesign
-                                name="arrowleft"
-                                size={20}
-                                color="black"
-                                style={{}}
-                            />
-                            <Text className="text-black-600 text-x font-bold ml-3">
-                                IELTS Practice Test
-                            </Text>
-                        </View>
-                        <View className="">
-                            <Text className="text-black-600 text-x font-bold">
-                                IELTS Practice Test
-                            </Text>
-                        </View>
-                    </View>
-                    {/* SwitchSelector */}
+            <ScrollView
+                onScroll={handleScroll} scrollEventThrottle={16}
+                className="relative z-30">
+
+                <Gradient>
                     <View className="pr-5 pl-5 h-16 justify-center">
                         <View className="bg-white shadow h-14 justify-center rounded-3xl px-2.5 shadow-lg">
                             <SwitchSelector
@@ -140,7 +135,10 @@ const Statistic = () => {
                             </View>
                         </View>
                     )}
-                </LinearGradient>
+                </Gradient>
+                {/* SwitchSelector */}
+
+
                 {selectedValue === 0 && (
                     <View className="p-5 pt-3 h-33.75">
                         <View className="flex justify-center flex-col mb-2">
@@ -254,20 +252,5 @@ Statistic.propTypes = {
     progress: PropTypes.number,
     numQuestion: PropTypes.number,
 };
-const styles = StyleSheet.create({
-    background: {
-        left: 0,
-        right: 0,
-        top: 0,
-        height: 500,
-        width: '100%',
-    },
-    shadowContainer: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5, // For Android shadow effect
-    },
-});
+
 export default Statistic;

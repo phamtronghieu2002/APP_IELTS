@@ -50,7 +50,7 @@ const DrawCustom = (props) => {
                         onPress={() => { props.navigation.navigate(route.name) }}
                     >
                         {screen?.options?.drawerIcon && screen.options.drawerIcon({ focused: true, color: '#000', size: 20 })}
-                        <Text style={{ marginLeft: 10, fontSize: 16 }}>{route.name}</Text>
+                        <Text className="font-light" style={{ marginLeft: 10, fontSize: 16 }}>{route.name}</Text>
                     </TouchableOpacity>
                 )
 

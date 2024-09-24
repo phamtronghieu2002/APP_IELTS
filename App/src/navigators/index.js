@@ -4,22 +4,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer'; // Import Drawer Navigator
-import { screensStack ,screensDrawer} from './config';
+import { screensStack, screensDrawer } from './config';
 
 
 import { navigationRef } from './NavigationService';
 import { navigation } from './NavigationService';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Home from '../screens/Home';
-// import Profile from '../screens/Profile';
 import Statistic from '../screens/Statistic/Statistic';
 import Setting from '../screens/Setting/Setting';
 import Header from '../components/Header/HeaderDraw';
 import DrawCustom from '../components/Draw/Draw';
 import configs from '../configs';
-import IconM from 'react-native-vector-icons/MaterialIcons';
-import Profile from '../screens/Profile';
-import Login from '../screens/Login/Login';
+import { TouchableOpacity } from 'react-native';
+import { store } from '../app/store';
+import { setGradient } from '../fetures/interfaceSlice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -49,12 +48,14 @@ export const MyTabs = () => {
       screenOptions={{
         tabBarStyle: { backgroundColor: '#ffffff', paddingBottom: 10, paddingTop: 10, height: 60 }, // Style cho tab bar
         tabBarActiveTintColor: '#e91e63', // Màu cho tab đang được chọn
+
       }}
     >
 
       <Tab.Screen
         name={'HomeTab'}
         component={Home}
+
         options={{
           headerShown: false,
 
@@ -63,6 +64,19 @@ export const MyTabs = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="home-outline" size={size} color={color} />
           ),
+          tabBarButton: (props) => {
+            return (
+              <TouchableOpacity
+                {...props}
+                onPress={() => {
+                  store.dispatch(setGradient(false))
+                  props.onPress();
+                }}
+              />
+            );
+          },
+
+
         }}
       />
       <Tab.Screen
@@ -74,6 +88,17 @@ export const MyTabs = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="stats-chart-outline" color={color} size={size} />
           ),
+          tabBarButton: (props) => {
+            return (
+              <TouchableOpacity
+                {...props}
+                onPress={() => {
+                  store.dispatch(setGradient(true))
+                  props.onPress();
+                }}
+              />
+            );
+          },
         }}
       />
       <Tab.Screen
@@ -85,6 +110,17 @@ export const MyTabs = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="settings-outline" color={color} size={size} />
           ),
+          tabBarButton: (props) => {
+            return (
+              <TouchableOpacity
+                {...props}
+                onPress={() => {
+                  store.dispatch(setGradient(false))
+                  props.onPress();
+                }}
+              />
+            );
+          },
         }}
       />
     </Tab.Navigator>
@@ -94,12 +130,16 @@ export const MyTabs = () => {
 
 // Drawer Navigat=or
 const MyDrawer = () => {
+  const isShowHeaderDraw = store.getState().interface.isShowHeaderDraw;
+  console.log('====================================');
+  console.log('isShowHeaderDraw', isShowHeaderDraw);
+  console.log('====================================');
   return (
     <Drawer.Navigator
       drawerContent={(props) => <DrawCustom {...props} />}
       screenOptions={({ navigation, route }) => ({
         header: () => (
-          <Header navigation={navigation} />
+          isShowHeaderDraw ? <Header navigation={navigation} /> : null
         ),
       })}
       initialRouteName={configs?.screenName?.home}>

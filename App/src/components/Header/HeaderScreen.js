@@ -17,19 +17,24 @@ import IconF from 'react-native-vector-icons/Feather';
 const HeaderScreen = ({
     navigationTo,
     navigation,
-    label
+    label,
+    textMode = "dark"
 }) => {
     return (
 
-        <View className='gap-1 flex-row justify-start items-center mt-3  h-14 pr-4 pl-4'>
+        <View className={` gap-1 flex-row justify-start items-center mt-3  h-14 pr-4 pl-4`}>
             <Pressable
                 className="mr-2"
                 onPress={() => {
                     navigation.navigate(navigationTo, { screen: label })
                 }}>
-                <IconF name="chevron-left" color="black" size={30} />
+                <IconF
+                    style={{ color: textMode === "dark" ? "black" : "white" }}
+                    name="chevron-left" color="black" size={30} />
             </Pressable>
-            <Text className="text-lg font-bold">
+            <Text
+                style={{ color: textMode === "dark" ? "black" : "white" }}
+                className=" text-lg font-bold">
                 {label}
             </Text>
         </View>

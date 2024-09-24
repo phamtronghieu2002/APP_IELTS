@@ -24,6 +24,7 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="mycoolredirect"/>
         <data android:scheme="com.phamhieu2002iuh.myapp"/>
       </intent-filter>
     </activity>

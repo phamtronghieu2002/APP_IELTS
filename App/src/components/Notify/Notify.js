@@ -22,13 +22,15 @@ const convertTimeToHHMM = (date) => {
     return `${hours}:${minutes}`;
 };
 
-const Notify = ({ Icon, rounded, border = 'border', title = 'Notifycation', onHandle, backGround }) => {
+const Notify = ({textStyle="text-lg", Icon, rounded, border = 'border', title = 'Notifycation', onHandle, backGround, className ,circleSize}) => {
     const [time, setTime] = useState(new Date());
     const [show, setShow] = useState(false);
     const [switchValue, setSwitchValue] = useState(false);
     const onChange = (event, selectedTime) => {
+        console.log('selectedTime >>>', selectedTime);
+
         const currentTime = selectedTime || time;
-        setShow(Platform.OS === 'ios');
+        setShow(Platform.OS === 'android');
         setTime(currentTime);
     };
 
@@ -38,14 +40,14 @@ const Notify = ({ Icon, rounded, border = 'border', title = 'Notifycation', onHa
 
     return (
 
-        <View className={`${rounded} ${border}  ${backGround}  w-[100%] h-[67px] flex flex-row items-center justify-between pl-4 pr-4`}>
+        <View className={`${rounded} ${border}  ${backGround}  w-[100%] h-[67px] flex flex-row items-center justify-between pl-4 pr-4 ${className}`}>
             {Icon}
-            <Text className="text-lg">{title}</Text>
+            <Text className={textStyle}>{title}</Text>
 
             <View
                 onPress={showTimepicker}
 
-                className="shadow-md rounded-lg  w-[90px] h-[34px] border border-gray-400 flex flex-row items-center justify-center">
+                className="shadow-md rounded-lg  w-[90px] h-[34px] border border-slate-300 hover:border-indigo-300flex flex-row items-center justify-center">
                 <TouchableOpacity onPress={showTimepicker} className="mr-3">
                     <Text className="text-lg">{convertTimeToHHMM(time)}</Text>
                 </TouchableOpacity>
@@ -57,7 +59,7 @@ const Notify = ({ Icon, rounded, border = 'border', title = 'Notifycation', onHa
                 backgroundActive={'#FFFF00'}
                 activeText={''}
                 inActiveText={''}
-
+                circleSize={circleSize}
                 onValueChange={() => {
                     setSwitchValue(!switchValue);
                     onHandle(!switchValue);

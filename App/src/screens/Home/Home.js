@@ -14,11 +14,16 @@ import {
 } from 'react-native';
 import MainLayout from '../../layouts/MainLayout';
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
   return (
     <MainLayout>
       <Text className="text-red-600 text-xl font-bold">
         IELTS Practice Test
+      </Text>
+      <Text className="">
+        {route?.params?.userInfo?.photo}
+
+
       </Text>
       {/* / */}
       <View
@@ -205,7 +210,7 @@ const Home = ({ navigation }) => {
         IELTS Prep
       </Text>
       <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
-      <Pressable
+        <Pressable
           style={{
             // shadown bottom
 

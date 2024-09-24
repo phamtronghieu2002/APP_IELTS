@@ -18,22 +18,25 @@ const Notifycation = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-            <View className='flex-1 items-center justify-center pr-5 pl-5'>
-                <View className="flex items-center gap-16 mb-14">
-                    <Text className="text-3xl">
+            <View className='flex-1 items-center justify-center pr-5 pl-5 flex'>
+                <View className="mb-14  flex flex-col justify-center items-center">
+                    <Text className="text-3xl mb-10">
                         Notifycation
                     </Text>
-                    <Image
-                        className="mr-4"
-                        source={require('..//..//..//assets//notify.png')}
-                        style={{
-                            width: 275,
-                            height: 183,
-                        }}
-                    />
+                    <View className="">
+                        <Image
+                            source={require('..//..//..//assets//notify.png')}
+                            style={{
+                                width: 130,
+                                height: 100,
+                            }}
+                        />
+                    </View>
                 </View>
                 <Notify
-                    backGround={'bg-gray-200'}
+                    border='border border-slate-200'
+                    className="bg-gray-950"
+
                     rounded={'rounded-full'}
                     Icon={<FontAwesome name="bell-o" size={20} color="#000" />}
                 />
