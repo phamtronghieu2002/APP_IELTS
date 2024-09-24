@@ -2,6 +2,7 @@
 require('dotenv').config();
 console.log('env', process.env.ABC)
 const env = {
+
   BUILD_MODE: process.env.BUILD_MODE,
   LOCAL_APP_PORT: process.env.LOCAL_APP_PORT,
   LOCAL_APP_HOST: process.env.LOCAL_APP_HOST,
@@ -16,6 +17,9 @@ const env = {
   DINARY_CLOUD_NAME: process.env.DINARY_CLOUD_NAME,
   DINARY_CLOUD_API_KEY: process.env.DINARY_CLOUD_API_KEY,
   DINARY_CLOUD_API_SECRET: process.env.DINARY_CLOUD_API_SECRET,
+  MONGODB_URI: process.env.MONGODB_URI,
+  JWT_ACCESS_TOKEN_SECRET: process.env.JWT_ACCESS_TOKEN_SECRET,
+  JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
 };
 
 module.exports = env;

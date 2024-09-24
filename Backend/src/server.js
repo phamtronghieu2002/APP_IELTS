@@ -8,6 +8,7 @@ const configViewEngine = require("./config/viewEngines");
 const initAPIRoutes = require("./routes/v1");
 const errorHandlingMiddleware = require("./middlewares/errorHandlingMiddleware");
 
+const mongoose = require('mongoose');
 //init app
 const app = express();
 //lmao
@@ -22,13 +23,21 @@ configViewEngine(app);
 
 //config static file ex:css,js,images in public folder
 app.use(express.static(path.join(__dirname, "public")));
-
 //config body parse
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //configs cors
 app.use(cors(corsOptions))
+
+
+// connection to database
+
+mongoose
+  .connect(env?.MONGODB_URI,{ useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  });
 
 
 //configs routes
@@ -42,6 +51,10 @@ initAPIRoutes(app);
 
 //config error handling middleware
 app.use(errorHandlingMiddleware);
+
+
+
+
 if (build_mode === "dev") {
   app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console
