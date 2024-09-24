@@ -10,7 +10,7 @@ const errorHandlingMiddleware = require("./middlewares/errorHandlingMiddleware")
 
 //init app
 const app = express();
-
+//lmao
 //define host,port and build mode
 const hostname = env.LOCAL_APP_HOST;
 const port = env.LOCAL_APP_PORT;
