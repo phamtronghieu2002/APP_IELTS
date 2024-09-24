@@ -128,7 +128,7 @@ export const MyTabs = () => {
 };
 
 
-// Drawer Navigat=or
+// Drawer Navigator
 const MyDrawer = () => {
   const isShowHeaderDraw = store.getState().interface.isShowHeaderDraw;
   console.log('====================================');

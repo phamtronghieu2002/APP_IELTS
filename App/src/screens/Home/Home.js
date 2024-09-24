@@ -27,8 +27,6 @@ const Home = ({ navigation, route }) => {
       </Text>
       {/* / */}
       <View
-        //style box shadow
-
         className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
         <Pressable
           style={{
@@ -42,9 +40,6 @@ const Home = ({ navigation, route }) => {
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
             elevation: 5,
-
-
-
           }}
           className=" rounded-lg w-[47%] h-[150px] items-center flex justify-center bg-white 
           shadow-2xl mb-5">
