@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types'
 import {
   View,
@@ -13,8 +13,16 @@ import {
   Pressable,
 } from 'react-native';
 import MainLayout from '../../layouts/MainLayout';
-
+import { storeData, getData, removeData } from '../../utils/asyncStore';
+import axios from '..//..//axios/axiosInstance'
 const Home = ({ navigation, route }) => {
+
+  useEffect(() => {
+    getData('user').then((res) => {
+      console.log('res >>>>', res)
+    })
+    // removeData('user')
+  }, [])
   return (
     <MainLayout>
       <Text className="text-red-600 text-xl font-bold">

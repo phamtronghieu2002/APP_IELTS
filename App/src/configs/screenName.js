@@ -19,6 +19,8 @@ const screenName = {
     practice: 'Practice',
     PracticeTest: 'PracticeTest',
     calendar: 'Calendar',
+    introduce: 'Introduce',
+    initStack: 'InitStack',
 }
 export default screenName;
 

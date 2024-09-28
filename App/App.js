@@ -4,7 +4,7 @@ import MyStack from './src/navigators';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux'
 import { store } from './src/app/store';
-
+import Toast from 'react-native-toast-message';
 
 const App = () => {
   return (
@@ -18,6 +18,7 @@ const App = () => {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <MyStack />
           </GestureHandlerRootView>
+          <Toast />
         </Provider>
 
 
