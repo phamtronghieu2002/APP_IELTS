@@ -14,7 +14,13 @@ import PracticeTest from "../screens/PraticeTest/PraticeTest";
 import Calendar from "../screens/Calendar/Calendar";
 import Icon from "react-native-vector-icons/FontAwesome";
 import IconM from 'react-native-vector-icons/MaterialIcons';
+import Intro from "../screens/Intro/Intro";
 export const screensStack = [
+    {
+        name: configs.screenName.introduce,
+        component: Intro,
+        options: { title: "Welcome profile", headerShown: false },
+    },
     {
         name: 'initTab',
         options: { title: "Welcome MyTab", headerShown: false },
@@ -80,7 +86,8 @@ export const screensStack = [
     {
         name: configs.screenName.login,
         component: Login,
-        options: { title: "Welcome Logins", headerShown: true },
+        options: { title: "Welcome Logins", headerShown: false, },
+
     },
 
 

@@ -13,6 +13,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
     }
     dependencies {
         classpath('com.android.tools.build:gradle')
@@ -33,9 +34,14 @@ allprojects {
             // Android JSC is installed from npm
             url(new File(['node', '--print', "require.resolve('jsc-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), '../dist'))
         }
+        // notifee_react-native
+        maven {
+            url(new File(['node', '--print', "require.resolve('@notifee/react-native/package.json')"].execute(null, rootDir).text.trim(), '../android'))
+        }
 
         google()
         mavenCentral()
+   
         maven { url 'https://www.jitpack.io' }
     }
 }

@@ -26,7 +26,7 @@ const Statistic = () => {
 
     const handleScroll = (event) => {
         const currentOffset = event.nativeEvent.contentOffset.y;
-        if (currentOffset > scrollOffset && currentOffset > 50) {
+        if (currentOffset > scrollOffset && currentOffset > 20) {
                 dispatch(setShowHeaderDraw(false))
         } else {
       
