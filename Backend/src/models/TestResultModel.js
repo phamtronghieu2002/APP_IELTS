@@ -15,12 +15,6 @@ const TestResultSchema = new mongoose.Schema(
             ref: 'Tests',
           
         },
-        lesson_id: {
-            type: String,
-            require: true,
-            ref: 'Lesson',
-        },
-
         anwsers: {
             type: Array,
             require: false,

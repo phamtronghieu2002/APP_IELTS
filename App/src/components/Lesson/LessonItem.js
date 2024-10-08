@@ -10,6 +10,7 @@ import * as Progress from 'react-native-progress';
 import IconE from 'react-native-vector-icons/Entypo';
 import PraticeItem from './PracticeItem';
 import configs from '../../configs';
+import { addTestResult } from '../../services/testResultServices';
 
 const LessonItem = ({
     tests,
@@ -26,8 +27,11 @@ const LessonItem = ({
     const [contentHeight, setContentHeight] = useState(0);
 
     const colorPercent = percent_correct > 0 ? ' text-red-500' : 'text-gray-500';
-  console.log("percent_correct",percent_correct);
-  
+    const heightInterpolate = animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, contentHeight], // Adjust dropdown height here
+    });
+
     const toggleDropdown = () => {
         if (expanded) {
             // Collapse
@@ -49,16 +53,39 @@ const LessonItem = ({
         }
     };
 
-    const heightInterpolate = animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, contentHeight], // Adjust dropdown height here
-    });
 
-    function find_dimesions(layout) {
+    const find_dimesions = (layout) => {
         const { x, y, width, height } = layout;
         setContentHeight(height);
     }
 
+    const handlePressTestItem = async (test) => {
+        try {
+
+
+
+
+            const is_doing = test?.is_doing;
+            if (is_doing) {
+                navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, category_id: category?._id })
+
+
+            } else {
+                await addTestResult({
+                    test_id: test?._id,
+                })
+                navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id })
+            }
+
+
+        } catch (error) {
+            console.log('====================================');
+            console.log("Error handlePressTestItem: ", error);
+            console.log('====================================');
+        }
+
+
+    }
 
     return (
         <Pressable
@@ -100,7 +127,7 @@ const LessonItem = ({
                             backgroundColor='#f0f0f0'
                             color='red'
                             borderColor='#f0f0f0'
-                            progress={percent_correct /100}
+                            progress={percent_correct / 100}
                             width={100}
                         />
                         <Text className={colorPercent}>
@@ -127,7 +154,7 @@ const LessonItem = ({
                                         category={category}
                                         navigation={navigation}
                                         onPress={() => {
-                                            navigation?.navigate(category?.type, { nameTest: item?.name_test, test_id: item?._id });
+                                            handlePressTestItem(item)
                                         }}
 
                                     />

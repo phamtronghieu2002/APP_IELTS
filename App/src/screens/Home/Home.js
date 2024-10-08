@@ -64,6 +64,7 @@ const Home = ({ navigation, route }) => {
       }
     };
   useEffect(() => {
+
     fetchCategorySkills()
     fetchCategoriesPractices()
     fetchCategoriesPrepare()

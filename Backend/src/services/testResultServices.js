@@ -4,7 +4,14 @@ import TestModel from '../models/TestsModel.js';
 
 export const addTestResult = async (data) => {
     try {
-
+        const testResult = await TestResultModel.findOne({ test_id: data.test_id });
+        if (testResult) {
+            return {
+                data: {},
+                message: "Test result already exists",
+                errCode: 0,
+            }
+        }
         const newTestResult = new TestResultModel(data);
         return {
             data: await newTestResult.save(),
@@ -46,7 +53,7 @@ export const addQuestion = async (test_id, type, data) => {
             break;
         case "renew":
             //    xóa hết câu hỏi cũ và thêm câu hỏi mới
-            result= await TestResultModel.findOneAndUpdate({ test_id },
+            result = await TestResultModel.findOneAndUpdate({ test_id },
                 {
                     $set: {
                         anwsers: data
@@ -59,7 +66,7 @@ export const addQuestion = async (test_id, type, data) => {
         default:
             break;
     }
-  
+
 
     const dataO = result.toObject();
 
@@ -67,9 +74,9 @@ export const addQuestion = async (test_id, type, data) => {
     const total_incorrect = dataO.anwsers.filter(item => item.is_correct === false).length;
 
 
-    const test= await TestModel.findById(test_id)?.populate('questions').exec();
-    const total_questions_of_test =test?.toObject().questions?.[0]?.total_question;
- 
+    const test = await TestModel.findById(test_id)?.populate('questions').exec();
+    const total_questions_of_test = test?.toObject().questions?.[0]?.total_question;
+
     // cập nhật collection test
     await TestModel.findByIdAndUpdate(test_id, {
         $set: {

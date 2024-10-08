@@ -7,7 +7,7 @@ const ApiError = require('~/utils/ApiError');
 export const handleAddTestResult = async (req, res, next) => {
     try {
         const data = req.body;
-
+        data.user_id = req.user_id;
 
         const result = await testServices?.addTestResult(data);
         return res.status(StatusCodes.CREATED).json(result);
