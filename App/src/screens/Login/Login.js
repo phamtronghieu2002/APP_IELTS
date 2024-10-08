@@ -2,14 +2,17 @@ import React, { useEffect } from 'react';
 import { View, Text, Image, Pressable, SafeAreaView, ImageBackground } from 'react-native';
 import { StyleSheet } from 'react-native';
 import HeaderScreen from '../../components/Header/HeaderScreen';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser } from '../../fetures/userSlice';
 import configs from '../../configs';
+import { storeData, getData } from '../../utils/asyncStore';
+import { register } from '../../services/authService';
+import Toast from 'react-native-toast-message';
 // import {
 //     GoogleSignin,
 //     GoogleSigninButton,
 //     statusCodes,
 //   } from '@react-native-google-signin/google-signin';
-
-
 const webClientId = "1013873615823-cl9jhtcai95mcuhenqp2j5kvg8nvpekr.apps.googleusercontent.com";
 const androidClientId = "1013873615823-0r8ku736ooi3fiuaghi2bsrtfjfabv78.apps.googleusercontent.com";
 
@@ -26,8 +29,10 @@ const androidClientId = "1013873615823-0r8ku736ooi3fiuaghi2bsrtfjfabv78.apps.goo
 //     openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
 //     profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
 //   });
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
 
+    const isIntro = route?.params?.isIntro;
+    const dispatch = useDispatch();
     // const signIn = async () => {
     //     try {
     //       await GoogleSignin.hasPlayServices();
@@ -63,14 +68,54 @@ const Login = ({ navigation }) => {
 
 
     };
+
+
+    const handleContinueAsGuest = async () => {
+        // fake api tạo user giả
+        // save user vao -> redux , async storage
+
+
+        try {
+            const user = await register()
+
+            if (user) {
+                dispatch(loginUser(user));
+                // lưu user vào async storage
+                storeData?.('user', JSON.stringify(user));
+                Toast.show({
+                    type: 'success',
+                    text1: 'Login success fully !!',
+                    text2: 'Enjoy your Journey with 👋'
+                });
+                navigation?.navigate(configs?.screenName?.initStack, { screen: "Home" });
+            }
+
+        } catch (error) {
+            console.log('====================================');
+            console.log('error >>', error);
+            console.log('====================================');
+            Toast.show({
+                type: 'error',
+                text1: error,
+            });
+        }
+    };
     const image = { uri: 'https://images.pexels.com/photos/3475632/pexels-photo-3475632.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' };
     return (
         <ImageBackground source={image} resizeMode="cover" style={styles.image}>
             <SafeAreaView style={{ flex: 1 }} className="p-5 pt-5">
-                <HeaderScreen
-                    textMode='light'
-                    className={'text-white'}
-                    navigationTo={configs?.screenName?.home} navigation={navigation} label="Sign In" />
+                {
+
+
+                    isIntro ? <></> :
+                        <HeaderScreen
+                            textMode='light'
+                            className={'text-white'}
+                            navigation={navigation}
+                            label="Sign In"
+                        />
+
+                }
                 <View className='flex-1 items-center justify-center'>
                     <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
                         <View className="mb-52">
@@ -117,7 +162,8 @@ const Login = ({ navigation }) => {
                             {/* continute with guest button */}
                             <Pressable
                                 onPress={() => {
-                                    navigation?.navigate(configs?.screenName?.home);
+                                    handleContinueAsGuest();
+
                                 }}
                                 style={({ pressed }) => [
                                     {

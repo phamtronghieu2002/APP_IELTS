@@ -5,10 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer'; // Import Drawer Navigator
 import { screensStack, screensDrawer } from './config';
-
+import { Dimensions } from 'react-native';
 
 import { navigationRef } from './NavigationService';
-import { navigation } from './NavigationService';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import Home from '../screens/Home';
 import Statistic from '../screens/Statistic/Statistic';
@@ -18,7 +18,7 @@ import DrawCustom from '../components/Draw/Draw';
 import configs from '../configs';
 import { TouchableOpacity } from 'react-native';
 import { store } from '../app/store';
-import { setGradient } from '../fetures/interfaceSlice';
+import { setGradient, setShowHeaderDraw } from '../fetures/interfaceSlice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,7 +32,7 @@ export const InitStack = ({ navigation, route }) => {
   return (
     <Stack.Navigator>
       {screensStack.map((screen, index) => (
-        (screen.name == 'initTab') ? <Stack.Screen options={{ headerShown: false }} key={index} component={MyDrawer} name='123' /> :
+        (screen.name == 'initTab') ? <Stack.Screen options={{ headerShown: false }} key={index} component={MyDrawer} name={configs?.screenName?.initStack} /> :
           <Stack.Screen key={index} {...screen} />
       ))}
     </Stack.Navigator>
@@ -70,6 +70,8 @@ export const MyTabs = () => {
                 {...props}
                 onPress={() => {
                   store.dispatch(setGradient(false))
+                  store.dispatch(setShowHeaderDraw(true))
+
                   props.onPress();
                 }}
               />
@@ -94,6 +96,8 @@ export const MyTabs = () => {
                 {...props}
                 onPress={() => {
                   store.dispatch(setGradient(true))
+                  store.dispatch(setShowHeaderDraw(true))
+
                   props.onPress();
                 }}
               />
@@ -116,6 +120,7 @@ export const MyTabs = () => {
                 {...props}
                 onPress={() => {
                   store.dispatch(setGradient(false))
+                  store.dispatch(setShowHeaderDraw(true))
                   props.onPress();
                 }}
               />
@@ -131,16 +136,19 @@ export const MyTabs = () => {
 // Drawer Navigator
 const MyDrawer = () => {
   const isShowHeaderDraw = store.getState().interface.isShowHeaderDraw;
-  console.log('====================================');
-  console.log('isShowHeaderDraw', isShowHeaderDraw);
-  console.log('====================================');
+
   return (
     <Drawer.Navigator
+
+      
       drawerContent={(props) => <DrawCustom {...props} />}
       screenOptions={({ navigation, route }) => ({
         header: () => (
           isShowHeaderDraw ? <Header navigation={navigation} /> : null
         ),
+        drawerStyle: {
+          width: Dimensions.get('window').width / 1.25,
+        },
       })}
       initialRouteName={configs?.screenName?.home}>
       <Drawer.Screen name={configs?.screenName?.home} component={MyTabs} />

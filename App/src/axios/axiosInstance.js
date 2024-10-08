@@ -1,9 +1,19 @@
 import axios from "axios";
-import axiosRetry from "axios-retry";
+import env from "../configs/env";
+import { getToken } from "../utils/token";
 axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-  baseURL: "",
+  baseURL: `http://192.168.85.187:8080/api/v1`,
+});
+console.log(`${env.API_URL}/api/v1`);
+
+instance.interceptors.request.use(async function (config) {
+  const token = await getToken?.();
+
+  config.headers.Authorization = `Bearer ${token}`;
+
+  return config;
 });
 instance.interceptors.response.use(
   function (response) {
@@ -25,11 +35,8 @@ instance.interceptors.response.use(
     return Promise.reject(res || error);
   }
 );
-instance.interceptors.request.use(function (config) {
-  const token = "jwtToken";
-  config.headers.Authorization = `Bearer ${token}`;
 
-  return config;
-});
+
+
 
 export default instance;

@@ -15,7 +15,7 @@ const register = async ({
   });
 
   const res = await newUser.save()
-  const token = create_access_token({ userid: res._id }, "1h")
+  const token = create_access_token({ userid: res._id }, "30d")
   const user = res.toObject();
   user.accessToken = token;
   return {
