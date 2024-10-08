@@ -8,7 +8,7 @@ const TestSchema = new mongoose.Schema(
             require: true,
         },
  
-        questions_conrect_percent: {
+        percent_correct: {
             type: Number,
             require: false,
             min: 0,

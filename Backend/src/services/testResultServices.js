@@ -65,11 +65,18 @@ export const addQuestion = async (test_id, type, data) => {
 
     const total_correct = dataO.anwsers.filter(item => item.is_correct === true).length;
     const total_incorrect = dataO.anwsers.filter(item => item.is_correct === false).length;
+
+
+    const test= await TestModel.findById(test_id)?.populate('questions').exec();
+    const total_questions_of_test =test?.toObject().questions?.[0]?.total_question;
+ 
     // cập nhật collection test
     await TestModel.findByIdAndUpdate(test_id, {
         $set: {
             total_correct,
-            total_incorrect
+            total_incorrect,
+            percent_correct: (total_correct / total_questions_of_test) * 100
+
         }
     }, {
         new: true

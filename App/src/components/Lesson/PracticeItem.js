@@ -20,7 +20,7 @@ const PraticeItem = ({
     isDoing,
     _id,
     name_test,
-    percernt_correct,
+    percent_correct,
     category
 
 }) => {
@@ -37,7 +37,7 @@ const PraticeItem = ({
         }
         onPress?.();
     }
-    const colorPercent = percernt_correct > 0 ? 'border-red-400' : 'bg-gray-200';
+    const colorPercent = percent_correct > 0 ? 'border-red-400 text-red-500' : 'bg-gray-200';
     return (
         <View
             onPressIn={(e) => e.stopPropagation()}  // Stop the event from reaching parent
@@ -56,9 +56,16 @@ const PraticeItem = ({
                     {name_test}
                 </Text>
                 <View className="flex flex-row flex-1 justify-end">
-                    <View className={`pl-3 pr-3 rounded-full ${colorPercent} border-2 flex items-center`}>
-                        <Text className="">
-                            15%
+                    <View
+
+                        className={`pl-3 pr-3 rounded-full ${colorPercent}  flex items-center`}
+                        style={{
+                            borderWidth: 1,
+
+                        }}
+                    >
+                        <Text className={`${colorPercent}`}>
+                            {`${percent_correct}%`}
                         </Text>
                     </View>
                 </View>
