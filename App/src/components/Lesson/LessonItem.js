@@ -16,7 +16,7 @@ const LessonItem = ({
     icon,
     name_lesson,
     total_question,
-    tests_do_percent,
+    percent_correct,
     category,
     navigation
 }) => {
@@ -25,8 +25,9 @@ const LessonItem = ({
     const contentRef = useRef(null);
     const [contentHeight, setContentHeight] = useState(0);
 
-
-
+    const colorPercent = percent_correct > 0 ? ' text-red-500' : 'text-gray-500';
+  console.log("percent_correct",percent_correct);
+  
     const toggleDropdown = () => {
         if (expanded) {
             // Collapse
@@ -64,7 +65,7 @@ const LessonItem = ({
             className=" bg-white p-4 rounded-lg mb-3"
             onPress={toggleDropdown}
         >
-            <View className="top flex flex-row justify-between">
+            <View className="top flex flex-row justify-between items-center">
                 <View className="left flex flex-row gap-3">
                     {icon}
                     <Text className="text-lg font-bold">
@@ -99,11 +100,11 @@ const LessonItem = ({
                             backgroundColor='#f0f0f0'
                             color='red'
                             borderColor='#f0f0f0'
-                            progress={0.3}
+                            progress={percent_correct /100}
                             width={100}
                         />
-                        <Text className="text-red-600">
-                            4%
+                        <Text className={colorPercent}>
+                            {percent_correct}%
                         </Text>
                     </View>
                 </View>
@@ -126,7 +127,7 @@ const LessonItem = ({
                                         category={category}
                                         navigation={navigation}
                                         onPress={() => {
-                                            navigation?.navigate(category?.type, { nameTest: item?.name_test,test_id: item?._id });
+                                            navigation?.navigate(category?.type, { nameTest: item?.name_test, test_id: item?._id });
                                         }}
 
                                     />

@@ -12,7 +12,14 @@ const addlesson = async (lesson) => {
 
 const getLessonsByCateId = async (cate_id) => {
     const lessons = await lessonModel.find({ cate_id: cate_id }).populate('cate_id').populate('tests').exec();
-     console.log("lessons >>", lessons);
+    lessons?.forEach(lesson => {
+        let count_total_correct = 0;
+        lesson.tests?.forEach(test => {
+                count_total_correct += test.total_correct;
+           
+        });
+        lesson.percent_correct = (count_total_correct / lesson.total_question) * 100;
+    });
      
     return {
         data: lessons,
