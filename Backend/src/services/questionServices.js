@@ -4,13 +4,18 @@ import questionModel from '../models/QuestionsModel.js';
 const addQuestion = async (data) => {
     const test_id = data?.test_id;
     const isExist = await questionModel.findOne({ test_id: test_id });
-
+    let is_fill_in_blank
+    let count_question_fill_in_blank = 0;
     if (isExist) {
 
         const question = data?.questions;
-    
+        is_fill_in_blank = question?.question_type == "fill_in_blank";
 
-        const result = await questionModel.findOneAndUpdate({ test_id: test_id }, { $push: { questions: question }, $inc: { total_question: 1 } }, { new: false });
+        if (is_fill_in_blank) {
+            count_question_fill_in_blank = question?.options?.length;
+        }
+
+        const result = await questionModel.findOneAndUpdate({ test_id: test_id }, { $push: { questions: question }, $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : 1 } }, { new: false });
         return {
             data: result,
             message: "question created successfully",
@@ -18,7 +23,9 @@ const addQuestion = async (data) => {
         };
 
     }
-    const newquestion = new questionModel(data);
+    const newquestion = new questionModel({
+        ...data, total_question: is_fill_in_blank ? count_question_fill_in_blank : 1
+    });
     return {
         data: await newquestion.save(),
         message: "question created successfully",

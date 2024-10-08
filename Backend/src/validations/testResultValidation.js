@@ -8,8 +8,6 @@ module.exports = {
             const data = req.body;
             const validData = joi.object({
                 test_id: joi.string().required(),
-                user_id: joi.string().required(),
-                lesson_id: joi.string().required(),
             });
 
             await checkValidation(validData, data);

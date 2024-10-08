@@ -15,12 +15,12 @@ const getLessonsByCateId = async (cate_id) => {
     lessons?.forEach(lesson => {
         let count_total_correct = 0;
         lesson.tests?.forEach(test => {
-                count_total_correct += test.total_correct;
-           
+            count_total_correct += test.total_correct;
+
         });
         lesson.percent_correct = (count_total_correct / lesson.total_question) * 100;
     });
-     
+
     return {
         data: lessons,
         message: "Get Lessons successfully",
@@ -31,7 +31,10 @@ const getLessonsByCateId = async (cate_id) => {
 const addTest = async (id, data) => {
     const test_id = data?.test;
     const test = await testModel?.findById(test_id)?.populate('questions').exec();
+
     const testObject = test?.toObject();
+
+ 
     const count_question = testObject?.questions[0]?.total_question;
 
     const result = await lessonModel.findOneAndUpdate({ _id: id }, { $push: { tests: test_id }, $inc: { total_question: count_question } }, { new: true });

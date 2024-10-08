@@ -2,8 +2,6 @@
 import testModel from '../models/TestsModel.js';
 
 const addtest = async (test) => {
-
-
     const newtest = new testModel(test);
     return {
         data: await newtest.save(),
