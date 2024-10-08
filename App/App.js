@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux'
 import { store } from './src/app/store';
 import Toast from 'react-native-toast-message';
+import { TestProvider } from './src/providers/TestProvider';
 
 const App = () => {
   return (
@@ -14,12 +15,14 @@ const App = () => {
     //test 2
 
 
-        <Provider store={store}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <MyStack />
-          </GestureHandlerRootView>
-          <Toast />
-        </Provider>
+    <Provider store={store}>
+      <TestProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <MyStack />
+        </GestureHandlerRootView>
+        <Toast />
+      </TestProvider>
+    </Provider>
 
 
 

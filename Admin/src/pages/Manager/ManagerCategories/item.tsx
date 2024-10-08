@@ -4,7 +4,7 @@ import type { TabsProps } from 'antd';
 
 
 
-export   const items: TabsProps['items'] = [
+export   const items: ()=>TabsProps['items'] = () => [
     {
       key: '1',
       label: 'Bài học',

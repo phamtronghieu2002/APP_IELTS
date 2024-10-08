@@ -38,9 +38,7 @@ i18nConfig()
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <Provider store={store}>
-    <ThemeConfigHoc>
-      <App />
-    </ThemeConfigHoc>
+    <App />
   </Provider>,
   // </React.StrictMode>,
 )
