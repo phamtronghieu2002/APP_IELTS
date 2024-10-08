@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer'; // Import Drawer Navigator
 import { screensStack, screensDrawer } from './config';
-
+import { Dimensions } from 'react-native';
 
 import { navigationRef } from './NavigationService';
 
@@ -139,11 +139,16 @@ const MyDrawer = () => {
 
   return (
     <Drawer.Navigator
+
+      
       drawerContent={(props) => <DrawCustom {...props} />}
       screenOptions={({ navigation, route }) => ({
         header: () => (
           isShowHeaderDraw ? <Header navigation={navigation} /> : null
         ),
+        drawerStyle: {
+          width: Dimensions.get('window').width / 1.25,
+        },
       })}
       initialRouteName={configs?.screenName?.home}>
       <Drawer.Screen name={configs?.screenName?.home} component={MyTabs} />

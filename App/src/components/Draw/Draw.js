@@ -4,22 +4,34 @@ import {
     View,
     Text,
     Image,
-    ScrollView,
-    SafeAreaView,
-    FlatList,
-    SectionList,
-    TextInput,
+
     TouchableOpacity,
-    Pressable,
+    StatusBar
 } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { screensDrawer } from '../../navigators/config';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 const DrawCustom = (props) => {
 
     return (
-        <DrawerContentScrollView {...props}>
+        <DrawerContentScrollView
+            style={{
+                zIndex: 999,
+                width: '100%',
+                position: 'relative',
+            }}
+            {...props}>
+            <TouchableOpacity
+                className="
+               flex flex-row items-center justify-center  bg-slate-100 rounded-full"
+                style={{ alignSelf: 'flex-end', marginRight: 20, width: 35, height: 35 }}
+                onPress={() => props?.navigation?.closeDrawer()}
+            >
+                <Icon name="close" size={20} color="black" />
+            </TouchableOpacity>
             <View style={{ padding: 20 }} className="flex flex-row  items-center gap-4">
+                <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+
                 <View className="rounded-full bg-red-50 w-[55px] h-[55px] flex justify-center items-center">
                     <Image
                         className="w-[100%] h-[100%]"
@@ -34,23 +46,35 @@ const DrawCustom = (props) => {
 
                 </Text>
             </View>
+            <View className="absolute top-0 left-0 right-0 h-[30px]">
+
+            </View>
 
             {props.state.routes.map((route, index) => {
                 const screen = screensDrawer.find((item) => item.name === route.name);
+     
+                
+          
                 return (
                     <TouchableOpacity
-                        className="border-b-2 border-gray-100 font-light"
+                        className="border-gray-100 font-light"
                         key={index}
                         style={{
+                            display: 'flex',
+                            gap: 10,
+                            borderWidth: 1,
                             flexDirection: 'row',
                             alignItems: 'center',
-                            padding: 10,
+                            padding: 13,
+                            paddingLeft: 15,
                             backgroundColor: route.name === props.state.routeNames[props.state.index] ? '#e0e0e0' : '#fff',
                         }}
                         onPress={() => { props.navigation.navigate(route.name) }}
                     >
-                        {screen?.options?.drawerIcon && screen.options.drawerIcon({ focused: true, color: '#000', size: 20 })}
-                        <Text className="font-light" style={{ marginLeft: 10, fontSize: 16 }}>{route.name}</Text>
+                        <View className="flex justify-end flex-row items-end w-7">
+                            {screen?.options?.drawerIcon && screen.options.drawerIcon({ focused: true, color: '#6c706d', size: 20 })}
+                        </View>
+                        <Text className="font-light" style={{ marginLeft: 10, fontSize: 16 }}>{screen?.label || route?.name}</Text>
                     </TouchableOpacity>
                 )
 

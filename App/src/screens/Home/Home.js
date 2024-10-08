@@ -15,14 +15,60 @@ import {
 import MainLayout from '../../layouts/MainLayout';
 import { storeData, getData, removeData } from '../../utils/asyncStore';
 import axios from '..//..//axios/axiosInstance'
+import configs from '../../configs';
+import { getCategories } from '../../services/categoryServices';
+import { _groupCategories } from '../../utils/constant';
 const Home = ({ navigation, route }) => {
 
+  const [categories, setCategories] = React.useState({
+    skills: [],
+    prepare: [],
+    practices: []
+  })
+
+
+    
+    const fetchCategorySkills = async () => {
+      try {
+        const res = await getCategories(_groupCategories?.skills);
+        setCategories(prevState => ({
+          ...prevState,
+          skills: res?.data
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    const fetchCategoriesPractices = async () => {
+      try {
+        const res = await getCategories(_groupCategories?.practices);
+        setCategories(prevState => ({
+          ...prevState,
+          practices: res?.data
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    const fetchCategoriesPrepare = async () => {
+      try {
+        const res = await getCategories(_groupCategories?.prepare);
+        setCategories(prevState => ({
+          ...prevState,
+          prepare: res?.data
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    };
   useEffect(() => {
-    getData('user').then((res) => {
-      console.log('res >>>>', res)
-    })
-    // removeData('user')
+    fetchCategorySkills()
+    fetchCategoriesPractices()
+    fetchCategoriesPrepare()
   }, [])
+
   return (
     <MainLayout>
       <Text className="text-red-600 text-xl font-bold">
@@ -36,210 +82,129 @@ const Home = ({ navigation, route }) => {
       {/* / */}
       <View
         className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
-        <Pressable
-          style={{
-            // shadown bottom
 
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          className=" rounded-lg w-[47%] h-[150px] items-center flex justify-center bg-white 
-          shadow-2xl mb-5">
-          <Image
-            width={50}
-            height={50}
-            source={require('../../../assets/home/reading.png')} />
-          <Text className="mt-2">
-            Reading
-          </Text>
-        </Pressable>
+        {
+          categories?.skills?.map((item, index) =>
+            <Pressable
+              key={index}
+              onPress={() => {
+                navigation.navigate(configs?.screenName?.lesson, { category: item })
+              }}
+              style={{
+                // shadown bottom
 
-        <Pressable
-          style={{
-            // shadown bottom
-
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
 
 
 
-          }}
-          className=" rounded-lg w-[47%] h-[150px] items-center flex justify-center bg-white 
-          shadow-2xl mb-5">
-          <Image
-            width={50}
-            height={50}
-            source={require('../../../assets/home/listening.png')} />
-          <Text className="mt-2">
-            Reading
-          </Text>
-        </Pressable>
+              }}
+              className=" rounded-lg w-[47%] h-[150px] items-center flex justify-center bg-white 
+              shadow-2xl mb-5">
+              <Image
 
-        <Pressable
-          style={{
-            // shadown bottom
 
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
+                width={55}
+                height={55}
+                source={{
+                  uri: item?.thumb,
+                }}
+
+              />
+              <Text className="mt-2">
+                {item?.name_category}
+              </Text>
+            </Pressable>
+          )
+
+        }
 
 
 
-          }}
-          className=" rounded-lg w-[47%] h-[150px] items-center flex justify-center bg-white 
-          shadow-2xl mb-5">
-          <Image
-            width={50}
-            height={50}
-            source={require('../../../assets/home/writting.png')} />
-          <Text className="mt-2">
-            Reading
-          </Text>
-        </Pressable>
 
-        <Pressable
-          style={{
-            // shadown bottom
-
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-
-
-
-          }}
-          className=" rounded-lg w-[47%] h-[150px] items-center flex justify-center bg-white 
-          shadow-2xl mb-5">
-          <Image
-            width={50}
-            height={50}
-            source={require('../../../assets/home/reading.png')} />
-          <Text className="mt-2">
-            Reading
-          </Text>
-        </Pressable>
       </View>
       {/*  */}
 
-      <Pressable
-        style={{
-          marginBottom: 10,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-
-        }}
-        className="h-[60px] bg-white rounded-xl flex flex-row items-center  pl-3  box-border">
-        <View className="w-[45px] h-[40px] bg-gray-300 rounded flex pl-1 justify-center items-center">
-          <Image
+      {
+        categories?.practices?.map((item, index) =>
+          <Pressable
+            key={index}
             style={{
-              width: 30,
-              height: 35
+              marginBottom: 10,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+
             }}
-            source={require('../../../assets/home/book1.png')}
-          />
+            className="h-[60px] bg-white rounded-xl flex flex-row items-center  pl-3  box-border">
+            <View className="w-[45px] h-[40px] bg-gray-300 rounded flex pl-1 justify-center items-center">
+              <Image
+                style={{
+                  width: 30,
+                  height: 35
+                }}
+                source={{
+                  uri: item?.thumb
+                }}
+              />
 
-        </View>
-        <View className="ml-3">
-          <Text className="font-bold">
-            IELTS Vocabulary
-          </Text>
-          <Text className="text-xs text-gray-500 mt-1">
-            3000 words
-          </Text>
-        </View>
-      </Pressable>
-      <Pressable
-        style={{
-          marginBottom: 10,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
+            </View>
+            <View className="ml-3">
+              <Text className="font-bold">
+                {item?.name_category}
+              </Text>
+              <Text className="text-xs text-gray-500 mt-1">
+                3000 words
+              </Text>
+            </View>
+          </Pressable>
+        )
 
-        }}
-        className="h-[60px] bg-white rounded-xl flex flex-row items-center  pl-3  box-border">
-        <View className="w-[45px] h-[40px] bg-gray-300 rounded flex pl-1 justify-center items-center">
-          <Image
-            style={{
-              width: 30,
-              height: 35
-            }}
-            source={require('../../../assets/home/book1.png')}
-          />
-
-        </View>
-        <View className="ml-3">
-          <Text className="font-bold">
-            IELTS Vocabulary
-          </Text>
-          <Text className="text-xs text-gray-500 mt-1">
-            3000 words
-          </Text>
-        </View>
-      </Pressable>
+      }
       <Text className="text-red-600 text-xl font-bold mt-3">
         IELTS Prep
       </Text>
       <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
-        <Pressable
-          style={{
-            // shadown bottom
-
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-
-
-
-          }}
-          className=" rounded-lg w-[47%] h-[120px] items-center flex justify-center bg-white 
+        {
+          categories?.prepare?.map((item, index) =>
+            <Pressable
+              key={index}
+              style={{
+                // shadown bottom
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
+              className=" rounded-lg w-[47%] h-[120px] items-center flex justify-center bg-white 
           shadow-2xl mb-5">
-          <Image
-            width={50}
-            height={50}
-            source={require('../../../assets/home/reading.png')} />
-          <Text className="mt-2">
-            Reading
-          </Text>
-        </Pressable>
-
+              <Image
+                width={50}
+                height={50}
+                source={{
+                  uri: item?.thumb,
+                }}
+              />
+              <Text className="mt-2">
+                {item?.name_category}
+              </Text>
+            </Pressable>)
+        }
       </View>
     </MainLayout>
   );

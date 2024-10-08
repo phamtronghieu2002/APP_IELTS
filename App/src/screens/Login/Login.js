@@ -73,6 +73,8 @@ const Login = ({ navigation, route }) => {
     const handleContinueAsGuest = async () => {
         // fake api tạo user giả
         // save user vao -> redux , async storage
+
+
         try {
             const user = await register()
 
@@ -82,8 +84,8 @@ const Login = ({ navigation, route }) => {
                 storeData?.('user', JSON.stringify(user));
                 Toast.show({
                     type: 'success',
-                    text1: 'Hello',
-                    text2: 'This is some something 👋'
+                    text1: 'Login success fully !!',
+                    text2: 'Enjoy your Journey with 👋'
                 });
                 navigation?.navigate(configs?.screenName?.initStack, { screen: "Home" });
             }
@@ -109,7 +111,6 @@ const Login = ({ navigation, route }) => {
                         <HeaderScreen
                             textMode='light'
                             className={'text-white'}
-                            navigationTo={configs?.screenName?.home}
                             navigation={navigation}
                             label="Sign In"
                         />
@@ -162,7 +163,7 @@ const Login = ({ navigation, route }) => {
                             <Pressable
                                 onPress={() => {
                                     handleContinueAsGuest();
-                                 
+
                                 }}
                                 style={({ pressed }) => [
                                     {

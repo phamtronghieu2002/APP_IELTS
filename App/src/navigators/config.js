@@ -15,6 +15,9 @@ import Calendar from "../screens/Calendar/Calendar";
 import Icon from "react-native-vector-icons/FontAwesome";
 import IconM from 'react-native-vector-icons/MaterialIcons';
 import Intro from "../screens/Intro/Intro";
+import Lesson from "../components/Lesson/Lesson";
+import Overview from "../screens/Overview/Overview";
+import ReadingTest from "../components/Lesson/Test/ReadingTest";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -30,6 +33,21 @@ export const screensStack = [
         name: configs.screenName.setting,
         component: Setting,
         options: { title: "Welcome profile", headerShown: true },
+    },
+    {
+        name: configs.screenName.overview,
+        component: Overview,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.reading,
+        component: ReadingTest,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.lesson,
+        component: Lesson,
+        options: { title: "Welcome profile", headerShown: false },
     },
     {
         name: configs.screenName.notifycation,
@@ -114,7 +132,7 @@ export const screensDrawer = [
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
-                <IconM name="feedback" size={20} color="#000" />
+                <IconM name="feedback" size={20} color={color} />
             ),
         },
 
@@ -125,7 +143,7 @@ export const screensDrawer = [
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
-                <IconM name="share" size={20} color="#000" />
+                <IconM name="share" size={20} color={color} />
             ),
         },
 
@@ -137,18 +155,19 @@ export const screensDrawer = [
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
-                <IconM name="folder" size={20} color="#000" />
+                <IconM name="folder" size={20} color={color} />
             ),
         },
 
     },
     {
+        label: "Term and Condition",
         name: configs.screenName.termAndCondition,
         component: Profile,
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
-                <IconM name="privacy-tip" size={20} color="#000" />
+                <IconM name="privacy-tip" size={20} color={color} />
             ),
         },
 
@@ -160,7 +179,7 @@ export const screensDrawer = [
             title: "Welcome Profile",
             headerShown: false,
             drawerIcon: ({ focused, color, size }) => (
-                <Icon className="font-light" name="sign-out" size={20} color="#000" />
+                <Icon className="font-light" name="sign-out" size={20} color={color} />
             ),
 
         },

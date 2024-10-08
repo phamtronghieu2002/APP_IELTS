@@ -8,8 +8,9 @@ const instance = axios.create({
 });
 console.log(`${env.API_URL}/api/v1`);
 
-instance.interceptors.request.use(function (config) {
-  const token = getToken?.();
+instance.interceptors.request.use(async function (config) {
+  const token = await getToken?.();
+
   config.headers.Authorization = `Bearer ${token}`;
 
   return config;
