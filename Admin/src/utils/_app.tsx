@@ -5,6 +5,7 @@ import { IUserInfo } from "../_types/userType"
 import { store } from "../app/store"
 import { routeConfig } from "../configs/routeConfig"
 import { Coppy } from "../conponents/Coppy"
+import { initAppCategory } from "../features/app/appSlice"
 import {
   IRouteModalProps,
   setMenu,
@@ -18,6 +19,7 @@ import {
   setUserAccess,
   setUserChild,
 } from "../features/user/userSlice"
+import { getCategories } from "../services/categoryServices"
 // import { getCmcServerService } from "../services/dev_cmcServerServices"
 import { getMenuService } from "../services/interfaceServices"
 
@@ -106,6 +108,19 @@ export const _app = {
   },
 
   getInitialData: {
+    categories: async () => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const fb = await getCategories()
+          const data: any = fb?.data
+          const dispatch = store.dispatch
+          dispatch(initAppCategory(data))
+          resolve(data)
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
     userInfo: async () => {
       return new Promise(async (resolve, reject) => {
         try {
@@ -166,182 +181,11 @@ export const _app = {
       })
     },
 
-
     all: async () => {
       const userInfoPromise = _app.getInitialData?.userInfo()
-      const user: any = await userInfoPromise
-      const userId = user?.id
-
       const menuPromise = _app.getInitialData?.menu()
-
-      return Promise.all([
-        userInfoPromise,
-        menuPromise,
-
-      ])
-    },
-  },
-
-  routeModal: {
-    showModalRoute: (data: {
-      startTime: number
-      endTime: number
-      imei: string
-    }) => {
-      const dispatch = store?.dispatch
-      dispatch?.(
-        setRouteModalState?.({
-          isOpen: true,
-          imei: data?.imei,
-          startTime: data?.startTime,
-          endTime: data?.endTime,
-        }),
-      )
-    },
-
-    hideModalRoute: () => {
-      const dispatch = store?.dispatch
-      dispatch?.(
-        setRouteModalState?.({
-          isOpen: false,
-        }),
-      )
-    },
-  },
-
-  user: {
-    resetPass: (userId: number, userName: string, onSuccess?: () => void) => {
-      api.modal?.confirm?.({
-        title: (
-          <div>
-            Bạn có muốn reset mật khẩu tài khoản{" "}
-            <span className="font-semibold">{userName}</span> về mặc định?
-          </div>
-        ),
-        content: "",
-        onOk: () => {
-          const loadingApiClose = api.message?.loading(
-            `Đang đặt lại mật khẩu cho tài khoản ${userName}`,
-            20,
-          )
-          resetPassService(userId)
-            .then((fb: any) => {
-              onSuccess?.()
-
-              api.modal?.info({
-                title: "Đã đặt lại mật khẩu mới",
-                content: (
-                  <div>
-                    <div>Tài khoản: {userName}</div>
-                    <div className="flex items-center gap-2">
-                      Mật khẩu mới:{" "}
-                      <Coppy>
-                        {fb?.data?.[0]?.new_password ||
-                          _const?.string?.message?.unknow}
-                      </Coppy>
-                    </div>
-                  </div>
-                ),
-              })
-            })
-            .catch((error) => {
-              api.message?.error(getString?.errorAxiosParams(error))
-            })
-            .finally(() => {
-              loadingApiClose?.()
-            })
-        },
-      })
-    },
-
-    disabled: (userId: number, userName: string, onSuccess?: () => void) => {
-      api.modal?.confirm?.({
-        title: (
-          <div>
-            Bạn có muốn vô hiệu hoá tài khoản{" "}
-            <span className="font-semibold">{userName}</span>?
-          </div>
-        ),
-        content:
-          "Người dùng sẽ không thể đăng nhập vào tài khoản khi bị vô hiệu hoá",
-        onOk: () => {
-          const loadingApiClose = api.message?.loading(
-            `Đang vô hiệu hoá tài khoản ${userName}`,
-            20,
-          )
-          disableService(userId, 0)
-            .then((fb: any) => {
-              onSuccess?.()
-
-              api.message?.info(`Đã vô hiệu hoá tài khoản ${userName}`)
-            })
-            .catch((error) => {
-              api.message?.error(getString?.errorAxiosParams(error))
-            })
-            .finally(() => {
-              loadingApiClose?.()
-            })
-        },
-      })
-    },
-
-    actived: (userId: number, userName: string, onSuccess?: () => void) => {
-      api.modal?.confirm?.({
-        title: (
-          <div>
-            Bạn có muốn bỏ vô hiệu hoá tài khoản{" "}
-            <span className="font-semibold">{userName}</span>?
-          </div>
-        ),
-        content: "Người dùng sẽ đăng nhập vào tài khoản",
-        onOk: () => {
-          const loadingApiClose = api.message?.loading(
-            `Đang bỏ vô hiệu hoá tài khoản ${userName}`,
-            20,
-          )
-          disableService(userId, 1)
-            .then((fb: any) => {
-              onSuccess?.()
-
-              api.message?.info(`Đã bỏ vô hiệu hoá tài khoản ${userName}`)
-            })
-            .catch((error) => {
-              api.message?.error(getString?.errorAxiosParams(error))
-            })
-            .finally(() => {
-              loadingApiClose?.()
-            })
-        },
-      })
-    },
-
-    delete: (userId: number, userName: string, onSuccess?: () => void) => {
-      api.modal?.confirm?.({
-        title: (
-          <div>
-            Bạn có muốn xoá tài khoản{" "}
-            <span className="font-semibold">{userName}</span>?
-          </div>
-        ),
-        content: "Người dùng sẽ không thể đăng nhập vào tài khoản khi bị xoá",
-        onOk: () => {
-          const loadingApiClose = api.message?.loading(
-            `Đang xoá tài khoản ${userName}`,
-            20,
-          )
-          deleteUserService(userId)
-            .then((fb: any) => {
-              onSuccess?.()
-              api.message?.info(`Đã xoá tài khoản ${userName}`)
-            })
-            .catch((error: any) => {
-              api.message?.error(getString?.errorAxiosParams(error))
-            })
-            .finally(() => {
-              loadingApiClose?.()
-            })
-        },
-      })
+      const categoriesPromise = _app.getInitialData?.categories()
+      return Promise.all([userInfoPromise, menuPromise,categoriesPromise])
     },
   },
 

@@ -30,11 +30,7 @@ interface IPageInterface {
 export interface IState {
   menu: IServerMenu[]
   menuObj: { [key: string]: IServerMenu }
-
-
-
   page: IPageInterface
-
   routeModal: IRouteModalProps
 
   online: {
@@ -45,9 +41,6 @@ export interface IState {
 const initialState: IState = {
   menu: [],
   menuObj: {},
-
-
-
   page: {
     logo: "",
     favicon: "",

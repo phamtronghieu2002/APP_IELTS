@@ -12,7 +12,7 @@ export const loginService = async (body: any) => {
   return new Promise(async (resolve, reject) => {
     try {
       const fb: any = await serverInstanceNoAuth.post(API, body)
-      const refeshToken = fb?.data?.[0]?.refreshToken
+      const refeshToken = fb?.data?.[0]?.refreshToken 
       const accessToken = fb?.data?.[0]?.token
 
       storage.setToken(accessToken, refeshToken)
