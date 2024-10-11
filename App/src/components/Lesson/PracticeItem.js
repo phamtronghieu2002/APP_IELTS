@@ -3,13 +3,7 @@ import PropTypes from 'prop-types'
 import {
     View,
     Text,
-    Image,
-    ScrollView,
-    SafeAreaView,
-    FlatList,
-    SectionList,
-    TextInput,
-    TouchableOpacity,
+
     Pressable,
 } from 'react-native';
 import IconO from 'react-native-vector-icons/Octicons';
@@ -21,20 +15,14 @@ const PraticeItem = ({
     _id,
     name_test,
     percent_correct,
-    category
+ 
 
 }) => {
 
 
-    const handleShowPreview = (name, id) => {
-        return navigation.navigate(configs?.screenName?.overview, { name_test: name, id });
-    }
 
     const handlePress = () => {
-        if (isDoing) {
-            handleShowPreview(name_test, _id);
-            return
-        }
+
         onPress?.();
     }
     const colorPercent = percent_correct > 0 ? 'border-red-400 text-red-500' : 'bg-gray-200';

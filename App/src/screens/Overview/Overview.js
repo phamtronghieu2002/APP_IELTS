@@ -12,7 +12,11 @@ import { Pressable } from 'react-native';
 import IconO from 'react-native-vector-icons/Octicons';
 import { Icon } from 'react-native-elements';
 const Overview = ({ navigation, route }) => {
-    const name_test = route?.params?.name_test;
+    const name_test = route?.params?.name_test;``
+    const id_test = route?.params?.test_id;
+
+
+
     return (
         <SafeAreaView>
             <HeaderScreen
@@ -51,7 +55,12 @@ const Overview = ({ navigation, route }) => {
                     />
                     <View className="mt-10">
 
-                        <Pressable className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => { }}>
+                        <Pressable
+
+                            className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => {
+
+                                navigation.navigate('Reading', { nameTest: name_test, test_id: id_test });
+                            }}>
                             <Text className="text-white font-bold text-lg">
                                 Practice now
                             </Text>
@@ -128,7 +137,10 @@ const Overview = ({ navigation, route }) => {
                                 <Text className="text-red-600 font-bold text-lg">
                                     2
                                 </Text>
-                                <Pressable className="" onPress={() => { }}>
+                                <Pressable className="" onPress={() => {
+
+
+                                }}>
                                     <Text className="text-red-400 text-lg">
                                         Practice now
                                     </Text>
