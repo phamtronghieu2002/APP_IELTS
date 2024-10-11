@@ -16,8 +16,8 @@ const handleGetLessons = async (req, res, next) => {
     try {
 
         const categoryid = req.params.id || "";
-
-        const result = await lessonServices?.getLessonsByCateId(categoryid);
+        const keyword = req.query.keyword || "";
+        const result = await lessonServices?.getLessonsByCateId(categoryid,keyword);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
@@ -35,5 +35,25 @@ const handleAddTest = async (req, res, next) => {
     }
 }
 
+const handleDeleteLesson = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await lessonServices?.deleteLesson(id);
+        return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
+    }
+}
 
-module.exports = { handleAddLesson,handleGetLessons ,handleAddTest}
+const handleUpdateLesson = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        const result = await lessonServices?.updateLesson(id, data);
+        return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
+    }
+}
+
+module.exports = { handleAddLesson,handleGetLessons ,handleAddTest,handleDeleteLesson,handleUpdateLesson}

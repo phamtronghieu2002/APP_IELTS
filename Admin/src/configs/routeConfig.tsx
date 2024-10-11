@@ -4,7 +4,7 @@ export const routeConfig = {
   login: "/login",
 
   //MANAGER
-  manager: "/mananger/managerLesson",
+  manager: "/mananger/introduction",
   manager_reading: "/mananger/reading",
   manager_listening: "/mananger/listening",
   manager_speaking: "/mananger/speaking",

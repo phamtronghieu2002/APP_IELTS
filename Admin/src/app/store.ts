@@ -1,13 +1,15 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit"
 import userReducer from "../features/user/userSlice"
 import interfaceReducer from "../features/interface/interfaceSlice"
+import appReducer from "../features/app/appSlice"
 
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     interface: interfaceReducer,
-    // device: deviceReducer,
+    app:appReducer
+
   },
 })
 

@@ -12,6 +12,7 @@ import Reading from "../pages/Manager/ManagerCategories/Reading/Reading"
 import Policy from "../pages/Manager/ManagerPolicy/Policy"
 import Term from "../pages/Manager/ManagerTerm/Term"
 import Users from "../pages/Manager/ManagerUser/Users"
+import Introduction from "../pages/Manager/Introduction"
 
 export interface IRoute {
   path: string
@@ -40,10 +41,10 @@ export const routes: IRoute[] = [
   //PRIVATE
   {
     path: routeConfig?.manager,
-    component: ManagerLesson,
+    component: Introduction,
     layout: MainLayout,
     useFullScreen: true,
-    useMonitor: true,
+    // useMonitor: true,
   },
   {
     path: routeConfig?.manager_listening,

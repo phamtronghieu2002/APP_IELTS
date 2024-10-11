@@ -22,8 +22,20 @@ import { _app } from "../utils/_app"
 import { routeConfig } from "../configs/routeConfig"
 import { randomUUID } from "crypto"
 import { FaMicrophone } from "react-icons/fa6"
+import Introduction from "../pages/Manager/Introduction"
 
 export const fakeMenu: IServerMenu[] = [
+  {
+    child: [],
+    icon: "FaHome",
+    id: 999,
+    link: routeConfig.manager,
+    lv: 0,
+    name: "Trang chủ",
+    parent_id: 0,
+    type: "nuldl",
+    component: "",
+  },
   {
     child: [
       {
