@@ -9,6 +9,7 @@ import {
   LiaChartAreaSolid,
   LiaDrawPolygonSolid,
   LiaTemperatureLowSolid,
+  LiaTrashAlt
 } from "react-icons/lia"
 import {
   MdOutlineLocalPolice,
@@ -29,6 +30,9 @@ import {
   PiBellRingingBold,
   PiCarFill,
 } from "react-icons/pi"
+
+
+import { FaEdit } from "react-icons/fa";
 import {
   RiChatHistoryFill,
   RiFolderSettingsFill,
@@ -68,7 +72,12 @@ import { BsFillFileEarmarkRuledFill } from "react-icons/bs";
 import { FaUsers } from "react-icons/fa";
 import { BsFileEarmarkRuledFill } from "react-icons/bs";
 import { SiFacebookgaming } from "react-icons/si";
+
+
+
 const IconLib = {
+  FaEdit,
+  LiaTrashAlt,
   SiFacebookgaming ,
   BsFileEarmarkRuledFill,
   FaUsers,

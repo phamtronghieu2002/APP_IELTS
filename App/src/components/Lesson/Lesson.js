@@ -42,7 +42,9 @@ const getLessonIcon = (type) => {
 const Lesson = ({ navigation, route }) => {
 
     const test = [1, 2, 3, 4, 5, 6]
-    const category = route?.params?.category;
+
+    const category = route?.params?.category;// lấy ra category từ route 
+    
     const [lessons, setLessons] = React.useState([]);
    
     const fetchLesson = async () => {

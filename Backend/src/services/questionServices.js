@@ -15,7 +15,7 @@ const addQuestion = async (data) => {
             count_question_fill_in_blank = question?.options?.length;
         }
 
-        const result = await questionModel.findOneAndUpdate({ test_id: test_id }, { $push: { questions: question }, $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : 1 } }, { new: false });
+        const result = await questionModel.findOneAndUpdate({ test_id: test_id }, { $push: { questions: question }, $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : 1 } }, { new: true });
         return {
             data: result,
             message: "question created successfully",

@@ -6,7 +6,7 @@ import {
     SafeAreaView
 } from 'react-native';
 import HeaderScreen from '../../Header/HeaderScreen';
-import { getTestById } from '../../../services/testService';
+import { getTestById, updateIsDoing } from '../../../services/testService';
 import ExpandableText from '../../ExpandableText/ExpandableText';
 import RadioButton from '../../RadioButton/RadioButton';
 import Explain from '../../Explain/Explain';
@@ -16,23 +16,25 @@ import WebView from 'react-native-webview';
 import { TextInput } from 'react-native';
 import AnswerInputArea from '../../AnswerInput/AnswerInput';
 import ResultBar from '../../ResultBar/ResultBar';
+import { addAnwserToTestResult, addTestResult } from '../../../services/testResultServices';
+import { _testTypes } from '../../../utils/constant';
 const ReadingTest = ({ navigation, route }) => {
 
     const { width } = useWindowDimensions();
+
     const [test, setTest] = React.useState({});
+
+
+
+
     const [questions, setQuestions] = React.useState({});
     const test_id = route?.params?.test_id;
 
 
-    //    {
-    //         question_id:"abc",
-    //         options:{
-    //             option_id:"abc",
-    //             text:"abc",
-    //             is_correct:true
-    //         }
-    //    }
+
     const [answers, setAnswers] = React.useState([]);
+    console.log("answers >>>", answers);
+
     const fetchTestById = async () => {
         try {
             const response = await getTestById(test_id);
@@ -48,9 +50,48 @@ const ReadingTest = ({ navigation, route }) => {
         fetchTestById();
     }, []);
 
+    console.log("answers >>>", answers);
 
-    const handleChooseAnswer = (question_id, options) => {
-        setAnswers([...answers, { question_id, options }]);
+    const handleChooseAnswer = async (question_id, options) => {
+        try {
+
+            const is_doing = test?.is_doing;
+            if (!is_doing) {
+                await updateIsDoing(test_id, {
+                    is_doing: true
+                });
+            }
+
+
+            setAnswers(((prev) => {
+                const isExits = prev.some((a) => a.question_id === question_id);
+                if (isExits) {
+                    return prev
+                } else {
+                    addAnwserToTestResult(
+                        test_id, is_doing ? _testTypes?.renew : _testTypes?.new, {
+                        anwser: {
+                            question_id,
+                            is_correct: options.is_correct
+                        }
+                    }
+                    ).then(fb => {
+
+                    }).catch(err => {
+                        console.log("error >>>>", err);
+
+                    }
+                    )
+                    return [...prev, {
+                        question_id,
+                        options
+                    }]
+                }
+            }));
+        } catch (error) {
+            console.log("error >>>>", error);
+
+        }
     };
 
     return (
@@ -93,7 +134,6 @@ const ReadingTest = ({ navigation, route }) => {
                     {
                         questions?.questions?.map((q, index) => {
                             const question_type = q?.question_type;
-
                             return (
                                 <View key={index} className="mb-5 border-b-2 border-gray-200 pb-3">
                                     {

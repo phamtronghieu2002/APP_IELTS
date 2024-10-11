@@ -64,10 +64,9 @@ const LessonItem = ({
 
 
 
-
             const is_doing = test?.is_doing;
             if (is_doing) {
-                navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, category_id: category?._id })
+                navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, name_test: test?.name_test, type: category?.type })
 
 
             } else {

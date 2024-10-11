@@ -9,6 +9,9 @@ import ModalLesson from "../../../../conponents/Modal/ModalLesson"
 import { PlusOutlined } from "@ant-design/icons"
 import { context } from "../Provider/ManagerCategoryProvider"
 import { MaskLoader } from "../../../../conponents/Loader"
+import DrawLesson from "../../../../conponents/Draw/DrawLesson"
+
+import { IconC } from "../../../../conponents/IconC"
 const columns = [
   {
     title: "STT",
@@ -49,7 +52,7 @@ const columns = [
                   type="link"
                   className="bg-blue-500 text-white p-2 rounded"
                 >
-                  Sửa
+                  <IconC name={`FaEdit`} />
                 </Button>
               }
               type="update"
@@ -61,14 +64,24 @@ const columns = [
               }}
               title={`Xóa bài học ${record?.name_lesson}`}
               button={
+                <Button className=" border-0 text-white p-2  text-rose-700">
+                  <IconC name={`LiaTrashAlt`} />
+                </Button>
+              }
+              type="delete"
+              data={record}
+            />
+            <DrawLesson
+              
+              button={
                 <Button
                   type="link"
                   className="bg-blue-500 text-white p-2 rounded"
                 >
-                  Xóa
+                  Quản lý bài test
                 </Button>
               }
-              type="delete"
+              title="Cài đặt bài học"
               data={record}
             />
           </div>
@@ -86,7 +99,7 @@ const Lesson: FC<ContentProps> = ({ category_id }) => {
 
   const fetchLessons = async (keyword: string) => {
     setLoading(true)
-    const res = await getLessonByCategory(category_id,keyword)
+    const res = await getLessonByCategory(category_id, keyword)
 
     const lessons = res.data?.map((lesson: any, index: number) => {
       return {
