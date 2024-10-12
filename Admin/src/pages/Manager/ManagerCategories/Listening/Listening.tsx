@@ -5,7 +5,6 @@ import { useAppSelector, useAppDispatch } from "../../../../app/hooks"
 interface ListeningProps {}
 
 const Listening: FC<ListeningProps> = () => {
-  
   const categories = useAppSelector((state) => state.app.categories)
 
   const id_category_listening = categories.find(
