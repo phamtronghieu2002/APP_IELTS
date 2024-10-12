@@ -1,55 +1,45 @@
 import React, { FC, useContext, useRef } from "react"
 import { ModalCView } from "../ModalC/ModalC"
 import { FormC } from "../FormC"
-import { an } from "vitest/dist/types-e3c9754d.js"
 import { Button } from "antd"
 import { CloseOutlined } from "@ant-design/icons"
-
 import { _log } from "../../utils/_log"
 import { context } from "../../pages/Manager/ManagerCategories/Provider/ManagerCategoryProvider"
 import { MaskLoader } from "../Loader"
 import { FormInstance } from "antd/lib"
 import { api } from "../../_helper"
-import {
-  addTestToLesson,
-  createTest,
-  deleteTest,
-  updateTest,
-} from "../../services/testService"
 
-interface ModaltestProps {
+interface ModalSortQuestionProps {
   button: React.ReactNode
   title: string
   type: "add" | "update" | "delete"
   data?: any
   modalProps?: any
-  lesson_id: string
-  refresh?: () => void
+  category_id?: string
 }
 
 const ModalForm: FC<{
   action: any
   type: "add" | "update" | "delete"
   data?: any
-  lesson_id: string
-  refresh?: () => void
-}> = ({ action, type, data, lesson_id, refresh }) => {
+  category_id?: string
+}> = ({ action, type, data, category_id }) => {
   const { storeCategories, dispath } = useContext<any>(context)
 
   const formRef = useRef<FormInstance<any>>(null)
- 
+
   const handleAdd = async (fb: any) => {
     try {
-      const name_test = fb?.name_test
+      const name_SortQuestion = fb?.name_SortQuestion
       dispath({ type: "loading", payload: true })
-      const res = await createTest({
-        name_test,
-      })
-      const test_id = res.data?._id
+      //   await addSortQuestion({
+      //     name_SortQuestion,
+      //     cate_id: category_id ?? "",
+      //   })
+      dispath({ type: "SET_REFRESH" })
 
-      await addTestToLesson(lesson_id ?? "", test_id)
-      refresh?.()
-      api?.message?.success("Thêm test thành công")
+      dispath({ type: "SET_LOADING", payload: false })
+      api?.message?.success("Thêm bài học thành công")
       action?.closeModal()
     } catch (error) {
       _log("erro")
@@ -57,15 +47,15 @@ const ModalForm: FC<{
   }
   const handleUpdate = async (fb: any) => {
     try {
-      const name_test = fb?.name_test
+      const name_SortQuestion = fb?.name_SortQuestion
       dispath({ type: "loading", payload: true })
-      await updateTest({
-        name_test,
-        id: data?._id,
-      })
+      //   await updateSortQuestion({
+      //     name_SortQuestion,
+      //     id: data?._id,
+      //   })
+      dispath({ type: "refresh" })
 
-      refresh?.()
-
+      dispath({ type: "loading", payload: false })
       api?.message?.success("Sửa bài học thành công")
       action?.closeModal()
     } catch (error) {
@@ -75,10 +65,10 @@ const ModalForm: FC<{
   const handleDelete = async (fb: any) => {
     try {
       dispath({ type: "loading", payload: true })
-      await deleteTest(data?._id)
-      refresh?.()
-
-      api?.message?.success("xóa  bài test  thành công !!")
+      //   await deleteSortQuestion(data?._id)
+      dispath({ type: "refresh" })
+      dispath({ type: "loading", payload: false })
+      api?.message?.success("xóa  bài học thành công")
       action?.closeModal()
     } catch (error) {
       _log("erro")
@@ -117,10 +107,10 @@ const ModalForm: FC<{
 
   const fields = [
     {
-      name: "name_test",
+      name: "name_SortQuestion",
       type: "input",
       label: "Tên",
-      placeholder: "Nhập tên bài test",
+      placeholder: "Nhập tên bài SortQuestion",
       rules: [
         {
           required: true,
@@ -137,7 +127,7 @@ const ModalForm: FC<{
       {storeCategories?.loading && <MaskLoader />}
       {type === "delete" ? (
         <div className="flex items-center gap-7">
-          <p>Bạn có chắc chắn muốn xóa bài test này không?</p>
+          <p>Bạn có chắc chắn muốn xóa bài học này không?</p>
 
           <div className="flex gap-2">
             <Button
@@ -177,14 +167,13 @@ const ModalForm: FC<{
   )
 }
 
-const Modaltest: FC<ModaltestProps> = ({
+const ModalSortQuestion: FC<ModalSortQuestionProps> = ({
   button,
   title,
   type,
   data,
   modalProps,
-  lesson_id,
-  refresh,
+  category_id,
 }) => {
   return (
     <ModalCView
@@ -196,15 +185,14 @@ const Modaltest: FC<ModaltestProps> = ({
       title={title}
       children={(action) => (
         <ModalForm
-          refresh={refresh}
           data={data}
           action={action}
           type={type}
-          lesson_id={lesson_id}
+          category_id={category_id}
         />
       )}
     />
   )
 }
 
-export default Modaltest
+export default ModalSortQuestion

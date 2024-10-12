@@ -56,7 +56,7 @@ export const addQuestion = async (test_id, type, data) => {
             result = await TestResultModel.findOneAndUpdate({ test_id },
                 {
                     $set: {
-                        anwsers: data
+                        anwsers: []
                     }
                 },
                 {

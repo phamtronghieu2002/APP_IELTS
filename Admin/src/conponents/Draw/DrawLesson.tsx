@@ -25,9 +25,13 @@ interface ContentDrawProps {
 }
 
 const ContentDraw: FC<ContentDrawProps> = ({ data }) => {
+  const lesson_id = data?._id
+  const category_id = data?.category_id
+
+
   return (
     <div className="wrapper flex justify-between bg-slate-100 h-full">
-      <Sidebar />
+      <Sidebar lesson_id={lesson_id} category_id={category_id} />
       <MainContent />
     </div>
   )
@@ -44,7 +48,7 @@ const DrawLesson: FC<DrawLessonProps> = ({ button, title, data }) => {
         }
         button={button}
         data={data}
-        children={(action) => <ContentDraw {...action} />}
+        children={(action) => <ContentDraw {...action} data={data} />}
       />
     </DrawProvider>
   )

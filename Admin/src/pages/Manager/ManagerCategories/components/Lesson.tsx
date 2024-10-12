@@ -64,7 +64,7 @@ const columns = [
               }}
               title={`Xóa bài học ${record?.name_lesson}`}
               button={
-                <Button className=" border-0 text-white p-2  text-rose-700">
+                <Button className=" border-0 text-white p-2  !text-rose-700">
                   <IconC name={`LiaTrashAlt`} />
                 </Button>
               }
@@ -72,7 +72,6 @@ const columns = [
               data={record}
             />
             <DrawLesson
-              
               button={
                 <Button
                   type="link"
@@ -95,7 +94,6 @@ const Lesson: FC<ContentProps> = ({ category_id }) => {
   const [lessons, setLessons] = useState<any>([])
   const { storeCategories, dispath } = useContext(context)
   const [loading, setLoading] = useState(false)
-  console.log("storeCategories", storeCategories)
 
   const fetchLessons = async (keyword: string) => {
     setLoading(true)
@@ -107,6 +105,8 @@ const Lesson: FC<ContentProps> = ({ category_id }) => {
         total_test: lesson?.tests?.length,
         key: index,
         stt: index + 1,
+        category_id,
+        
       }
     })
     setLoading(false)

@@ -7,7 +7,7 @@ interface DrawProps {
   children: (data: { closeModal: any; data: any }) => React.ReactNode
   title: React.ReactNode
   width?: string | number
-  data: any
+  data?: any
 }
 
 const DrawC: FC<DrawProps> = ({
