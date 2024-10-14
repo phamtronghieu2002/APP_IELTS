@@ -9,6 +9,15 @@ export const createTest = async (data: any) => {
   return axios.post("/test", data)
 }
 
+export const addQuestionToTest = async (
+  test_id: string,
+  question_id: string,
+) => {
+  return axios.post(`/test/addQuestion/${test_id}`, {
+    question: question_id,
+  })
+}
+
 export const updateTest = async (data: any) => {
   return axios.put(`/test/${data?.id}`, data)
 }

@@ -3,8 +3,8 @@ import axios from "axios"
 axios.defaults.withCredentials = true
 
 const instance = axios.create({
-  baseURL: `http://192.168.0.137:8080/api/v1`,
-  // baseURL: `http://192.168.85.187:8080/api/v1`,
+  // baseURL: `http://192.168.0.137:8080/api/v1`,
+  baseURL: `${import.meta.env.VITE_SERVER_IELTS_DOMAIN}:8080/api/v1`,
 })
 
 instance.interceptors.request.use(async function (config) {

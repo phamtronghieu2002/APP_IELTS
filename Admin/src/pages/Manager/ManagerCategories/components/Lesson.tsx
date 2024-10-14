@@ -42,55 +42,53 @@ const columns = [
     dataIndex: "actions",
     key: "actions",
     render(value: any, record: any, index: any) {
-      return {
-        children: (
-          <div className="flex flex-row gap-1">
-            <ModalLesson
-              title={`Sửa bài học ${record?.name_lesson}`}
-              button={
-                <Button
-                  type="link"
-                  className="bg-blue-500 text-white p-2 rounded"
-                >
-                  <IconC name={`FaEdit`} />
-                </Button>
-              }
-              type="update"
-              data={record}
-            />
-            <ModalLesson
-              modalProps={{
-                width: 550,
-              }}
-              title={`Xóa bài học ${record?.name_lesson}`}
-              button={
-                <Button className=" border-0 text-white p-2  !text-rose-700">
-                  <IconC name={`LiaTrashAlt`} />
-                </Button>
-              }
-              type="delete"
-              data={record}
-            />
-            <DrawLesson
-              button={
-                <Button
-                  type="link"
-                  className="bg-blue-500 text-white p-2 rounded"
-                >
-                  Quản lý bài test
-                </Button>
-              }
-              title="Cài đặt bài học"
-              data={record}
-            />
-          </div>
-        ),
-      }
+      return (
+        <div className="flex flex-row gap-1">
+          <ModalLesson
+            title={`Sửa bài học ${record?.name_lesson}`}
+            button={
+              <Button
+                type="link"
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                <IconC name={`FaEdit`} />
+              </Button>
+            }
+            type="update"
+            data={record}
+          />
+          <ModalLesson
+            modalProps={{
+              width: 550,
+            }}
+            title={`Xóa bài học ${record?.name_lesson}`}
+            button={
+              <Button className=" border-0 text-white p-2  !text-rose-700">
+                <IconC name={`LiaTrashAlt`} />
+              </Button>
+            }
+            type="delete"
+            data={record}
+          />
+          <DrawLesson
+            button={
+              <Button
+                type="link"
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                Quản lý bài test
+              </Button>
+            }
+            title="Cài đặt bài học"
+            data={record}
+          />
+        </div>
+      )
     },
   },
 ]
 
-const Lesson: FC<ContentProps> = ({ category_id }) => {
+const Lesson: FC<ContentProps> = ({ category_id, type_category }) => {
   const [lessons, setLessons] = useState<any>([])
   const { storeCategories, dispath } = useContext(context)
   const [loading, setLoading] = useState(false)
@@ -106,7 +104,7 @@ const Lesson: FC<ContentProps> = ({ category_id }) => {
         key: index,
         stt: index + 1,
         category_id,
-        
+        type_category,
       }
     })
     setLoading(false)

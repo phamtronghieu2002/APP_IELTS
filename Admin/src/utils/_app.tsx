@@ -39,6 +39,10 @@ import storage from "./storage"
 type REALTIME_PROMISE_DATA = "gps" | "info" | "alarm"
 
 export const _app = {
+
+  randomId(){
+    return  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  },
   logout: async () => {
     logoutService().finally(() => {
       storage.clearToken?.()
