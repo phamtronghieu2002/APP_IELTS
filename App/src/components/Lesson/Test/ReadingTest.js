@@ -21,19 +21,18 @@ import { _testTypes } from '../../../utils/constant';
 const ReadingTest = ({ navigation, route }) => {
 
     const { width } = useWindowDimensions();
-
-    const [test, setTest] = React.useState({});
-
-
-
-
     const [questions, setQuestions] = React.useState({});
-    const test_id = route?.params?.test_id;
-
-
-
+    const [test, setTest] = React.useState({});
     const [answers, setAnswers] = React.useState([]);
-    console.log("answers >>>", answers);
+
+    const test_id = route?.params?.test_id;
+    
+
+
+
+
+
+
 
     const fetchTestById = async () => {
         try {

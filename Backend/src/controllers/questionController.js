@@ -32,9 +32,19 @@ const handleUpdateQuestionByTestId = async (req, res, next) => {
 
 const handleDeleteQuestionById = async (req, res, next) => {
     try {
-        const  questionid  = req.query?.questionid;
-        const  testid  = req.params.id
-        const result = await questionServices?.deleteQuestion(testid,questionid);
+        const questionid = req.query?.questionid;
+        const testid = req.params.id
+        const result = await questionServices?.deleteQuestion(testid, questionid);
+        return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
+    }
+}
+
+const handleGetQuestionById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await questionServices?.getQuestionById(id);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
@@ -42,4 +52,4 @@ const handleDeleteQuestionById = async (req, res, next) => {
 }
 
 
-module.exports = { handleAddQuestion ,handleGetQuestions,handleUpdateQuestionByTestId,handleDeleteQuestionById}
+module.exports = { handleAddQuestion, handleGetQuestions, handleUpdateQuestionByTestId, handleDeleteQuestionById, handleGetQuestionById }

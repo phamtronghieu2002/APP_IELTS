@@ -5,6 +5,7 @@ import lessonRoutes from "./LessonRoute";
 import testRoutes from "./TestRoute";
 import questionRoutes from "./QuestionRoute";
 import testResultRoute from "./TestResultRoute";
+import audioRoute from "./AudioRoute";
 import { veryfyUser } from "~/middlewares/authMiddleware";
 const initAPIRoutes = (app) => {
 
@@ -14,6 +15,7 @@ const initAPIRoutes = (app) => {
       app.use("/api/v1/test", testRoutes);
       app.use("/api/v1/question", questionRoutes);
       app.use("/api/v1/testResult", testResultRoute);
+      app.use("/api/v1/audio", audioRoute);
 
 }
 

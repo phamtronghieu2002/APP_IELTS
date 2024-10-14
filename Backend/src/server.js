@@ -7,10 +7,11 @@ const corsOptions = require("./config/cors");
 const configViewEngine = require("./config/viewEngines");
 const initAPIRoutes = require("./routes/v1");
 const errorHandlingMiddleware = require("./middlewares/errorHandlingMiddleware");
-
 const mongoose = require('mongoose');
 //init app
 const app = express();
+const filesDirectory = path.join(__dirname, 'files');
+
 
 //define host,port and build mode
 const hostname = env.LOCAL_APP_HOST;
@@ -23,6 +24,7 @@ configViewEngine(app);
 
 //config static file ex:css,js,images in public folder
 app.use(express.static(path.join(__dirname, "public")));
+app.use('/files', express.static(filesDirectory));
 //config body parse
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef } from "react"
+import React, { FC, useContext, useRef, useState } from "react"
 import { ModalCView } from "../ModalC/ModalC"
 import { FormC } from "../FormC"
 import { an } from "vitest/dist/types-e3c9754d.js"
@@ -6,17 +6,23 @@ import { Button } from "antd"
 import { CloseOutlined } from "@ant-design/icons"
 
 import { _log } from "../../utils/_log"
-import { context } from "../../pages/Manager/ManagerCategories/Provider/ManagerCategoryProvider"
 import { MaskLoader } from "../Loader"
 import { FormInstance } from "antd/lib"
 import { api } from "../../_helper"
 import {
+  addQuestionToTest,
   addTestToLesson,
   createTest,
   deleteTest,
   updateTest,
 } from "../../services/testService"
+import TinyMCEEditor from "../Markdown/Markdown"
+import UploadAudio from "./components/UploadAudio"
+import { Input } from "antd"
+import { createQuestion } from "../../services/questionServices"
+import { context } from "../Draw/provider/DrawProvider"
 
+const { TextArea } = Input
 interface ModaltestProps {
   button: React.ReactNode
   title: string
@@ -24,7 +30,8 @@ interface ModaltestProps {
   data?: any
   modalProps?: any
   lesson_id: string
-  refresh?: () => void
+  type_category: string
+  refresh?: any
 }
 
 const ModalForm: FC<{
@@ -32,23 +39,51 @@ const ModalForm: FC<{
   type: "add" | "update" | "delete"
   data?: any
   lesson_id: string
-  refresh?: () => void
-}> = ({ action, type, data, lesson_id, refresh }) => {
-  const { storeCategories, dispath } = useContext<any>(context)
+  type_category: string
+  refresh?: any
+}> = ({ action, type, data, lesson_id, refresh, type_category }) => {
+  const { drawStore, dispath } = useContext<any>(context)
 
   const formRef = useRef<FormInstance<any>>(null)
- 
+  const editorRef = useRef<any>(null) // Store the editor instance
+  const [audioUrl, setAudioUrl] = useState<string | null>("")
+  const [formData, setFormData] = useState<any>({
+    name_test: "",
+    question_text: "",
+    description: "",
+    audio_url: "",
+    questions: [],
+    test_id: "",
+  })
+  const handleSetFormData = (name: string, value: string) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
+  }
+
   const handleAdd = async (fb: any) => {
     try {
-      const name_test = fb?.name_test
-      dispath({ type: "loading", payload: true })
+      const { name_test } = formData
       const res = await createTest({
         name_test,
       })
-      const test_id = res.data?._id
+      const test = res.data
+      const test_id = test?._id
 
       await addTestToLesson(lesson_id ?? "", test_id)
-      refresh?.()
+      const q = await createQuestion(formData)
+      dispath({
+        type: "SET_QUESTION",
+        payload: q?.data,
+      })
+
+      await addQuestionToTest(test_id, q?.data?._id)
+      refresh?.({
+        ...test,
+        value: test?._id,
+        label: test?.name_test,
+      })
       api?.message?.success("Thêm test thành công")
       action?.closeModal()
     } catch (error) {
@@ -58,7 +93,6 @@ const ModalForm: FC<{
   const handleUpdate = async (fb: any) => {
     try {
       const name_test = fb?.name_test
-      dispath({ type: "loading", payload: true })
       await updateTest({
         name_test,
         id: data?._id,
@@ -74,7 +108,6 @@ const ModalForm: FC<{
   }
   const handleDelete = async (fb: any) => {
     try {
-      dispath({ type: "loading", payload: true })
       await deleteTest(data?._id)
       refresh?.()
 
@@ -132,9 +165,9 @@ const ModalForm: FC<{
   const onFinish = (values: any) => {
     getActions(type, values)?.onOK()
   }
+
   return (
     <div>
-      {storeCategories?.loading && <MaskLoader />}
       {type === "delete" ? (
         <div className="flex items-center gap-7">
           <p>Bạn có chắc chắn muốn xóa bài test này không?</p>
@@ -154,6 +187,7 @@ const ModalForm: FC<{
       ) : (
         <>
           <FormC
+            onChange={handleSetFormData}
             ref={formRef}
             initialValues={data}
             chunk={1}
@@ -161,6 +195,32 @@ const ModalForm: FC<{
             fields={fields}
             onFinish={onFinish}
           />
+          <div className="heading_test mb-5">
+            <label htmlFor="">Nhập đề bài</label>
+            {type_category === "Reading" ? (
+              <TinyMCEEditor
+                onChange={(e: any) => {
+                  handleSetFormData("question_text", e)
+                }}
+                ref={editorRef}
+              />
+            ) : (
+              <UploadAudio
+                setUrl={(url: string) => {
+                  handleSetFormData("audio_url", url)
+                }}
+              />
+            )}
+            <label htmlFor="">Miêu tả</label>
+            {/* text area antd */}
+            <TextArea
+              onChange={(e) => {
+                handleSetFormData("description", e.target.value)
+              }}
+              rows={4}
+            />
+          </div>
+
           <div className="flex items-end justify-end">
             <Button
               onClick={() => {
@@ -177,19 +237,20 @@ const ModalForm: FC<{
   )
 }
 
-const Modaltest: FC<ModaltestProps> = ({
+const ModalTest: FC<ModaltestProps> = ({
   button,
   title,
   type,
   data,
   modalProps,
   lesson_id,
+  type_category,
   refresh,
 }) => {
   return (
     <ModalCView
       modalProps={{
-        width: 400,
+        width: 600,
         ...modalProps,
       }}
       button={button}
@@ -201,10 +262,11 @@ const Modaltest: FC<ModaltestProps> = ({
           action={action}
           type={type}
           lesson_id={lesson_id}
+          type_category={type_category}
         />
       )}
     />
   )
 }
 
-export default Modaltest
+export default ModalTest

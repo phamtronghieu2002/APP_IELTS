@@ -46,15 +46,10 @@ const QuestionSchema = new mongoose.Schema(
             require: false,
             default: [],
         },
-        test_id: {
-            type: String,
-            require: true,
-            ref: 'Tests',
-        },
         total_question: {
             type: Number,
             required: false,
-            default: 1,
+            default: 0,
         }
     },
     { timestamps: true },

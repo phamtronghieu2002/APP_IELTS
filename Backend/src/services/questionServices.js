@@ -1,34 +1,84 @@
 
 import questionModel from '../models/QuestionsModel.js';
+import lessonModel from '../models/LessonModel.js';
 
 const addQuestion = async (data) => {
-    const test_id = data?.test_id;
-    const isExist = await questionModel.findOne({ test_id: test_id });
-    let is_fill_in_blank
+    const question_id = data?.question_id;
+    const lesson_id = data?.lesson_id;
+    
+    // Tìm document với question_id
+    const existingQuestionDoc = await questionModel.findOne({ _id: question_id || "" });
+    
+    let is_fill_in_blank = false;
     let count_question_fill_in_blank = 0;
-    if (isExist) {
 
-        const question = data?.questions;
-        is_fill_in_blank = question?.question_type == "fill_in_blank";
-
+    if (existingQuestionDoc) {
+        const newQuestion = data?.questions;
+        is_fill_in_blank = newQuestion?.question_type === "fill_in_blank";
+        
         if (is_fill_in_blank) {
-            count_question_fill_in_blank = question?.options?.length;
+            count_question_fill_in_blank = newQuestion?.options?.length;
         }
 
-        const result = await questionModel.findOneAndUpdate({ test_id: test_id }, { $push: { questions: question }, $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : 1 } }, { new: true });
+        // Kiểm tra xem câu hỏi với `question_id` đã tồn tại trong mảng `questions` chưa
+        const existingQuestionIndex = existingQuestionDoc.questions.findIndex(
+            (q) => q.question_id === newQuestion.question_id
+        );
+
+        let updatedQuestions;
+
+        if (existingQuestionIndex !== -1) {
+            // Nếu đã tồn tại, cập nhật câu hỏi
+            updatedQuestions = existingQuestionDoc.questions.map((q, index) =>
+                index === existingQuestionIndex ? newQuestion : q
+            );
+        } else {
+            // Nếu chưa tồn tại, push câu hỏi mới vào mảng `questions`
+            updatedQuestions = [...existingQuestionDoc.questions, newQuestion];
+        }
+
+        // Cập nhật document với mảng `questions` mới và tăng số lượng câu hỏi
+        const result = await questionModel.findOneAndUpdate(
+            { _id: question_id },
+            { 
+                questions: updatedQuestions, 
+                $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : existingQuestionIndex !== -1 ? 0 : 1 } 
+            },
+            { new: true }
+        );
+
+        // Cập nhật `total_question` trong bảng `lessonModel`
+        const lesson = await lessonModel.findById(lesson_id)
+            .populate({
+                path: 'tests',
+                populate: { path: 'questions' }
+            })
+            .exec();
+
+        let total_question = 0;
+        lesson.tests.forEach(test => {
+            total_question += test.questions[0]?.total_question || 0;
+        });
+
+        await lessonModel.findByIdAndUpdate(lesson_id, { total_question }, { new: true });
+
         return {
             data: result,
-            message: "question created successfully",
+            message: "Question updated successfully",
             errCode: 0,
         };
 
     }
-    const newquestion = new questionModel({
-        ...data, total_question: is_fill_in_blank ? count_question_fill_in_blank : 1
+
+    // Nếu không tìm thấy document, tạo câu hỏi mới
+    const newQuestion = new questionModel({
+        ...data,
+        total_question: is_fill_in_blank ? count_question_fill_in_blank : 1
     });
+
     return {
-        data: await newquestion.save(),
-        message: "question created successfully",
+        data: await newQuestion.save(),
+        message: "Question created successfully",
         errCode: 0,
     };
 };
@@ -102,9 +152,17 @@ const deleteQuestion = async (test_id, questionId) => {
     }
 };
 
+const getQuestionById = async (id) => {
+    return {
+        data: await questionModel.findById(id),
+        message: "question fetched successfully",
+        errCode: 0,
+    };
+}
 
 module.exports = {
     addQuestion, getAllQuestions,
     updateQuestionByTestId,
-    deleteQuestion
+    deleteQuestion,
+    getQuestionById
 }

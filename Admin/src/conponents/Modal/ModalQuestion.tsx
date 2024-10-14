@@ -20,6 +20,25 @@ interface ModalquestionProps {
   category_id?: string
 }
 
+export const question_type_models = [
+  {
+    title: "Trắc nghiệm",
+    desc: "Cho phép tạo câu hỏi trắc nghiệm có nhiều câu trả lời và chỉ được chọn 1 đáp án đúng",
+    type: _questionType?.choice,
+    icon: "FaListCheck",
+    template:
+      "https://res.cloudinary.com/dzpj1y0ww/image/upload/v1728720056/ielts/4a374bae-fbbd-4389-a29f-f01c77d47189.png",
+  },
+  {
+    title: "Tự luận",
+    desc: "Cho phép tạo câu hỏi yêu cầu trả lời chi tiết bằng văn bản",
+    type: _questionType?.fill_in_blanks,
+    icon: "MdOutlineTextRotationNone",
+    template:
+      "https://res.cloudinary.com/dzpj1y0ww/image/upload/v1728720120/ielts/a3534689-7bc0-4292-8462-ae05ec8ff55f.png",
+  },
+]
+
 const ModalForm: FC<{
   action: any
   type: "add" | "update" | "delete"
@@ -32,43 +51,29 @@ const ModalForm: FC<{
   const handleSelectTypeQuestion = (data: any) => {
     setTypeQuestion(data)
   }
-  const question_type_models = [
-    {
-      title: "Trắc nghiệm",
-      desc: "Cho phép tạo câu hỏi trắc nghiệm có nhiều câu trả lời và chỉ được chọn 1 đáp án đúng",
-      id: _questionType?.choice,
-      icon: "FaListCheck",
-      template:
-        "https://res.cloudinary.com/dzpj1y0ww/image/upload/v1728720056/ielts/4a374bae-fbbd-4389-a29f-f01c77d47189.png",
-    },
-    {
-      title: "Tự luận",
-      desc: "Cho phép tạo câu hỏi yêu cầu trả lời chi tiết bằng văn bản",
-      id: _questionType?.fill_in_blanks,
-      icon: "MdOutlineTextRotationNone",
-      template:
-        "https://res.cloudinary.com/dzpj1y0ww/image/upload/v1728720120/ielts/a3534689-7bc0-4292-8462-ae05ec8ff55f.png",
-    },
-  ]
+
+  const handleConfirm = () => {
+    const question_type = typeQuestion?.type
+    dispath({
+      type: "SET_QUESTION_TYPE",
+      payload: question_type,
+    })
+  }
 
   useEffect(() => {
     setTypeQuestion(question_type_models[0])
   }, [])
   return (
-    <div className="wrapper flex min-h-[300px]">
+    <div className="wrapper flex min-h-[570px]">
       <div className="wp_questionType w-[50%] pr-3">
         {question_type_models.map((item, index) => {
-          const active = typeQuestion?.id === item.id ? "bg-green-100" : ""
+          const active = typeQuestion?.type === item.type ? "bg-green-100" : ""
           return (
             <div
               key={index}
               className={`font-medium text-[16px] flex items-center justify-start p-3 gap-3 hover:bg-gray-100 cursor-pointer ${active}`}
               onClick={() => {
                 handleSelectTypeQuestion(item)
-                dispath({
-                  type: "SET_QUESTION_TYPE",
-                  payload: item,
-                })
               }}
             >
               <IconC name={item.icon} size={20} />
@@ -76,7 +81,17 @@ const ModalForm: FC<{
             </div>
           )
         })}
-        <Button type="primary" className="w-full p-5 mt-5">
+        <Button
+          onClick={() => {
+            dispath?.({
+              type: "SET_QUESTION_SELECT",
+              payload: null,
+            })
+            action?.closeModal()
+          }}
+          type="primary"
+          className="w-full p-5 mt-5"
+        >
           Xác nhận
         </Button>
       </div>
