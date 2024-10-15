@@ -79,13 +79,12 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
         text: "",
       }
     })
-  }, [data, initNumber])
+  }, [data])
 
   const [listChoice, setListChoice] =
     useState<optionProps[]>(initQuestionChoice)
 
   const { drawStore, dispath } = useContext<any>(context)
-
 
   useEffect(() => {
     if (!drawStore?.sub_question_select) {
@@ -93,7 +92,14 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
     }
   }, [initQuestionChoice])
 
-
+  useEffect(() => {
+    console.log("====================================")
+    console.log("data >> ", data)
+    console.log("====================================")
+    if (data) {
+      setListChoice(data)
+    }
+  }, [data])
   const handleCheck = (item: optionProps) => {
     const newList = listChoice.map((choice: optionProps) => {
       return {

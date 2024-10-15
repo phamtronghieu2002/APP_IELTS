@@ -5,17 +5,17 @@ import lessonModel from '../models/LessonModel.js';
 const addQuestion = async (data) => {
     const question_id = data?.question_id;
     const lesson_id = data?.lesson_id;
-    
+
     // Tìm document với question_id
     const existingQuestionDoc = await questionModel.findOne({ _id: question_id || "" });
-    
+
     let is_fill_in_blank = false;
     let count_question_fill_in_blank = 0;
 
     if (existingQuestionDoc) {
         const newQuestion = data?.questions;
         is_fill_in_blank = newQuestion?.question_type === "fill_in_blank";
-        
+
         if (is_fill_in_blank) {
             count_question_fill_in_blank = newQuestion?.options?.length;
         }
@@ -40,9 +40,9 @@ const addQuestion = async (data) => {
         // Cập nhật document với mảng `questions` mới và tăng số lượng câu hỏi
         const result = await questionModel.findOneAndUpdate(
             { _id: question_id },
-            { 
-                questions: updatedQuestions, 
-                $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : existingQuestionIndex !== -1 ? 0 : 1 } 
+            {
+                questions: updatedQuestions,
+                $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : existingQuestionIndex !== -1 ? 0 : 1 }
             },
             { new: true }
         );
@@ -91,32 +91,14 @@ const getAllQuestions = async () => {
     };
 }
 
-const updateQuestionByTestId = async (test_id, data) => {
-    const {
-        question_text,
-        description,
-        video_url,
-        audio_url,
-        model_answer,
-        correct_answer,
-        question // Đây là object chứa thông tin câu hỏi cập nhật
-    } = data;
+const updateQuestionById = async (question_id, data) => {
+
 
     try {
         // Tìm document dựa vào test_id và questionId, sau đó cập nhật
         const result = await questionModel.updateOne(
-            { test_id, "questions.question_id": question.question_id }, // Điều kiện tìm document theo test_id và questionId
-            {
-                $set: {
-                    "questions.$": question,          // Cập nhật câu hỏi trong mảng
-                    "question_text": question_text,    // Cập nhật nội dung bài test
-                    "description": description,        // Cập nhật mô tả
-                    "video_url": video_url,            // Cập nhật video URL
-                    "audio_url": audio_url,            // Cập nhật audio URL
-                    "model_answer": model_answer,      // Cập nhật model answer
-                    "correct_answer": correct_answer   // Cập nhật câu trả lời đúng
-                }
-            },
+            { _id: question_id, }, data
+            ,
             { new: true } // Tùy chọn để trả về document đã cập nhật
         );
 
@@ -162,7 +144,7 @@ const getQuestionById = async (id) => {
 
 module.exports = {
     addQuestion, getAllQuestions,
-    updateQuestionByTestId,
+    updateQuestionById,
     deleteQuestion,
     getQuestionById
 }

@@ -19,11 +19,11 @@ const handleGetQuestions = async (req, res, next) => {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
     }
 }
-const handleUpdateQuestionByTestId = async (req, res, next) => {
+const handleupdateQuestionById = async (req, res, next) => {
     try {
         const { id } = req.params;
         const data = req.body;
-        const result = await questionServices?.updateQuestionByTestId(id, data);
+        const result = await questionServices?.updateQuestionById(id, data);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
@@ -52,4 +52,4 @@ const handleGetQuestionById = async (req, res, next) => {
 }
 
 
-module.exports = { handleAddQuestion, handleGetQuestions, handleUpdateQuestionByTestId, handleDeleteQuestionById, handleGetQuestionById }
+module.exports = { handleAddQuestion, handleGetQuestions, handleupdateQuestionById, handleDeleteQuestionById, handleGetQuestionById }

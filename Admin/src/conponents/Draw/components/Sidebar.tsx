@@ -29,6 +29,11 @@ const Sidebar: FC<SidebarProps> = ({
   const [testSelected, setTestSelected] = useState<any>(null)
   const { drawStore, dispath } = useContext<any>(context)
   const [loading, setLoading] = useState<boolean>(false)
+
+    console.log('====================================');
+    console.log("testSelected", testSelected);
+    console.log('====================================');
+
   const fetchQuestions = async (test_id: string, isFirst: boolean) => {
     setLoading(true)
     const res = await getTestById(test_id)
@@ -73,8 +78,7 @@ const Sidebar: FC<SidebarProps> = ({
 
   useEffect(() => {
     if (testSelected) {
-      
-      fetchQuestions(testSelected._id, drawStore?.freshKey==0)
+      fetchQuestions(testSelected._id, drawStore?.freshKey == 0)
     }
   }, [testSelected, drawStore?.freshKey])
 

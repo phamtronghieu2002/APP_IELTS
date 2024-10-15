@@ -9,6 +9,7 @@ import { Button } from "antd"
 import { _app } from "../../../utils/_app"
 import { MaskLoader } from "../../Loader"
 import { api } from "../../../_helper"
+import { createQuestion } from "../../../services/questionServices"
 interface MainContentProps {
   lesson_id?: string
 }
@@ -18,21 +19,21 @@ const MainContent: FC<MainContentProps> = ({ lesson_id }) => {
   const [loading, setLoading] = useState<boolean>(true)
   const question_select = drawStore?.sub_question_select
   const question = drawStore?.question
-  
-  console.log('====================================');
-  console.log("drawStore", drawStore);
-  console.log('====================================');
 
-  console.log('====================================');
-  console.log("question_select?.question_text", question_select?.question_text);
-  console.log('====================================');
+  // console.log("====================================")
+  // console.log("drawStore", drawStore)
+  // console.log("====================================")
+
+  // console.log("====================================")
+  // console.log("question_select?.question_text", question_select?.question_text)
+  // console.log("====================================")
   const [question_text, setQuestionText] = useState<string>("")
   const [explain, setExplain] = useState<string>("")
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
-    }, 700)
+    }, 1000)
   }, [])
 
   const question_type_item = question_type_models.find(
@@ -54,7 +55,9 @@ const MainContent: FC<MainContentProps> = ({ lesson_id }) => {
     try {
       const question_id = question?._id
       const question_type = drawStore?.question_type
-      const sub_question_id = _app?.randomId()
+      const sub_question_id = question_select
+        ? question_select?.question_id
+        : _app?.randomId()
 
       const result = {
         question_id,
@@ -65,16 +68,17 @@ const MainContent: FC<MainContentProps> = ({ lesson_id }) => {
           question_id: sub_question_id,
           question_text,
           options: data,
+          explain,
         },
       }
-
+      await createQuestion(result)
       api?.message?.success("Lưu câu hỏi thành công !!!")
       dispath?.({
         type: "REFRESH",
       })
       dispath?.({
         type: "SET_QUESTION_SELECT",
-        payload: result,
+        payload: result?.questions,
       })
       if (is_save_new) {
         dispath?.({
@@ -129,6 +133,7 @@ const MainContent: FC<MainContentProps> = ({ lesson_id }) => {
               Giải thích đáp án đúng
             </label>
             <TinyMCEEditor
+              initialValue={question_select?.explain}
               onChange={setExplain}
               height={200}
               placeholder="Nhập nội dung giải thích"
