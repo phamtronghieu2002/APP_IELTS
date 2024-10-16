@@ -5,6 +5,7 @@ const WHITELIST_DOMAINS = [
   "https://yourdomain.com",   
   "http://127.0.0.1:5500",
   "http://192.168.85.187:8081",
+  "http://localhost:5111"
 
   
 ];

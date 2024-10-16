@@ -73,7 +73,9 @@ export const FormC = forwardRef<FormInstance<any>, IProps>(
     }
 
     const ITEMS = _array.chunkArray(fields, chunk)
-
+    console.log('====================================');
+    console.log("ITEMS", ITEMS);
+    console.log('====================================');
     return (
       <div className="planform __app_form">
         <Form
@@ -92,6 +94,8 @@ export const FormC = forwardRef<FormInstance<any>, IProps>(
             return (
               <Row className="gap-x-3" key={`row-${index}`}>
                 {row?.map((item, index) => {
+                  console.log("item", item);
+                  
                   if (item == "hole") {
                     return <Col flex={`1 1 ${chunkWidth}px`} key={index}></Col>
                   }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types'
 import {
   View,
@@ -13,13 +13,52 @@ import {
   Pressable,
 } from 'react-native';
 import MainButton from '../Button/MainButton';
+import { addAnwserToTestResult } from '../../services/testResultServices';
+import { _testTypes } from '../../utils/constant';
 
 const AnswerInputArea = ({
-  data,
+  data,...props
 }) => {
+  const {test_id, is_doing} = props;
+
+
   console.log('====================================');
-  console.log("data >>>", data);
+  console.log("datalmao >>>>>>>>>>>>", data);
   console.log('====================================');
+
+  const [userAnswer, setUserAnswer] = React.useState([]);
+  const [isClickCheck, setIsClickCheck] = useState(false);
+
+  const checkAnswer = async () => {
+    console.log("ddddddddddddddddddddddddddddata >>>", data);
+    console.log("userAnswer >>>", userAnswer);
+    let testResult = new Map();
+    data.map((item, index) => {
+      if (item.is_correct === userAnswer[index]) {
+        testResult.set(item.question_id, true); // Use set to add key-value pairs
+      } else {
+        testResult.set(item.question_id, false); // Use set to add key-value pairs
+      }
+    });
+    const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct }));
+  
+    testResultArray.map(async (item) => {
+      try {
+        await addAnwserToTestResult(test_id, _testTypes?.new, {
+          anwser: item
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    );
+    console.log("testResult >>>", testResultArray);
+    setIsClickCheck(true);
+  };
+  
+  
+
+
   return (
     <View className="">
       <Text className="text-center mb-3  font-bold">
@@ -38,6 +77,13 @@ const AnswerInputArea = ({
               key={index}
               className="text-left flex-1  pl-4"
               placeholder="Type your answer"
+              onChangeText={(text) => {
+                let temp = [...userAnswer];
+                temp[index] = text;
+                setUserAnswer(temp);
+              }
+              }
+              editable={!isClickCheck}
             />
           </View>
         );
@@ -46,6 +92,8 @@ const AnswerInputArea = ({
       <MainButton
         title={"Check"}
         roundedfull
+        onPress={checkAnswer}
+        disabled={isClickCheck}
       />
     </View>
   );

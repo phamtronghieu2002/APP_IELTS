@@ -35,7 +35,6 @@ import {
   PiPrinterDuotone,
 } from "react-icons/pi"
 import { GroupCheckboxC } from "../CheckBoxC"
-import { TablePrintModal } from "../modals/TablePrintModal"
 
 interface ITableExportExcel {
   fileName: string
@@ -256,39 +255,6 @@ export const TableC: React.FC<IProps> = ({
   const exportExcelBtn = (style?: React.CSSProperties) =>
     exportExcel ? (
       <>
-        <TablePrintModal
-          title={
-            <div className="flex flex-col justify-center items-center">
-              {exportExcel?.title?.map?.((title, index) => {
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      fontWeight: index ? 400 : 600,
-                    }}
-                  >
-                    {title}
-                  </div>
-                )
-              })}
-            </div>
-          }
-          tableProps={{
-            columns: filterColums,
-            dataSource: props?.dataSource,
-          }}
-          button={
-            <Button
-              style={style || {}}
-              size="small"
-              type="default"
-              icon={<PrinterOutlined />}
-            >
-              In
-            </Button>
-          }
-        />
-
         <ExportExcel
           title={exportExcel?.title}
           fileName={exportExcel.fileName}
@@ -375,12 +341,8 @@ export const TableC: React.FC<IProps> = ({
       ) : null}
       <Table
         pagination={{
-          defaultPageSize: 50,
-          showTotal(total, range) {
-            if (!showTotal) return undefined
-
-            return `Tổng cộng ${total} dữ diệu`
-          },
+          pageSize: 8,
+          total: props?.dataSource?.length,
         }}
         scroll={
           scroll?.useScroll

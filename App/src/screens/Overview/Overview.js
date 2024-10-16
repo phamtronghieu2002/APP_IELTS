@@ -11,8 +11,24 @@ import CircularProgress from 'react-native-circular-progress-indicator';
 import { Pressable } from 'react-native';
 import IconO from 'react-native-vector-icons/Octicons';
 import { Icon } from 'react-native-elements';
+import { addAnwserToTestResult } from '../../services/testResultServices';
+import { _testTypes } from '../../utils/constant';
 const Overview = ({ navigation, route }) => {
     const name_test = route?.params?.name_test;
+    const id_test = route?.params?.test_id;
+
+    const practiceNow = async () => {
+        try {
+            await addAnwserToTestResult(id_test, _testTypes?.renew, {
+              anwser: {}
+            });
+          } catch (error) {
+            console.error(error);
+          }
+    };
+
+
+
     return (
         <SafeAreaView>
             <HeaderScreen
@@ -51,7 +67,12 @@ const Overview = ({ navigation, route }) => {
                     />
                     <View className="mt-10">
 
-                        <Pressable className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => { }}>
+                        <Pressable
+
+                            className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => {
+                                practiceNow();
+                                navigation.navigate('Reading', { nameTest: name_test, test_id: id_test });
+                            }}>
                             <Text className="text-white font-bold text-lg">
                                 Practice now
                             </Text>
@@ -128,7 +149,10 @@ const Overview = ({ navigation, route }) => {
                                 <Text className="text-red-600 font-bold text-lg">
                                     2
                                 </Text>
-                                <Pressable className="" onPress={() => { }}>
+                                <Pressable className="" onPress={() => {
+
+
+                                }}>
                                     <Text className="text-red-400 text-lg">
                                         Practice now
                                     </Text>
