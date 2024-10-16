@@ -72,9 +72,17 @@ import { FaUsers } from "react-icons/fa"
 import { BsFileEarmarkRuledFill } from "react-icons/bs"
 import { SiFacebookgaming } from "react-icons/si"
 import { FaListCheck } from "react-icons/fa6"
+import { FaHome } from "react-icons/fa"
 
 import { MdOutlineTextRotationNone } from "react-icons/md"
+import { MdOutlinePhoneIphone } from "react-icons/md";
+import { FiSmartphone } from "react-icons/fi";
+import { CiCirclePlus } from "react-icons/ci";
 const IconLib = {
+  CiCirclePlus,
+  FiSmartphone,
+  MdOutlinePhoneIphone,
+  FaHome,
   FaListCheck,
   MdOutlineTextRotationNone,
   FaSortAlphaUp,

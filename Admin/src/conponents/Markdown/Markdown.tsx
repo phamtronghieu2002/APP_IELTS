@@ -26,7 +26,9 @@ const TinyMCEEditor = forwardRef<any, TinyMCEEditorProps>(
 
           onChange?.(e.target.getContent(), option_id || "")
         }}
-        apiKey="s4gsty9vdplnn3idc917nk23oln9tma3lpnetfwnpxmw4vss"
+        tinymceScriptSrc={'/tinymce/tinymce.min.js'}
+
+        // apiKey="s4gsty9vdplnn3idc917nk23oln9tma3lpnetfwnpxmw4vss"
         onInit={(_evt, editor) => {
           if (ref) {
             ;(ref as any).current = editor // Assign the editor instance to the ref

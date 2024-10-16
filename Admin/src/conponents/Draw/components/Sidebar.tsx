@@ -8,8 +8,8 @@ import ModalQuestion from "../../Modal/ModalQuestion"
 import { getLessonById } from "../../../services/lessonService"
 import "./Sidebar.scss"
 import { context } from "../provider/DrawProvider"
+import { context as contextCategory } from "..//..//..//pages//Manager//ManagerCategories//Provider//ManagerCategoryProvider"
 import { getTestById } from "../../../services/testService"
-import { d } from "vitest/dist/types-e3c9754d.js"
 import { use } from "i18next"
 import { MaskLoader } from "../../Loader"
 
@@ -28,17 +28,17 @@ const Sidebar: FC<SidebarProps> = ({
   const [tests, setTests] = useState<any[]>([])
   const [testSelected, setTestSelected] = useState<any>(null)
   const { drawStore, dispath } = useContext<any>(context)
-  const [loading, setLoading] = useState<boolean>(false)
+  const { storeCategories, dispath: dispathCategory } =
+    useContext<any>(contextCategory)
 
-    console.log('====================================');
-    console.log("testSelected", testSelected);
-    console.log('====================================');
+  const [loadingQuestion, setLoadingQuestion] = useState<boolean>(false)
+  const [loadingTest, setLoadingTest] = useState<boolean>(false)
 
   const fetchQuestions = async (test_id: string, isFirst: boolean) => {
-    setLoading(true)
+    setLoadingQuestion(true)
     const res = await getTestById(test_id)
     const questions = res.data?.questions?.[0]?.questions || []
-    setLoading(false)
+    setLoadingQuestion(false)
     setQuestions(questions)
 
     if (isFirst) {
@@ -51,8 +51,10 @@ const Sidebar: FC<SidebarProps> = ({
   }
 
   const fetchTest = async () => {
+    setLoadingTest(true)
     const res = await getLessonById(lesson_id)
     const tests = res.data?.tests
+    setLoadingTest(false)
     setTests(() => {
       return tests?.map((test: any) => ({
         value: test?._id,
@@ -73,6 +75,10 @@ const Sidebar: FC<SidebarProps> = ({
 
       dispath({ type: "SET_TEST_ID", payload: test_id })
       setTestSelected(tests[0]) // Chọn test đầu tiên làm mặc định
+    } else if (tests?.length > 0 && testSelected) {
+      const test = tests.find((item) => item._id === testSelected._id)
+
+      setTestSelected(test)
     }
   }, [tests])
 
@@ -98,6 +104,7 @@ const Sidebar: FC<SidebarProps> = ({
               refresh={(test: any) => {
                 fetchTest()
                 setTestSelected(test)
+                dispathCategory({ type: "SET_REFRESH" })
               }}
               lesson_id={lesson_id}
               button={
@@ -114,13 +121,15 @@ const Sidebar: FC<SidebarProps> = ({
           </div>
           <div className="body mt-3">
             <Select
+              isLoading={loadingTest}
+              required
               options={tests}
               value={testSelected} // Sử dụng value thay vì defaultValue
               onChange={onChange}
               className="text-base"
               classNamePrefix="react-select"
               placeholder="Tìm kiếm bài test..."
-              isSearchable // Bật tính năng tìm kiếm
+              isSearchable
             />
             <div className="actions flex gap-1 mt-3">
               <ModalTest
@@ -184,6 +193,8 @@ const Sidebar: FC<SidebarProps> = ({
                 type="add"
               />
               <ModalQuestion
+                 width={800}
+                 height={300}
                 button={
                   <Tooltip title="Xóa câu hỏi">
                     <Button
@@ -195,7 +206,7 @@ const Sidebar: FC<SidebarProps> = ({
                     </Button>
                   </Tooltip>
                 }
-                title="Sắp xếp câu hỏi"
+                title="Xóa câu hỏi"
                 type="delete"
               />
               <ModalQuestion
@@ -212,7 +223,7 @@ const Sidebar: FC<SidebarProps> = ({
               />
             </div>
             <div className="questions flex gap-3 flex-wrap mt-10 ">
-              {loading ? (
+              {loadingQuestion ? (
                 <MaskLoader />
               ) : (
                 questions.map((question, index) => {
@@ -231,6 +242,10 @@ const Sidebar: FC<SidebarProps> = ({
                         dispath({
                           type: "SET_QUESTION_TYPE",
                           payload: question?.question_type,
+                        })
+                        dispath({
+                          type: "SET_TYPE_ACTION",
+                          payload: "update",
                         })
                       }}
                       key={index}

@@ -18,6 +18,8 @@ interface ModalquestionProps {
   data?: any
   modalProps?: any
   category_id?: string
+  width?: number
+  height?: number
 }
 
 export const question_type_models = [
@@ -65,44 +67,68 @@ const ModalForm: FC<{
   }, [])
   return (
     <div className="wrapper flex min-h-[570px]">
-      <div className="wp_questionType w-[50%] pr-3">
-        {question_type_models.map((item, index) => {
-          const active = typeQuestion?.type === item.type ? "bg-green-100" : ""
-          return (
-            <div
-              key={index}
-              className={`font-medium text-[16px] flex items-center justify-start p-3 gap-3 hover:bg-gray-100 cursor-pointer ${active}`}
-              onClick={() => {
-                handleSelectTypeQuestion(item)
-              }}
+      {type === "delete" ? (
+        <div className="flex items-center gap-7">
+          <p>Bạn có chắc chắn muốn xóa câu hỏi này không?</p>
+          <div className="flex gap-2">
+            <Button
+              variant="solid"
+              color="danger"
+              icon={<CloseOutlined />}
+              onClick={action?.onCancel}
             >
-              <IconC name={item.icon} size={20} />
-              <div className="title">{item.title}</div>
-            </div>
-          )
-        })}
-        <Button
-          onClick={() => {
-            dispath?.({
-              type: "SET_QUESTION_SELECT",
-              payload: null,
-            })
-            action?.closeModal()
-          }}
-          type="primary"
-          className="w-full p-5 mt-5"
-        >
-          Xác nhận
-        </Button>
-      </div>
-      <div className="wp_content flex-1 flex flex-col gap-3">
-        <h3 className="font-bold text-base"> {typeQuestion?.title}</h3>
-        <p>{typeQuestion?.desc}</p>
-        <h3 className="font-bold text-base">Câu hỏi mẫu</h3>
-        <div className="border p-3 min-h-[80px] flex items-center justify-center">
-          <img width={300} height={300} src={typeQuestion?.template} />
+              Hủy
+            </Button>
+            <Button onClick={() => {}}>Xác nhận</Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="wp_questionType w-[50%] pr-3">
+            {question_type_models.map((item, index) => {
+              const active =
+                typeQuestion?.type === item.type ? "bg-green-100" : ""
+              return (
+                <div
+                  key={index}
+                  className={`font-medium text-[16px] flex items-center justify-start p-3 gap-3 hover:bg-gray-100 cursor-pointer ${active}`}
+                  onClick={() => {
+                    handleSelectTypeQuestion(item)
+                  }}
+                >
+                  <IconC name={item.icon} size={20} />
+                  <div className="title">{item.title}</div>
+                </div>
+              )
+            })}
+            <Button
+              onClick={() => {
+                dispath?.({
+                  type: "SET_QUESTION_SELECT",
+                  payload: null,
+                })
+                dispath({
+                  type: "SET_TYPE_ACTION",
+                  payload: "add",
+                })
+                action?.closeModal()
+              }}
+              type="primary"
+              className="w-full p-5 mt-5"
+            >
+              Xác nhận
+            </Button>
+          </div>
+          <div className="wp_content flex-1 flex flex-col gap-3">
+            <h3 className="font-bold text-base"> {typeQuestion?.title}</h3>
+            <p>{typeQuestion?.desc}</p>
+            <h3 className="font-bold text-base">Câu hỏi mẫu</h3>
+            <div className="border p-3 min-h-[80px] flex items-center justify-center">
+              <img width={300} height={300} src={typeQuestion?.template} />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -114,6 +140,9 @@ const ModalQuestion: FC<ModalquestionProps> = ({
   data,
   modalProps,
   category_id,
+  width=800,
+  height=600
+
 }) => {
   return (
     <ModalCView

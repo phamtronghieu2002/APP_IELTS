@@ -1,6 +1,7 @@
 import type { TabsProps } from "antd"
 import { FC } from "react"
 import Lesson from "./components/Lesson"
+import Tips from "./components/Tips"
 
 interface TestProps {}
 
@@ -9,7 +10,7 @@ export const items: (category_id: string,type_category:string) => TabsProps["ite
     key: "1",
     label: "Bài học",
     children: <Lesson category_id={category_id} type_category={type_category} />,
-  },
+  }, 
   {
     key: "2",
     label: "Từ vựng",
@@ -18,7 +19,7 @@ export const items: (category_id: string,type_category:string) => TabsProps["ite
   {
     key: "3",
     label: "Mẹo",
-    children: "Content of Tab Pane 3",
+    children: <Tips category_id={category_id} />,
   },
   {
     key: "4",

@@ -45,7 +45,12 @@ const getLessonsByCateId = async (cate_id, keyword) => {
     };
 };
 const getLessonById = async (id) => {
-    const lesson = await lessonModel.findById(id).populate('cate_id').populate('tests').exec();
+
+
+    const lesson = await lessonModel.findById(id).populate('cate_id').populate({
+        path: 'tests',
+        populate: { path: 'questions' }
+    }).exec();
     return {
         data: lesson,
         message: "Get Lesson successfully",

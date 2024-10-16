@@ -51,7 +51,7 @@ const columns = [
                 type="link"
                 className="bg-blue-500 text-white p-2 rounded"
               >
-                <IconC name={`FaEdit`} />
+                <IconC name={`FaEdit`}  size={20}/>
               </Button>
             }
             type="update"
@@ -64,7 +64,7 @@ const columns = [
             title={`Xóa bài học ${record?.name_lesson}`}
             button={
               <Button className=" border-0 text-white p-2  !text-rose-700">
-                <IconC name={`LiaTrashAlt`} />
+                <IconC name={`LiaTrashAlt`}   size={20}/>
               </Button>
             }
             type="delete"
