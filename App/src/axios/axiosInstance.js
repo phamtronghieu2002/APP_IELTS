@@ -4,7 +4,7 @@ import { getToken } from "../utils/token";
 axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-  baseURL: `http://192.168.43.120:8080/api/v1`,
+  baseURL: `http://192.168.0.130:8080/api/v1`,
 });
 console.log(`${env.API_URL}/api/v1`);
 
