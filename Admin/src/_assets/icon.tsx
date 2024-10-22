@@ -78,7 +78,15 @@ import { MdOutlineTextRotationNone } from "react-icons/md"
 import { MdOutlinePhoneIphone } from "react-icons/md";
 import { FiSmartphone } from "react-icons/fi";
 import { CiCirclePlus } from "react-icons/ci";
+import { FaRegFaceSmileBeam } from "react-icons/fa6";
+import { MdOutlineTextIncrease } from "react-icons/md";
+import { AiOutlineSound } from "react-icons/ai";
+import { BsQuestionSquareFill } from "react-icons/bs";
 const IconLib = {
+  BsQuestionSquareFill,
+  AiOutlineSound,
+  MdOutlineTextIncrease,
+  FaRegFaceSmileBeam,
   CiCirclePlus,
   FiSmartphone,
   MdOutlinePhoneIphone,

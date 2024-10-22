@@ -12,6 +12,10 @@ import { context as contextCategory } from "..//..//..//pages//Manager//ManagerC
 import { getTestById } from "../../../services/testService"
 import { use } from "i18next"
 import { MaskLoader } from "../../Loader"
+import { TeamTreeSelect } from "../../picker/TeamPicker"
+import ModalVoc from "../../Modal/ModalVoc"
+import ModalQuestionVoc from "../../Modal/ModalQuestionVoc"
+import { _log } from "../../../utils/_log"
 
 interface SidebarProps {
   lesson_id: string
@@ -40,13 +44,13 @@ const Sidebar: FC<SidebarProps> = ({
     const questions = res.data?.questions?.[0]?.questions || []
     setLoadingQuestion(false)
     setQuestions(questions)
+    dispath({
+      type: "SET_QUESTION",
+      payload: res.data?.questions?.[0],
+    })
 
     if (isFirst) {
       dispath({ type: "SET_QUESTION_SELECT", payload: questions?.[0] })
-      dispath({
-        type: "SET_QUESTION",
-        payload: res.data?.questions?.[0],
-      })
     }
   }
 
@@ -63,6 +67,7 @@ const Sidebar: FC<SidebarProps> = ({
       }))
     })
   }
+
 
   useEffect(() => {
     fetchTest()
@@ -131,48 +136,53 @@ const Sidebar: FC<SidebarProps> = ({
               placeholder="Tìm kiếm bài test..."
               isSearchable
             />
-            <div className="actions flex gap-1 mt-3">
-              <ModalTest
-                type_category={type_category}
-                refresh={fetchTest}
-                lesson_id={lesson_id}
-                title={`Sửa bài test`}
-                button={
-                  <Tooltip title="Sửa bài test">
-                    <Button
-                      size="large"
-                      type="link"
-                      className="bg-blue-500 text-white p-2 rounded"
-                    >
-                      <IconC name={`FaEdit`} size={23} />
-                    </Button>
-                  </Tooltip>
-                }
-                type="update"
-                data={testSelected}
-              />
-              <ModalTest
-                type_category={type_category}
-                refresh={fetchTest}
-                lesson_id={lesson_id}
-                modalProps={{
-                  width: 550,
-                }}
-                title={`Xóa bài test`}
-                button={
-                  <Tooltip title="Xóa bài test">
-                    <Button
-                      size="large"
-                      className="border-0 text-white p-2 !text-rose-700"
-                    >
-                      <IconC name={`LiaTrashAlt`} size={23} />
-                    </Button>
-                  </Tooltip>
-                }
-                type="delete"
-                data={testSelected}
-              />
-            </div>
+            {testSelected && (
+              <div className="actions flex gap-1 mt-3">
+                <ModalTest
+                  type_category={type_category}
+                  refresh={fetchTest}
+                  lesson_id={lesson_id}
+                  title={`Sửa bài test`}
+                  button={
+                    <Tooltip title="Sửa bài test">
+                      <Button
+                        size="large"
+                        type="link"
+                        className="bg-blue-500 text-white p-2 rounded"
+                      >
+                        <IconC name={`FaEdit`} size={23} />
+                      </Button>
+                    </Tooltip>
+                  }
+                  type="update"
+                  data={testSelected}
+                />
+                <ModalTest
+                  type_category={type_category}
+                  refresh={() => {
+                    fetchTest()
+                    setTestSelected(null)
+                  }}
+                  lesson_id={lesson_id}
+                  modalProps={{
+                    width: 550,
+                  }}
+                  title={`Xóa bài test`}
+                  button={
+                    <Tooltip title="Xóa bài test">
+                      <Button
+                        size="large"
+                        className="border-0 text-white p-2 !text-rose-700"
+                      >
+                        <IconC name={`LiaTrashAlt`} size={23} />
+                      </Button>
+                    </Tooltip>
+                  }
+                  type="delete"
+                  data={testSelected}
+                />
+              </div>
+            )}
           </div>
         </div>
         <div className="item mt-3">
@@ -180,48 +190,62 @@ const Sidebar: FC<SidebarProps> = ({
             <h3 className="font-bold">Danh mục câu hỏi</h3>
           </div>
           <div className="body mt-3">
-            <div className="actions flex gap-3 flex-wrap">
-              <ModalQuestion
-                button={
-                  <Tooltip title="Thêm câu hỏi">
-                    <Button size="middle" type="primary" className="">
-                      <PlusOutlined /> Chọn loại câu hỏi
-                    </Button>
-                  </Tooltip>
-                }
-                title="Thêm câu hỏi"
-                type="add"
-              />
-              <ModalQuestion
-                 width={800}
-                 height={300}
-                button={
-                  <Tooltip title="Xóa câu hỏi">
-                    <Button
-                      size="middle"
-                      className="!bg-rose-700 font-medium text-lime-50"
-                    >
-                      <IconC name={`FaTrash`} size={15} />
-                      Xóa câu hỏi
-                    </Button>
-                  </Tooltip>
-                }
-                title="Xóa câu hỏi"
-                type="delete"
-              />
-              <ModalQuestion
-                button={
-                  <Tooltip title="Sắp xếp câu hỏi">
-                    <Button type="primary" size="middle">
-                      <IconC name={`FaSortAlphaUp`} size={15} />
-                      Sắp xếp câu hỏi
-                    </Button>
-                  </Tooltip>
-                }
-                title="Sắp xếp câu hỏi"
-                type="add"
-              />
-            </div>
+            {testSelected && (
+              <div className="actions flex gap-3 flex-wrap">
+                {type_category != "Listening" && type_category != "Writing" ? (
+                  <></>
+                ) : (
+                  <ModalQuestion
+                    lesson_id={lesson_id}
+                    button={
+                      <Tooltip title="Thêm câu hỏi">
+                        <Button size="middle" type="primary" className="">
+                          <PlusOutlined /> Chọn loại câu hỏi
+                        </Button>
+                      </Tooltip>
+                    }
+                    title="Thêm câu hỏi"
+                    type="add"
+                  />
+                )}
+                {drawStore?.sub_question_select && (
+                  <ModalQuestion
+                    refresh={() => {
+                      fetchQuestions(testSelected._id, true)
+                    }}
+                    lesson_id={lesson_id}
+                    width={800}
+                    height={300}
+                    button={
+                      <Tooltip title="Xóa câu hỏi">
+                        <Button
+                          size="middle"
+                          className="!bg-rose-700 font-medium text-lime-50"
+                        >
+                          <IconC name={`FaTrash`} size={15} />
+                          Xóa câu hỏi
+                        </Button>
+                      </Tooltip>
+                    }
+                    title="Xóa câu hỏi"
+                    type="delete"
+                  />
+                )}
+                <ModalQuestion
+                  lesson_id={lesson_id}
+                  button={
+                    <Tooltip title="Sắp xếp câu hỏi">
+                      <Button type="primary" size="middle">
+                        <IconC name={`FaSortAlphaUp`} size={15} />
+                        Sắp xếp câu hỏi
+                      </Button>
+                    </Tooltip>
+                  }
+                  title="Sắp xếp câu hỏi"
+                  type="add"
+                />
+              </div>
+            )}
             <div className="questions flex gap-3 flex-wrap mt-10 ">
               {loadingQuestion ? (
                 <MaskLoader />
@@ -232,7 +256,8 @@ const Sidebar: FC<SidebarProps> = ({
                     question?.question_id
                       ? "active"
                       : ""
-                  return (
+
+                  const Componentcontent: any = (
                     <div
                       onClick={() => {
                         dispath({
@@ -249,10 +274,23 @@ const Sidebar: FC<SidebarProps> = ({
                         })
                       }}
                       key={index}
-                      className={`question rounded ${active}  flex items-center justify-center w-[35px] h-[35px] border cursor-pointer`}
+                      className={`question rounded ${active}  flex items-center justify-center w-[40px] h-[40px] border cursor-pointer`}
                     >
                       {index + 1}
                     </div>
+                  )
+
+                  return type_category == "Vocabulary" ? (
+                    <ModalQuestionVoc
+                      key={index}
+                      button={Componentcontent}
+                      type_category={type_category}
+                      lesson_id={lesson_id}
+                      type="add"
+                      title={`Tạo câu hỏi luyện tập từ vựng: ${"12"}`}
+                    />
+                  ) : (
+                    Componentcontent
                   )
                 })
               )}

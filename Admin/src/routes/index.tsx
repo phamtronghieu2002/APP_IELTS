@@ -6,13 +6,16 @@ import { Login } from "../pages/Login"
 import { LoginLayout } from "../layouts/LoginLayout"
 
 import { RootPage } from "../pages/Root"
-import ManagerLesson from "../pages/Manager/ManagerLesson/ManagerLesson"
 import Listening from "../pages/Manager/ManagerCategories/Listening/Listening"
 import Reading from "../pages/Manager/ManagerCategories/Reading/Reading"
 import Policy from "../pages/Manager/ManagerPolicy/Policy"
 import Term from "../pages/Manager/ManagerTerm/Term"
 import Users from "../pages/Manager/ManagerUser/Users"
 import Introduction from "../pages/Manager/Introduction"
+import Speaking from "../pages/Manager/ManagerCategories/Speaking/Speaking"
+import Writing from "../pages/Manager/ManagerCategories/Writing/Writing"
+import Grammar from "../pages/Manager/ManagerCategories/Grammar/Grammar"
+import Vocabulary from "../pages/Manager/ManagerCategories/Vocabulary/Vocabulary"
 
 export interface IRoute {
   path: string
@@ -54,6 +57,26 @@ export const routes: IRoute[] = [
   {
     path: routeConfig?.manager_reading,
     component: Reading,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_speaking,
+    component: Speaking,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_grammar,
+    component: Grammar,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_vocabulary,
+    component: Vocabulary,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_writing,
+    component: Writing,
     layout: MainLayout,
   },
   {

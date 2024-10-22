@@ -1,4 +1,4 @@
-import React from "react"
+import React, { act } from "react"
 import { Question } from "../../Question"
 import { _questionType } from "../../../utils/_constant"
 
@@ -18,6 +18,7 @@ interface stateProps {
   freshKey: number
   question_type?: string
   type_action: "add" | "update"
+  confirm_create_type_question?: object
 }
 const initState: stateProps = {
   test_id: "",
@@ -26,14 +27,13 @@ const initState: stateProps = {
   freshKey: 0,
   type_action: "add",
   question_type: _questionType?.choice,
+  confirm_create_type_question: {},
 }
 
 const DrawProvider: React.FC<DrawProviderProps> = ({ children }) => {
   const [drawStore, setDrawStore] = React.useState<any>(initState)
 
   const dispath = (action: actionType) => {
-    console.log("actions >>>", action)
-
     switch (action.type) {
       case "SET_TEST_ID":
         setDrawStore((prev: any) => ({
@@ -42,6 +42,7 @@ const DrawProvider: React.FC<DrawProviderProps> = ({ children }) => {
         }))
         break
       case "SET_QUESTION_SELECT":
+
         setDrawStore((prev: any) => ({
           ...prev,
           sub_question_select: action?.payload,
@@ -49,10 +50,17 @@ const DrawProvider: React.FC<DrawProviderProps> = ({ children }) => {
         break
       case "SET_QUESTION":
         setDrawStore((prev: any) => {
-
           return {
             ...prev,
             question: action?.payload,
+          }
+        })
+        break
+      case "SET_QUESTION_VOC":
+        setDrawStore((prev: any) => {
+          return {
+            ...prev,
+            question: { ...prev.question, vocURL: action?.payload },
           }
         })
         break
@@ -73,6 +81,14 @@ const DrawProvider: React.FC<DrawProviderProps> = ({ children }) => {
           ...prev,
           question_type: action?.payload,
         }))
+        break
+      case "SET_CONFIRM_CREATE_TYPE_QUESTION":
+        alert("SET_CONFIRM_CREATE_TYPE_QUESTION")
+        setDrawStore((prev: any) => ({
+          ...prev,
+          confirm_create_type_question: {},
+        }))
+        break
       default:
         break
     }

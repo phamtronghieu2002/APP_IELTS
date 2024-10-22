@@ -10,6 +10,7 @@ import { api } from "../../_helper"
 import { context } from "../Draw/provider/DrawProvider"
 import { _questionType } from "../../utils/_constant"
 import { IconC } from "../IconC"
+import { deleteQuestionById } from "../../services/questionServices"
 
 interface ModalquestionProps {
   button: React.ReactNode
@@ -17,9 +18,10 @@ interface ModalquestionProps {
   type: "add" | "update" | "delete"
   data?: any
   modalProps?: any
-  category_id?: string
+  lesson_id: string
   width?: number
   height?: number
+  refresh?: any
 }
 
 export const question_type_models = [
@@ -45,8 +47,10 @@ const ModalForm: FC<{
   action: any
   type: "add" | "update" | "delete"
   data?: any
-  category_id?: string
-}> = ({ action, type, data, category_id }) => {
+  lesson_id: string
+  refresh?: any
+}> = ({ action, type, data, lesson_id,refresh }) => {
+
   const { drawStore, dispath } = useContext<any>(context)
   const [typeQuestion, setTypeQuestion] = React.useState<any>(null)
 
@@ -60,6 +64,23 @@ const ModalForm: FC<{
       type: "SET_QUESTION_TYPE",
       payload: question_type,
     })
+  } 
+
+  const handleDeleteQuetions = async()=>{
+      try {
+        const question_id = drawStore?.question?._id
+        const sub_question_id = drawStore?.sub_question_select?.question_id
+        await deleteQuestionById(
+          question_id,
+          sub_question_id,
+          lesson_id
+        )
+        refresh?.()
+        action?.closeModal()
+        api?.message?.success("Xóa câu hỏi thành công")
+      } catch (error) {
+        
+      }
   }
 
   useEffect(() => {
@@ -79,7 +100,7 @@ const ModalForm: FC<{
             >
               Hủy
             </Button>
-            <Button onClick={() => {}}>Xác nhận</Button>
+            <Button onClick={handleDeleteQuetions}>Xác nhận</Button>
           </div>
         </div>
       ) : (
@@ -107,10 +128,14 @@ const ModalForm: FC<{
                   type: "SET_QUESTION_SELECT",
                   payload: null,
                 })
+                dispath?.({
+                  type: "SET_CONFIRM_CREATE_TYPE_QUESTION",
+                })
                 dispath({
                   type: "SET_TYPE_ACTION",
                   payload: "add",
                 })
+                handleConfirm()
                 action?.closeModal()
               }}
               type="primary"
@@ -139,10 +164,10 @@ const ModalQuestion: FC<ModalquestionProps> = ({
   type,
   data,
   modalProps,
-  category_id,
-  width=800,
-  height=600
-
+  lesson_id,
+  refresh,
+  width = 800,
+  height = 600,
 }) => {
   return (
     <ModalCView
@@ -155,10 +180,11 @@ const ModalQuestion: FC<ModalquestionProps> = ({
       title={title}
       children={(action) => (
         <ModalForm
+        refresh={refresh}
           data={data}
           action={action}
           type={type}
-          category_id={category_id}
+          lesson_id={lesson_id}
         />
       )}
     />

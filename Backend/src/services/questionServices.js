@@ -8,7 +8,7 @@ const addQuestion = async (data) => {
 
     // Tìm document với question_id
     let is_fill_in_blank = false;
-    if(question_id){
+    if (question_id) {
         const existingQuestionDoc = await questionModel.findOne({ _id: question_id || "" });
 
         let count_question_fill_in_blank = 0;
@@ -74,8 +74,7 @@ const addQuestion = async (data) => {
     }
     // Nếu không tìm thấy document, tạo câu hỏi mới
     const newQuestion = new questionModel({
-        ...data,
-        total_question: is_fill_in_blank ? count_question_fill_in_blank : 1
+        ...data
     });
 
     return {
@@ -115,19 +114,35 @@ const updateQuestionById = async (question_id, data) => {
     }
 };
 
-const deleteQuestion = async (test_id, questionId) => {
+const deleteQuestion = async (question_id, sub_id, lesson_id) => {
     try {
         // Tìm document dựa vào test_id và questionId, sau đó xóa câu hỏi
         const result = await questionModel.updateOne(
-            { test_id },
+            { _id: question_id },
             {
                 $pull: {
-                    questions: { question_id: questionId }
+                    questions: { question_id: sub_id }
                 },
                 $inc: { total_question: -1 }
             },
             { new: true }
         );
+
+
+
+        const lesson = await lessonModel.findById(lesson_id)
+            .populate({
+                path: 'tests',
+                populate: { path: 'questions' }
+            })
+            .exec();
+
+        let total_question = 0;
+        lesson.tests.forEach(test => {
+            total_question += test.questions[0]?.total_question || 0;
+        });
+
+        await lessonModel.findByIdAndUpdate(lesson_id, { total_question }, { new: true });
 
         return {
             data: result,

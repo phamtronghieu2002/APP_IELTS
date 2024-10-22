@@ -4,23 +4,23 @@ import TinyMCEEditor from "../../../../conponents/Markdown/Markdown"
 import { Button, Tooltip } from "antd"
 import ModalTips from "../../../../conponents/Modal/ModalTips"
 import { IconC } from "../../../../conponents/IconC"
-import { getTips } from "../../../../services/tipServices"
+import { getTips, updateTip } from "../../../../services/tipServices"
 import { use } from "i18next"
+import { api } from "../../../../_helper"
 interface TipsProps {
   category_id: string
 }
 
-
 const Tips: FC<TipsProps> = ({ category_id }) => {
   const [tips, setTips] = useState<any[]>([])
   const [selectedTip, setselectedTip] = useState<any>(null)
-  console.log("tips", tips);
-  
+  console.log("tips", tips)
+
   const fetchTips = async () => {
     const res = await getTips(category_id)
-    console.log('====================================');
-    console.log("res", res);
-    console.log('====================================');
+    console.log("====================================")
+    console.log("res", res)
+    console.log("====================================")
     const data = res.data?.contents
 
     const options = data?.map((item: any) => ({
@@ -28,8 +28,8 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
       value: item.id_tip,
       label: item.name_tip,
     }))
-    console.log("options", options);
-    
+    console.log("options", options)
+
     setTips(options)
   }
 
@@ -38,7 +38,7 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
   }, [])
 
   useEffect(() => {
-    if (tips.length > 0) {
+    if (tips?.length > 0) {
       if (!selectedTip) {
         setselectedTip(tips?.[0])
         return
@@ -48,6 +48,29 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
     }
   }, [tips])
 
+  const handleChangeMardown = (value: string) => {
+    const data = { ...selectedTip, content: value }
+    setselectedTip(data)
+  }
+
+  const handleSave = async () => {
+    try {
+      await updateTip({
+        cate_id: category_id,
+        contents: {
+          name_tip: selectedTip?.name_tip,
+          id_tip: selectedTip?.id_tip,
+          content: selectedTip?.content,
+        },
+      })
+      fetchTips()
+      api?.message?.success("Lưu thành công")
+    } catch (e) {
+      console.log("====================================")
+      console.log("error", e)
+      console.log("====================================")
+    }
+  }
   return (
     <div className="wrapper flex items-start gap-3">
       <div className="heading w-[30%] ">
@@ -61,9 +84,9 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
             options={tips}
           />
           <ModalTips
-            type_category={""}
-            refresh={() => {}}
-            title={`Sửa bài test`}
+            category_id={category_id}
+            refresh={fetchTips}
+            title={`Thêm tên tip`}
             button={
               <Tooltip title="Thêm tên tip">
                 <Button
@@ -82,8 +105,11 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
         </div>
         <div className="actions flex">
           <ModalTips
-            type_category={""}
-            refresh={() => {}}
+            category_id={category_id}
+            refresh={(data: any) => {
+              fetchTips()
+              selectedTip?.(data)
+            }}
             title={`Sửa tips`}
             button={
               <Tooltip title="Sửa tips">
@@ -97,11 +123,14 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
               </Tooltip>
             }
             type="update"
-            data={{}}
+            data={selectedTip}
           />
           <ModalTips
-            type_category={""}
-            refresh={() => {}}
+            category_id={category_id}
+            refresh={() => {
+              fetchTips()
+              selectedTip?.(null)
+            }}
             modalProps={{
               width: 550,
             }}
@@ -117,14 +146,21 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
               </Tooltip>
             }
             type="delete"
-            data={{}}
+            data={selectedTip}
           />
         </div>
       </div>
       <div className="content">
-        <TinyMCEEditor height={450} />
+        <TinyMCEEditor
+          onChange={handleChangeMardown}
+          initialValue={selectedTip?.content}
+          height={450}
+        />
         <div className="actions flex item-center justify-end">
-          <Button className="text-yellow-50 w-56 bg-gradient-to-r from-violet-500 to-fuchsia-500 mt-2">
+          <Button
+            onClick={handleSave}
+            className="text-yellow-50 w-56 bg-gradient-to-r from-violet-500 to-fuchsia-500 mt-2"
+          >
             Lưu
           </Button>
         </div>

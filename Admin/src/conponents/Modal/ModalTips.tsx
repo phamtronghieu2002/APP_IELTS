@@ -24,6 +24,8 @@ import {
   updateQuestionById,
 } from "../../services/questionServices"
 import { context } from "../Draw/provider/DrawProvider"
+import { createTip, deleteTip, updateTip } from "../../services/tipServices"
+import { _app } from "../../utils/_app"
 
 const { TextArea } = Input
 interface ModalTipsProps {
@@ -33,7 +35,7 @@ interface ModalTipsProps {
   data?: any
   modalProps?: any
   lesson_id?: string
-  type_category: string
+  category_id: string
   refresh?: any
 }
 
@@ -42,67 +44,57 @@ const ModalForm: FC<{
   type: "add" | "update" | "delete"
   data?: any
   lesson_id?: string
-  type_category: string
+  category_id: string
   refresh?: any
-}> = ({ action, type, data, lesson_id, refresh, type_category }) => {
+}> = ({ action, type, data, lesson_id, refresh, category_id }) => {
   const formRef = useRef<FormInstance<any>>(null)
 
   const handleAdd = async (fb: any) => {
     try {
-      //   const { name_Tips } = formData
-      // // //   const res = await createTips({
-      // // //     name_Tips,
-      // // //   })
-      // //   const Tips = res.data
-      // //   const Tips_id = Tips?._id
-      // //   await addTipsToLesson(lesson_id ?? "", Tips_id)
-      //   const q = await createQuestion(formData)
-      //   dispath({
-      //     type: "SET_QUESTION",
-      //     payload: q?.data,
-      //   })
-      // //   await addQuestionToTips(Tips_id, q?.data?._id)
-      //   refresh?.({
-      //     ...Tips,
-      //     value: Tips?._id,
-      //     label: Tips?.name_Tips,
-      //   })
-      //   api?.message?.success("Thêm Tips thành công")
-      //   action?.closeModal()
+      const { name_tip } = fb
+      await createTip({
+        cate_id: category_id,
+        contents: {
+          name_tip,
+          id_tip: _app?.randomId(),
+          content: "",
+        },
+      })
+
+      refresh?.()
+      api?.message?.success("Thêm Tips thành công")
+      action?.closeModal()
     } catch (error) {
       _log("erro")
     }
   }
   const handleUpdate = async (fb: any) => {
     try {
-      //   const name_Tips = fb?.name_Tips
-      //   await updateTips({
-      //     name_Tips,
-      //     id: data?._id,
-      //   })
-      //   const res = await updateQuestionById(question?._id, {
-      //     question_text: formData?.question_text,
-      //     description: formData?.description,
-      //     audio_url: formData?.audio_url,
-      //   })
-      //   const question_fb = res?.data
-      //   dispath({
-      //     type: "SET_QUESTION",
-      //     payload: question_fb,
-      //   })
-      //   refresh?.()
-      //   api?.message?.success("Sửa bài học thành công")
-      //   action?.closeModal()
+      const { name_tip } = fb
+      const tip_update = {
+        cate_id: category_id,
+        contents: {
+          name_tip,
+          id_tip: data?.id_tip,
+          content: data?.content,
+        },
+      }
+      await updateTip(tip_update)
+
+      action?.closeModal()
+      refresh?.(tip_update)
+    
+      api?.message?.success("Thêm Tips thành công")
     } catch (error) {
       _log("erro")
     }
   }
   const handleDelete = async (fb: any) => {
     try {
-      //   await deleteTips(data?._id)
-      //   refresh?.()
-      //   api?.message?.success("xóa  bài Tips  thành công !!")
-      //   action?.closeModal()
+        await deleteTip(data?.id_tip)
+        action?.closeModal()
+        refresh?.()
+        api?.message?.success("xóa  bài Tips  thành công !!")
     } catch (error) {
       _log("erro")
     }
@@ -140,7 +132,7 @@ const ModalForm: FC<{
 
   const fields = [
     {
-      name: "name_tips",
+      name: "name_tip",
       type: "input",
       label: "Tên tips",
       placeholder: "Nhập tên  Tips",
@@ -208,7 +200,7 @@ const ModalTips: FC<ModalTipsProps> = ({
   data,
   modalProps,
   lesson_id,
-  type_category,
+  category_id,
   refresh,
 }) => {
   return (
@@ -226,7 +218,7 @@ const ModalTips: FC<ModalTipsProps> = ({
           action={action}
           type={type}
           lesson_id={lesson_id}
-          type_category={type_category}
+          category_id={category_id}
         />
       )}
     />

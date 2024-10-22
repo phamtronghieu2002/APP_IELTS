@@ -76,6 +76,7 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
   initNumber = 4,
   onSubmit,
 }) => {
+  const { drawStore, dispath } = useContext<any>(context)
   const initQuestionChoice = useMemo(() => {
     return Array.from({ length: initNumber }, (_, index) => {
       return {
@@ -84,7 +85,7 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
         text: "",
       }
     })
-  }, [])
+  }, [drawStore?.confirm_create_type_question])
 
   const [listChoice, setListChoice] =
     useState<optionProps[]>(initQuestionChoice)
@@ -92,7 +93,6 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
   const { storeCategories, dispath: dispathCategory } =
     useContext<any>(contextCategory)
 
-  const { dispath } = useContext<any>(context)
 
   useEffect(() => {
     if (data) {
@@ -100,7 +100,8 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
     } else {
       setListChoice(initQuestionChoice)
     }
-  }, [data])
+  }, [data, drawStore?.confirm_create_type_question])
+
   const handleCheck = (item: optionProps) => {
     const newList = listChoice.map((choice: optionProps) => {
       return {
@@ -171,6 +172,7 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
         <Button
           onClick={() => {
             onSubmit(listChoice, true)
+       
             dispath({
               type: "SET_TYPE_ACTION",
               payload: "add",

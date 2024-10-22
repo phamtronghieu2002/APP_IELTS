@@ -26,7 +26,7 @@ const ReadingTest = ({ navigation, route }) => {
     const [answers, setAnswers] = React.useState([]);
 
     const test_id = route?.params?.test_id;
-    
+
 
 
 

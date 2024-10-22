@@ -13,6 +13,7 @@ import DrawC from "../DrawC/DrawC"
 import DrawProvider from "./provider/DrawProvider"
 import MainContent from "./components/MainContent"
 import Sidebar from "./components/Sidebar"
+import MainContentVocabulary from "./components/MainContentVocabulary"
 
 interface DrawLessonProps {
   button: React.ReactNode
@@ -36,7 +37,13 @@ const ContentDraw: FC<ContentDrawProps> = ({ data }) => {
         category_id={category_id}
         type_category={type_category}
       />
-      <MainContent lesson_id={lesson_id} />
+      {
+        type_category == "Vocabulary" ? (
+          <MainContentVocabulary type_category={type_category} lesson_id={lesson_id} />
+        ) : (
+          <MainContent type_category={type_category} lesson_id={lesson_id} />
+        )
+      }
     </div>
   )
 }
@@ -46,7 +53,7 @@ const DrawLesson: FC<DrawLessonProps> = ({ button, title, data }) => {
     <DrawC
       title={
         <p>
-          Quản lí bài kiểm tra: <b>{data?.name_lesson}</b>
+          Quản lí bài kiểm tra Lesson: <b>{data?.name_lesson}</b>
         </p>
       }
       button={button}

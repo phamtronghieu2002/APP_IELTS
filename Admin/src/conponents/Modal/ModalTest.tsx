@@ -46,18 +46,19 @@ const ModalForm: FC<{
   refresh?: any
 }> = ({ action, type, data, lesson_id, refresh, type_category }) => {
   const { drawStore, dispath } = useContext<any>(context)
+  console.log("type", type != "add")
 
   const formRef = useRef<FormInstance<any>>(null)
   const editorRef = useRef<any>(null) // Store the editor instance
   const [audioUrl, setAudioUrl] = useState<string | null>("")
+  const question = drawStore?.question
   const [formData, setFormData] = useState<any>({
     name_test: "",
-    question_text: "",
-    description: "",
+    question_text: type != "add" ? question?.question_text : "",
+    description: type != "add" ? question?.description : "",
     audio_url: "",
     questions: [],
   })
-  const question = drawStore?.question
 
   const handleSetFormData = (name: string, value: string) => {
     setFormData({
@@ -79,6 +80,11 @@ const ModalForm: FC<{
       const q = await createQuestion(formData)
       dispath({
         type: "SET_QUESTION",
+        payload: test_id,
+      })
+
+      dispath({
+        type: "SET_TEST_ID",
         payload: q?.data,
       })
 
@@ -209,26 +215,30 @@ const ModalForm: FC<{
             onFinish={onFinish}
           />
           <div className="heading_test mb-5">
-            <label htmlFor="">Nhập đề bài</label>
-            {type_category === "Reading" ? (
-              <TinyMCEEditor
-                initialValue={question?.question_text}
-                onChange={(e: any) => {
-                  handleSetFormData("question_text", e)
-                }}
-                ref={editorRef}
-              />
-            ) : (
+            {type_category != "Vocabulary" && (
+              <label htmlFor="">Nhập đề bài</label>
+            )}
+            {type_category === "Listening" ? (
               <UploadAudio
                 setUrl={(url: string) => {
                   handleSetFormData("audio_url", url)
                 }}
               />
+            ) : (
+              type_category != "Vocabulary" && (
+                <TinyMCEEditor
+                  initialValue={formData?.question_text}
+                  onChange={(e: any) => {
+                    handleSetFormData("question_text", e)
+                  }}
+                  ref={editorRef}
+                />
+              )
             )}
             <label htmlFor="">Miêu tả</label>
             {/* text area antd */}
             <TextArea
-              value={formData?.description || question?.description}
+              value={formData?.description}
               onChange={(e) => {
                 handleSetFormData("description", e.target.value)
               }}

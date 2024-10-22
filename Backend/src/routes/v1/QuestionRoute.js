@@ -11,7 +11,7 @@ Router.get("/", questionController?.handleGetQuestions);
 Router.get("/:id", questionController?.handleGetQuestionById);
 
 Router.put("/:id", questionController?.handleupdateQuestionById);
-Router.delete("/test/:id", questionController?.handleDeleteQuestionById);
+Router.delete("/", questionController?.handleDeleteQuestionById);
 
 
 

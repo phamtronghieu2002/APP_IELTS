@@ -7,7 +7,7 @@ import ApiError from "~/utils/ApiError";
 Router.get("/", async (req, res, next) => {
     try {
         const cate_id = req.query.cate_id;
-        const result = await TipModal.find({
+        const result = await TipModal.findOne({
             cate_id
         });
         return res.status(StatusCodes.OK).json({
