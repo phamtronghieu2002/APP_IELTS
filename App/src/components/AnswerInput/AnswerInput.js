@@ -15,23 +15,20 @@ import {
 import MainButton from '../Button/MainButton';
 import { addAnwserToTestResult } from '../../services/testResultServices';
 import { _testTypes } from '../../utils/constant';
+import Explain from "../Explain/Explain";
 
 const AnswerInputArea = ({
   data,...props
 }) => {
   const {test_id, is_doing} = props;
+  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, onShowNextQuestion} = props;
 
-
-  console.log('====================================');
-  console.log("datalmao >>>>>>>>>>>>", data);
-  console.log('====================================');
 
   const [userAnswer, setUserAnswer] = React.useState([]);
   const [isClickCheck, setIsClickCheck] = useState(false);
+  const [showExplain, setShowExplain] = useState(isShow);
 
   const checkAnswer = async () => {
-    console.log("ddddddddddddddddddddddddddddata >>>", data);
-    console.log("userAnswer >>>", userAnswer);
     let testResult = new Map();
     data.map((item, index) => {
       if (item.is_correct === userAnswer[index]) {
@@ -39,6 +36,7 @@ const AnswerInputArea = ({
       } else {
         testResult.set(item.question_id, false); // Use set to add key-value pairs
       }
+      onProgressUpdate()
     });
     const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct }));
   
@@ -52,24 +50,40 @@ const AnswerInputArea = ({
       }
     }
     );
-    console.log("testResult >>>", testResultArray);
     setIsClickCheck(true);
+    setShowExplain(true);
+    onShowNextQuestion();
   };
   
-  
-
-
+  const checkiscorrect = (anwser ,index) => {
+    if (anwser === userAnswer[index]) {
+      return true;
+    }
+    return false;
+  }
+  const handelShowExplain = ({item, index}) => {
+    return (
+      <View className= "mb-3"> 
+            <Explain
+              is_correct={checkiscorrect(item.is_correct,index)}
+              explain={item.explain}
+              anwser={item.is_correct}
+            />
+          </View>
+    )
+  }
   return (
     <View className="">
       <Text className="text-center mb-3  font-bold">
-        Your answer
+        {`Your answer ${currentquestion}`}
       </Text>
       {data.map((item, index) => {
         return (
-          <View
+          <View>
+            <View
             key={index}
             className="flex flex-row p-3 bg-gray-50 rounded-lg items-center gap-1
-            mb-3">
+            ">
             <Text className="">
               ({item?.text})
             </Text>
@@ -85,6 +99,11 @@ const AnswerInputArea = ({
               }
               editable={!isClickCheck}
             />
+          </View>
+          {
+            isClickCheck && showExplain && handelShowExplain({ is_correct, item, anwser , index})
+          }
+          
           </View>
         );
       })

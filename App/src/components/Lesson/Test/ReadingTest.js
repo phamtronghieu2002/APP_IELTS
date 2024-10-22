@@ -24,7 +24,8 @@ import {
   addTestResult,
 } from "../../../services/testResultServices";
 import { _testTypes } from "../../../utils/constant";
-import MainButton from '../../Button/MainButton';
+import MainButton from "../../Button/MainButton";
+import RadioButtonForm from "../../RadioButton/RadioButtonForm";
 const ReadingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
@@ -34,14 +35,18 @@ const ReadingTest = ({ navigation, route }) => {
   const test_id = route?.params?.test_id;
 
   const [answers, setAnswers] = React.useState([]);
-  console.log("answers >>>", answers);
 
+  const [choiceQuestions, setChoiceQuestions] = React.useState([]);
   const fetchTestById = async () => {
     try {
       const response = await getTestById(test_id);
       const data = response.data;
       setTest(data);
       setQuestions(data.questions[0]);
+      const choices = data.questions[0].questions.filter(
+        (item) => item.question_type === "choice"
+      );
+      setChoiceQuestions(choices);
     } catch (error) {
       console.error(error);
     }
@@ -51,68 +56,30 @@ const ReadingTest = ({ navigation, route }) => {
     fetchTestById();
   }, []);
 
-  console.log("answers >>>", answers);
-  const handleChooseAnswer = async (question_id, options) => {
-    try {
-      const is_doing = test?.is_doing;
-      if (!is_doing) {
-        await updateIsDoing(test_id, {
-          is_doing: true,
-        });
-      }
-
-      setAnswers((prev) => {
-        const isExits = prev.some((a) => a.question_id === question_id);
-        if (isExits) {
-          return prev;
-        } else {
-          addAnwserToTestResult(test_id, _testTypes?.new, {
-            anwser: {
-              question_id,
-              is_correct: options.is_correct,
-            },
-          })
-            .then((fb) => {})
-            .catch((err) => {
-              console.log("error >>>>", err);
-            });
-          return [
-            ...prev,
-            {
-              question_id,
-              options,
-            },
-          ];
-        }
-      });
-    } catch (error) {
-      console.log("error >>>>", error);
-    }
-  };
-  console.log("totel >>>", questions.total_question);
-  
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
-  const listQuestion = questions?.questions || [];
-  const question_type = questions?.questions?.[currentQuestion].question_type;
-  const [countProgress, setCountProgress] = React.useState(1);
+  const [partQuestion, setPartQuestion] = React.useState(0);
+  const [countProgress, setCountProgress] = React.useState(0);
 
-  const handleIncreaseProgress = () => {
-    const questionType = questions?.questions?.[currentQuestion].question_type;
-    if (questionType === "fill_in_blank") {
-      setCountProgress(countProgress + questions?.questions?.[currentQuestion].options.length);
-    } else {
-      setCountProgress(countProgress + 1);
-    }
+  const handleProgressUpdate = () => {
+    setCountProgress((prevCount) => prevCount + 1);
   };
-
-  
+  const [showNextQuestion, setShowNextQuestion] = React.useState(false);
+  const handelShowNextQuestion = () => {
+    setShowNextQuestion(true);
+  };
+  const fill_in_blank_question = [];
+  const [isShowExplain, setIsShowExplain] = React.useState(true);
+  const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
   return (
     <SafeAreaView>
       <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
-      <View className="flex flex-col justify-center items-center pl-5 pr-5">
+      <View className="flex flex-row justify-center items-center pl-5 pr-5">
+        <Text className="font-bold">
+          {countProgress + "/" + questions.total_question}
+        </Text>
         <Progress.Bar
           progress={countProgress / questions.total_question || 0}
-          className="max-w-full mb-3"
+          className="max-w-full ml-2"
           width={150}
           color="#FF0505"
         />
@@ -146,12 +113,14 @@ const ReadingTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 pb-32"
         >
-          <Text className="mb-10">{questions?.description}</Text>
-          
-              <View
-                className="mb-5 border-b-2 border-gray-200 pb-3"
-              >
-                {question_type == "fill_in_blank" && (
+          {partQuestion == 0 && (
+            <Text className="mb-10">
+              Lựa chọn các đáp án sau sao cho phù hợp
+            </Text>
+          )}
+
+          <View className="mb-5 border-b-2 border-gray-200 pb-3">
+            {/* {question_type == "fill_in_blank" && (
                   <Text className="">{questions?.questions?.[currentQuestion].description}</Text>
                 )}
                 <RenderHtml
@@ -159,62 +128,106 @@ const ReadingTest = ({ navigation, route }) => {
                   source={{
                     html: questions?.questions?.[currentQuestion].question_text,
                   }}
-                />
-
-                {question_type === "choice" && (
-                  questions?.questions?.[currentQuestion]?.options.map((a, index) => (
-                    <RadioButton
-                      isShowAnswer={answers?.some(
-                        (ans) => ans.question_id === questions?.questions?.[currentQuestion].question_id
-                      )}
-                      is_correct={a.is_correct}
-                      incorrectAnswerId={
-                        answers?.find(
-                          (ans) => ans.question_id === questions?.questions?.[currentQuestion].question_id
-                        )?.options?.option_id
-                      }
-                      optionId={a.option_id}
-                      onPress={() => handleChooseAnswer(questions?.questions?.[currentQuestion].question_id, a)}
-                      key={index}
-                      label={a.text}
+                /> */}
+            {questions?.questions?.map((item, index) => {
+              if (item.question_type === "choice" && partQuestion === 0) {
+                return (
+                  <View key={index}>
+                    <RadioButtonForm
+                      item={item}
+                      test_id={test_id}
+                      test={test}
+                      onProgressUpdate={handleProgressUpdate}
+                      onShowNextQuestion={handelShowNextQuestion}
                     />
-                  ))
-                )}
-                {question_type === "fill_in_blank" && (
-                   <AnswerInputArea
-                   data={questions?.questions?.[currentQuestion].options}
-                   test_id={test_id}
-                   is_doing={test?.is_doing}
-                 />
-                )}
+                  </View>
+                );
+              } else if (item.question_type === "fill_in_blank") {
+                fill_in_blank_question.push(item); // Use push instead of append
 
-                {answers?.some((a) => a.question_id === questions?.questions?.[currentQuestion].question_id) && (
-                  <Explain
-                    is_correct={
-                      answers.find((a) => a.question_id === questions?.questions?.[currentQuestion].question_id)
-                        .options.is_correct
-                    }
-                    explain={questions?.questions?.[currentQuestion].explain}
-                    anwser={questions?.questions?.[currentQuestion].options.find((a) => a.is_correct)?.text}
-                  />
-                )}
+                return <View></View>; // Ensure you return something
+              }
+              return <View></View>; // Return null for cases where no condition matches
+            })}
+            {fill_in_blank_question.length > 0 && partQuestion == 1 && (
+              <View>
+                <Text className="mb-10">
+                  {
+                    fill_in_blank_question[currentQuestion_fill_in_blank]
+                      .description
+                  }
+                </Text>
+                <RenderHtml
+                  contentWidth={width}
+                  source={{
+                    html: fill_in_blank_question[currentQuestion_fill_in_blank]
+                      .question_text,
+                  }}
+                />
+                <AnswerInputArea
+                  key={currentQuestion_fill_in_blank} // Adding a unique key for each question
+                  currentquestion={currentQuestion_fill_in_blank}
+                  data={
+                    fill_in_blank_question[currentQuestion_fill_in_blank]
+                      .options
+                  }
+                  test_id={test_id}
+                  is_doing={test?.is_doing}
+                  is_correct={
+                    answers.find(
+                      (a) =>
+                        a.question_id ===
+                        fill_in_blank_question[currentQuestion_fill_in_blank]
+                          .question_id
+                    )?.options.is_correct
+                  }
+                  explain={
+                    fill_in_blank_question[currentQuestion_fill_in_blank]
+                      .explain
+                  }
+                  anwser={
+                    fill_in_blank_question[
+                      currentQuestion_fill_in_blank
+                    ].options.find((a) => a.is_correct)?.text
+                  }
+                  isShow={isShowExplain}
+                  onProgressUpdate={handleProgressUpdate}
+                  onShowNextQuestion={handelShowNextQuestion}
+                />
               </View>
-            
-          <MainButton
-        title={"Next question"}
-        roundedfull
-        onPress={()=>{
-            console.log("currentQuestion >>>", currentQuestion);
-            if (currentQuestion < questions?.questions?.length - 1) {
-              setCurrentQuestion(currentQuestion + 1);
-              handleIncreaseProgress();
-            }
-        }}
-        disabled={false}
-      />
+            )}
+          </View>
+
+          {showNextQuestion && (
+            <MainButton
+              title={"Next question"}
+              roundedfull
+              onPress={() => {
+                if (
+                  currentQuestion <
+                  questions?.questions?.length - choiceQuestions.length
+                ) {
+                  console.log("choice_question1", choiceQuestions.length);
+
+                  setPartQuestion(1);
+                  setCurrentQuestion(currentQuestion + 1);
+                }
+                if (
+                  currentQuestion <
+                    questions?.questions?.length - choiceQuestions.length &&
+                  partQuestion == 1
+                ) {
+                  console.log("choice_question2", choiceQuestions.length);
+                  setCurrentQuestion_fill_in_blank(
+                    currentQuestion_fill_in_blank + 1
+                  );
+                }
+                setShowNextQuestion(false);
+              }}
+            />
+          )}
         </View>
       </ScrollView>
-      {/* <ResultBar /> */}
     </SafeAreaView>
   );
 };
