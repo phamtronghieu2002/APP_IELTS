@@ -1,9 +1,17 @@
 import { Button, Radio } from "antd"
-import { FC, useCallback, useContext, useEffect, useState } from "react"
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import { IconC } from "../../IconC"
 import TinyMCEEditor from "../../Markdown/Markdown"
 import { s } from "vitest/dist/types-e3c9754d.js"
 import { context } from "../provider/DrawProvider"
+import { context as contextCategory } from "..//..//..//pages//Manager//ManagerCategories//Provider//ManagerCategoryProvider"
 
 interface ChoiceQuestionProps {
   data?: any
@@ -68,31 +76,31 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
   initNumber = 4,
   onSubmit,
 }) => {
-  const initQuestionChoice = useCallback(() => {
-    if (data) {
-      return data
-    }
+  const { drawStore, dispath } = useContext<any>(context)
+  const initQuestionChoice = useMemo(() => {
     return Array.from({ length: initNumber }, (_, index) => {
       return {
-        is_correct: false,
+        is_correct: index == 0,
         option_id: Math.random().toString(36).substring(7),
         text: "",
       }
     })
-  }, [data, initNumber])
+  }, [drawStore?.confirm_create_type_question])
 
   const [listChoice, setListChoice] =
     useState<optionProps[]>(initQuestionChoice)
 
-  const { drawStore, dispath } = useContext<any>(context)
+  const { storeCategories, dispath: dispathCategory } =
+    useContext<any>(contextCategory)
 
 
   useEffect(() => {
-    if (!drawStore?.sub_question_select) {
+    if (data) {
+      setListChoice(data)
+    } else {
       setListChoice(initQuestionChoice)
     }
-  }, [initQuestionChoice])
-
+  }, [data, drawStore?.confirm_create_type_question])
 
   const handleCheck = (item: optionProps) => {
     const newList = listChoice.map((choice: optionProps) => {
@@ -155,6 +163,7 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
         <Button
           onClick={() => {
             onSubmit(listChoice)
+            dispathCategory({ type: "SET_REFRESH" })
           }}
           className="bg-gradient-to-r p-5 from-violet-500 to-fuchsia-500 text-lime-50"
         >
@@ -163,6 +172,12 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
         <Button
           onClick={() => {
             onSubmit(listChoice, true)
+       
+            dispath({
+              type: "SET_TYPE_ACTION",
+              payload: "add",
+            })
+            dispathCategory({ type: "SET_REFRESH" })
           }}
           className="bg-gradient-to-r p-5 from-sky-500 to-fuchsia-500 text-lime-50"
         >

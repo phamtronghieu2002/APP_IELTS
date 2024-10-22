@@ -20,6 +20,12 @@
     <script  type="module" src="/src/main.tsx"></script>
   </body>
   <script>
+    
+    const handle = (x)=>{
+      x?.();
+    }
+    handle(); // Không gây lỗi, chỉ trả về undefined
+    
     const div = document.getElementById('root');
     console.log(div.getAttribute('value'));
   </script>

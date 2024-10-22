@@ -3,17 +3,19 @@ import { Upload, Button, message } from "antd"
 import { UploadOutlined } from "@ant-design/icons"
 import type { UploadProps } from "antd"
 import axios from "..//..//..//services/axiosInstance"
+import { _app } from "../../../utils/_app"
 
 interface UploadAudioProps {
   setUrl: (url: string) => void
+  initialUrl?: string
 }
 
-const UploadAudio: FC<UploadAudioProps> = ({ setUrl }) => {
+const UploadAudio: FC<UploadAudioProps> = ({ setUrl, initialUrl }) => {
   const [audioFile, setAudioFile] = useState<File | null>(null)
-  const [audioUrl, setAudioUrl] = useState<string | null>(null)
-  console.log("====================================")
-  console.log("audioUrl >>>>>>>>>>", audioUrl)
-  console.log("====================================")
+  const [audioUrl, setAudioUrl] = useState<string | null>(
+    initialUrl ? _app?.getImageUrl(initialUrl) : null,
+  )
+
 
   const beforeUpload = (file: File) => {
     const isAudio = file.type.startsWith("audio/")
@@ -38,6 +40,7 @@ const UploadAudio: FC<UploadAudioProps> = ({ setUrl }) => {
     }
   }, [audioUrl])
   const handleUpload = async () => {
+    if (initialUrl) return
     if (!audioFile) {
       message.error("No audio file selected!")
       return
