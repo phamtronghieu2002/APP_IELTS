@@ -190,6 +190,9 @@ const Home = ({ navigation, route }) => {
         {
           categories?.prepare?.map((item, index) =>
             <Pressable
+              onPress={() => {
+                navigation.navigate(item?.type, {})
+              }}
               key={index}
               style={{
                 // shadown bottom

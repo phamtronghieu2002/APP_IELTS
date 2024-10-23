@@ -19,6 +19,11 @@ import Lesson from "../components/Lesson/Lesson";
 import Overview from "../screens/Overview/Overview";
 import ReadingTest from "../components/Lesson/Test/ReadingTest";
 import Policy from "../screens/Policy/Policy";
+import AboutIelts from "../screens/About/AboutIelts";
+import AboutDetail from "../screens/About/AboutDetail";
+import Tip from "../screens/Tips/Tips";
+import TipDetail from "../screens/Tips/TipDetail";
+import TipContent from "../screens/Tips/TipContent";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -72,12 +77,26 @@ export const screensStack = [
     },
     {
         name: configs.screenName.tips,
-        component: Tips,
+        component: Tip,
+        options: { title: "Welcome profile", headerShown: false },
+    }, {
+        name: configs.screenName.tipDetail,
+        component: TipDetail,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    , {
+        name: configs.screenName.tipContent,
+        component: TipContent,
         options: { title: "Welcome profile", headerShown: false },
     },
     {
         name: configs.screenName.about,
         component: About,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.about_detail,
+        component: AboutDetail,
         options: { title: "Welcome profile", headerShown: false },
     },
     {
@@ -108,6 +127,12 @@ export const screensStack = [
         options: { title: "Welcome Logins", headerShown: false, },
 
     },
+    // {
+    //     name: configs.screenName.about,
+    //     component: AboutIelts,
+    //     options: { title: "Welcome Logins", headerShown: false, },
+
+    // },
 
 
 ]
