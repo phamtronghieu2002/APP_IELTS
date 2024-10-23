@@ -12,14 +12,22 @@ import {
     TouchableOpacity,
     Pressable,
 } from 'react-native';
+import HeaderScreen from '../../components/Header/HeaderScreen';
 
-const Policy = () => {
+const Policy = ({ navigation }) => {
     return (
-        <View className=''>
-           <Text className="">
-           this is Policy screen
-           </Text>
-        </View>
+        <SafeAreaView className="">
+            <HeaderScreen
+                label={'Policy'}
+                navigation={navigation}
+            />
+            <View className="p-5">
+                <Text className="">
+                    xin chao
+                </Text>
+            </View>
+
+        </SafeAreaView>
     );
 };
 

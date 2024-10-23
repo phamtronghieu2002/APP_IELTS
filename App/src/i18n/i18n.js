@@ -22,9 +22,10 @@ const resources = {
 i18n
   .use(initReactI18next)
   .init({
+    compatibilityJSON: 'v3',
     resources,
-    lng:configs.i18n.default, //default language
-    keySeparator:".",
+    lng: configs.i18n.default, //default language
+    keySeparator: ".",
     interpolation: {
       escapeValue: false,
     },

@@ -18,6 +18,7 @@ import Intro from "../screens/Intro/Intro";
 import Lesson from "../components/Lesson/Lesson";
 import Overview from "../screens/Overview/Overview";
 import ReadingTest from "../components/Lesson/Test/ReadingTest";
+import Policy from "../screens/Policy/Policy";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -123,6 +124,7 @@ export const screensDrawer = (t) => [
             drawerIcon: ({ focused, color, size }) => (
                 <Icon name="user" size={size} color={color} />
             ),
+            headerShown: false
         },
 
 
@@ -156,12 +158,13 @@ export const screensDrawer = (t) => [
     {   
         label: t?.('draw.privacy'),
         name: configs.screenName.privacy,
-        component: Profile,
+        component: Policy,
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
                 <IconM name="folder" size={20} color={color} />
             ),
+            headerShown: false
         },
 
     },

@@ -10,6 +10,7 @@ import i18n from './src/i18n/i18n';
 import I18nProvider from './src/providers/I18nProvider';
 
 const App = () => {
+
   return (
     // nguyen thanh doanh
     //trong hieu
@@ -18,14 +19,16 @@ const App = () => {
 
 
     <Provider store={store}>
-      <I18nProvider>
-        <TestProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <MyStack />
-          </GestureHandlerRootView>
-          <Toast />
-        </TestProvider>
-      </I18nProvider>
+
+        <I18nProvider>
+          <TestProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <MyStack />
+            </GestureHandlerRootView>
+            <Toast />
+          </TestProvider>
+        </I18nProvider>
+   
     </Provider>
 
 

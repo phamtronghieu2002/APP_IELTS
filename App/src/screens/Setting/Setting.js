@@ -20,10 +20,18 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
 import { getData, storeData } from '../../utils/asyncStore';
 import { i18nContext } from '../../providers/I18nProvider';
+
+import { useColorScheme } from 'react-native';
+import { ThemeContext } from '../../providers/ThemeProvider';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+
 const Setting = () => {
 
   const [switchLightMode, setSwitchLightMode] = useState(false);
-  const {i18n, t} =useContext(i18nContext);
+  const { i18n, t } = useContext(i18nContext);
+  // const { toggleTheme } = useContext(ThemeContext);
+
+  // Thay đổi class NativeWind dựa vào colorScheme
 
 
 
@@ -33,7 +41,11 @@ const Setting = () => {
     { label: 'English', value: 'en' }
   ]);
 
-  const onHandleLightMode = (value) => { console.log(value) };
+  const onHandleLightMode = (value) => {
+    // const theme_mode = value ? 'dark' : 'light';
+
+    // toggleTheme(theme_mode);
+  };
 
   const onHandleTime = (value) => { console.log(value) };
 
@@ -51,6 +63,9 @@ const Setting = () => {
   useEffect(() => {
     getData("lang").then((res) => {
       setLang(res);
+    })
+    getData("theme").then((res) => {
+      setSwitchLightMode(res === 'dark' ? true : false);
     })
   }, []);
 
@@ -76,15 +91,17 @@ const Setting = () => {
             <View className="flex flex-row justify-center">
               <Image className="" source={require('../../../assets/Setting/Sun.png')} style={{ width: 25, height: 25 }} />
               <Text className="ml-3">
-              {
-                t('setting.lightMode')
-              }
+                {
+                  t('setting.lightMode')
+                }
               </Text>
             </View>
             <View className="mr-2">
               <Switch
+                
+          
                 circleSize={20}
-                backgroundActive={'#FFFF00'}
+                backgroundActive={'#06ba39'}
                 activeText={''}
                 inActiveText={''}
                 onValueChange={() => {

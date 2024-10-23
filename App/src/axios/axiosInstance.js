@@ -6,7 +6,6 @@ axios.defaults.withCredentials = true;
 const instance = axios.create({
   baseURL: `http://192.168.85.187:8080/api/v1`,
 });
-console.log(`${env.API_URL}/api/v1`);
 
 instance.interceptors.request.use(async function (config) {
   const token = await getToken?.();

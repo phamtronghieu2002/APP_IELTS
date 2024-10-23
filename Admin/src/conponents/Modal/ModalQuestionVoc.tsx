@@ -194,7 +194,7 @@ const ModalForm: FC<{
     <MainContent
     data_voc={data}
       onSubmit={onFinish}
-      className="w-[100%]"
+      className="w-full"
       lesson_id={lesson_id}
       type_category={type_category}
     />

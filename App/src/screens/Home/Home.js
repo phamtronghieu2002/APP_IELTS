@@ -18,7 +18,18 @@ import axios from '..//..//axios/axiosInstance'
 import configs from '../../configs';
 import { getCategories } from '../../services/categoryServices';
 import { _groupCategories } from '../../utils/constant';
+import { useColorScheme } from 'react-native';
+import { NativeWindStyleSheet } from 'nativewind';
 const Home = ({ navigation, route }) => {
+
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
+  // Thay đổi class NativeWind dựa vào colorScheme
+  useEffect(() => {
+    NativeWindStyleSheet.setColorScheme("dark"); // Tự động thay đổi theme
+  }, [colorScheme]);
+
 
   const [categories, setCategories] = React.useState({
     skills: [],
@@ -27,42 +38,42 @@ const Home = ({ navigation, route }) => {
   })
 
 
-    
-    const fetchCategorySkills = async () => {
-      try {
-        const res = await getCategories(_groupCategories?.skills);
-        setCategories(prevState => ({
-          ...prevState,
-          skills: res?.data
-        }));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    
-    const fetchCategoriesPractices = async () => {
-      try {
-        const res = await getCategories(_groupCategories?.practices);
-        setCategories(prevState => ({
-          ...prevState,
-          practices: res?.data
-        }));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    
-    const fetchCategoriesPrepare = async () => {
-      try {
-        const res = await getCategories(_groupCategories?.prepare);
-        setCategories(prevState => ({
-          ...prevState,
-          prepare: res?.data
-        }));
-      } catch (error) {
-        console.log(error);
-      }
-    };
+
+  const fetchCategorySkills = async () => {
+    try {
+      const res = await getCategories(_groupCategories?.skills);
+      setCategories(prevState => ({
+        ...prevState,
+        skills: res?.data
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchCategoriesPractices = async () => {
+    try {
+      const res = await getCategories(_groupCategories?.practices);
+      setCategories(prevState => ({
+        ...prevState,
+        practices: res?.data
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchCategoriesPrepare = async () => {
+    try {
+      const res = await getCategories(_groupCategories?.prepare);
+      setCategories(prevState => ({
+        ...prevState,
+        prepare: res?.data
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
 
     fetchCategorySkills()
@@ -82,8 +93,7 @@ const Home = ({ navigation, route }) => {
       </Text>
       {/* / */}
       <View
-        className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
-
+        className="wrapper_items mt-4 flex flex-row justify-between flex-wrap  dark:bg-white">
         {
           categories?.skills?.map((item, index) =>
             <Pressable
