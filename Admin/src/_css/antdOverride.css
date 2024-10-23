@@ -786,3 +786,22 @@ button,
 .ant-color-picker .ant-color-picker-inner-content {
   padding: 8px;
 }
+
+.wp_questionChoice
+  .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  background-color: inherit;
+}
+
+.wp_questionChoice
+  .ant-btn-default:where(
+    .css-dev-only-do-not-override-vryruh
+  ).ant-btn-variant-outlined:not(:disabled):not(.ant-btn-disabled):hover,
+:where(.css-dev-only-do-not-override-vryruh).ant-btn-variant-dashed:not(
+    :disabled
+  ):not(.ant-btn-disabled):hover {
+  background-color: inherit;
+}
+
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  background-color: var(--transparent);
+}

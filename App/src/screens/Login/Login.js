@@ -81,7 +81,7 @@ const Login = ({ navigation, route }) => {
             if (user) {
                 dispatch(loginUser(user));
                 // lưu user vào async storage
-                storeData?.('user', JSON.stringify(user));
+                storeData?.('user', user);
                 Toast.show({
                     type: 'success',
                     text1: 'Login success fully !!',

@@ -1,0 +1,29 @@
+{
+  "draw": {
+    "home": "Home",
+    "profile": "Profile",
+    "logout": "Logout",
+    "privacy": "Privacy",
+    "terms": "Terms and Conditions",
+    "share": "Share",
+    "feedback": "Feedback"
+  },
+  "menuBottom": {
+    "home": "Home",
+    "statiatis": "Statiatis",
+    "setting": "Setting"
+  },
+  "setting": {
+    "language": "Language",
+    "theme": "Theme",
+    "notification": "Notification",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "english": "English",
+    "vietnamese": "Vietnamese",
+    "cancel": "Cancel",
+    "save": "Save",
+    "lightMode": "Light Mode"
+  }
+}

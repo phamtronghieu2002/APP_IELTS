@@ -9,6 +9,7 @@ export const routeConfig = {
   manager_listening: "/mananger/listening",
   manager_speaking: "/mananger/speaking",
   manager_writing: "/mananger/writing",
+  manager_vocabulary: "/mananger/vocabulary",
 
 
   manager_grammar: "/mananger/grammar",

@@ -111,10 +111,11 @@ export const screensStack = [
 
 ]
 
-export const screensDrawer = [
+export const screensDrawer = (t) => [
     // tôi cần chỗ này 
 
     {
+        label: t?.('draw.profile'),
         name: configs.screenName.profile,
         component: Profile,
         options: {
@@ -127,6 +128,7 @@ export const screensDrawer = [
 
     },
     {
+        label: t?.('draw.feedback'),
         name: configs.screenName.feedback,
         component: Profile,
         options: {
@@ -138,6 +140,8 @@ export const screensDrawer = [
 
     },
     {
+        label: t?.('draw.share'),
+
         name: configs.screenName.share,
         component: Profile,
         options: {
@@ -149,7 +153,8 @@ export const screensDrawer = [
 
     }
     ,
-    {
+    {   
+        label: t?.('draw.privacy'),
         name: configs.screenName.privacy,
         component: Profile,
         options: {
@@ -161,7 +166,7 @@ export const screensDrawer = [
 
     },
     {
-        label: "Term and Condition",
+        label: t?.('draw.terms'),
         name: configs.screenName.termAndCondition,
         component: Profile,
         options: {

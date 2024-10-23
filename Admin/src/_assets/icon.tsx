@@ -9,7 +9,7 @@ import {
   LiaChartAreaSolid,
   LiaDrawPolygonSolid,
   LiaTemperatureLowSolid,
-  LiaTrashAlt
+  LiaTrashAlt,
 } from "react-icons/lia"
 import {
   MdOutlineLocalPolice,
@@ -31,8 +31,7 @@ import {
   PiCarFill,
 } from "react-icons/pi"
 
-
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa"
 import {
   RiChatHistoryFill,
   RiFolderSettingsFill,
@@ -41,7 +40,7 @@ import {
 } from "react-icons/ri"
 import { SiPolywork } from "react-icons/si"
 import { TbLassoPolygon, TbListDetails, TbNetworkOff } from "react-icons/tb"
-
+import { FaSortAlphaUp } from "react-icons/fa"
 export * as Fa6Icon from "react-icons/fa6"
 export * as FaIcon from "react-icons/fa"
 export * as SiIcon from "react-icons/si"
@@ -65,20 +64,40 @@ export * as TfiIcon from "react-icons/tfi"
 import { FaHeadphones } from "react-icons/fa"
 import { FaAddressBook } from "react-icons/fa"
 import { FaMicrophone } from "react-icons/fa"
-import { BiCategory } from "react-icons/bi";
+import { BiCategory } from "react-icons/bi"
 import { FaPen } from "react-icons/fa6"
-import { MdPolicy } from "react-icons/md";
-import { BsFillFileEarmarkRuledFill } from "react-icons/bs";
-import { FaUsers } from "react-icons/fa";
-import { BsFileEarmarkRuledFill } from "react-icons/bs";
-import { SiFacebookgaming } from "react-icons/si";
+import { MdPolicy } from "react-icons/md"
+import { BsFillFileEarmarkRuledFill } from "react-icons/bs"
+import { FaUsers } from "react-icons/fa"
+import { BsFileEarmarkRuledFill } from "react-icons/bs"
+import { SiFacebookgaming } from "react-icons/si"
+import { FaListCheck } from "react-icons/fa6"
+import { FaHome } from "react-icons/fa"
 
-
-
+import { MdOutlineTextRotationNone } from "react-icons/md"
+import { MdOutlinePhoneIphone } from "react-icons/md";
+import { FiSmartphone } from "react-icons/fi";
+import { CiCirclePlus } from "react-icons/ci";
+import { FaRegFaceSmileBeam } from "react-icons/fa6";
+import { MdOutlineTextIncrease } from "react-icons/md";
+import { AiOutlineSound } from "react-icons/ai";
+import { BsQuestionSquareFill } from "react-icons/bs";
 const IconLib = {
+  BsQuestionSquareFill,
+  AiOutlineSound,
+  MdOutlineTextIncrease,
+  FaRegFaceSmileBeam,
+  CiCirclePlus,
+  FiSmartphone,
+  MdOutlinePhoneIphone,
+  FaHome,
+  FaListCheck,
+  MdOutlineTextRotationNone,
+  FaSortAlphaUp,
+  FaTrash,
   FaEdit,
   LiaTrashAlt,
-  SiFacebookgaming ,
+  SiFacebookgaming,
   BsFileEarmarkRuledFill,
   FaUsers,
   BsFillFileEarmarkRuledFill,

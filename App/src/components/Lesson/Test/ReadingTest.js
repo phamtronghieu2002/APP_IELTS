@@ -74,14 +74,19 @@ const ReadingTest = ({ navigation, route }) => {
     <SafeAreaView>
       <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
       <View className="flex flex-row justify-center items-center pl-5 pr-5">
-        <Text className="font-bold">
+        <Text className="font-bold mr-3 text-red-600">
           {countProgress + "/" + questions.total_question}
         </Text>
         <Progress.Bar
+          style={{
+            backgroundColor: "white",
+            borderColor: "white",
+          }}
           progress={countProgress / questions.total_question || 0}
-          className="max-w-full ml-2"
-          width={150}
-          color="#FF0505"
+          color="red"
+          width={300}
+          height={10}
+          borderRadius={15}
         />
       </View>
       <ScrollView className="p-7">
@@ -214,7 +219,7 @@ const ReadingTest = ({ navigation, route }) => {
                 }
                 if (
                   currentQuestion <
-                    questions?.questions?.length - choiceQuestions.length &&
+                  questions?.questions?.length - choiceQuestions.length &&
                   partQuestion == 1
                 ) {
                   console.log("choice_question2", choiceQuestions.length);

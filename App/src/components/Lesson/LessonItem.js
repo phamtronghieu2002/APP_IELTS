@@ -94,7 +94,9 @@ const LessonItem = ({
             <View className="top flex flex-row justify-between items-center">
                 <View className="left flex flex-row gap-3">
                     {icon}
-                    <Text className="text-lg font-bold">
+                    <Text
+
+                        className="text-lg font-bold flex-wrap">
                         {name_lesson}
                     </Text>
                 </View>
@@ -126,11 +128,12 @@ const LessonItem = ({
                             backgroundColor='#f0f0f0'
                             color='red'
                             borderColor='#f0f0f0'
-                            progress={percent_correct / 100}
+                            // chỉ  lấy 2 chử số thập phân
+                            progress={(percent_correct / 100)}
                             width={100}
                         />
                         <Text className={colorPercent}>
-                            {percent_correct}%
+                            {percent_correct.toFixed(0)}%
                         </Text>
                     </View>
                 </View>

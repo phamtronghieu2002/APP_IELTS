@@ -1,0 +1,29 @@
+{
+  "draw": {
+    "home": "Trang chủ",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất",
+    "privacy": "Quyền riêng tư",
+    "terms": "Điều khoản",
+    "share": "Chia sẻ",
+    "feedback": "Phản hồi"
+  },
+  "menuBottom": {
+    "home": "Trang chủ",
+    "statiatis": "Thống kê",
+    "setting": "Cài đặt"
+  },
+  "setting": {
+    "language": "Ngôn ngữ",
+    "theme": "Chủ đề",
+    "notification": "Thông báo",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "english": "English",
+    "vietnamese": "Vietnamese",
+    "cancel": "Cancel",
+    "save": "Save",
+    "lightMode": "Chế độ sáng"
+  }
+}

@@ -59,9 +59,8 @@ const ModalForm: FC<{
         name_lesson,
         id: data?._id,
       })
-      dispath({ type: "refresh" })
-
-      dispath({ type: "loading", payload: false })
+      dispath({ type: "SET_REFRESH" })
+      dispath({ type: "SET_LOADING", payload: false })
       api?.message?.success("Sửa bài học thành công")
       action?.closeModal()
     } catch (error) {
@@ -72,8 +71,8 @@ const ModalForm: FC<{
     try {
       dispath({ type: "loading", payload: true })
       await deleteLesson(data?._id)
-      dispath({ type: "refresh" })
-      dispath({ type: "loading", payload: false })
+      dispath({ type: "SET_REFRESH" })
+      dispath({ type: "SET_LOADING", payload: false })
       api?.message?.success("xóa  bài học thành công")
       action?.closeModal()
     } catch (error) {
@@ -140,7 +139,7 @@ const ModalForm: FC<{
               variant="solid"
               color="danger"
               icon={<CloseOutlined />}
-              onClick={action?.onCancel}
+              onClick={action?.closeModal}
             >
               Hủy
             </Button>

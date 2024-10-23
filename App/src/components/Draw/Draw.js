@@ -11,8 +11,10 @@ import {
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { screensDrawer } from '../../navigators/config';
 import Icon from 'react-native-vector-icons/Ionicons';
+import useLang from '../../hooks/useLang';
 const DrawCustom = (props) => {
-
+     
+    const { t } = useLang();
     return (
         <DrawerContentScrollView
             style={{
@@ -51,7 +53,7 @@ const DrawCustom = (props) => {
             </View>
 
             {props.state.routes.map((route, index) => {
-                const screen = screensDrawer.find((item) => item.name === route.name);
+                const screen = screensDrawer(t).find((item) => item.name === route.name);
      
                 
           

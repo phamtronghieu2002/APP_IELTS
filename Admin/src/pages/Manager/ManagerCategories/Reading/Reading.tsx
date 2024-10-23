@@ -12,7 +12,7 @@ const Reading: FC<ReadingProps> = () => {
     (category: any) => category.type === "Reading",
   )?._id
 
-  return <TabWrapper items={items(id_category_Reading)} />
+  return <TabWrapper items={items(id_category_Reading, "Reading")} />
 }
 
 export default () => {

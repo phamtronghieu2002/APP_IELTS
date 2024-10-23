@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import RenderHtml from "react-native-render-html";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icon
 
 const ExpandableText = ({ text, initialHeight = 200 }) => {
-    const [expanded, setExpanded] = React.useState(false); // State cho show more/less
+    const [expanded, setExpanded] = React.useState(true); // State cho show more/less
     const [collapsed, setCollapsed] = React.useState(false); // State cho việc ẩn toàn bộ nội dung
     const [textHeight, setTextHeight] = React.useState(0); // Chiều cao thật của văn bản
     const animatedHeight = React.useRef(new Animated.Value(initialHeight)).current;
+    const { width } = useWindowDimensions();
 
     const toggleExpand = () => {
         if (expanded) {
@@ -57,8 +59,10 @@ const ExpandableText = ({ text, initialHeight = 200 }) => {
 
 
                     {!collapsed && (
+
+
                         <Text
-                          className="mt-3"
+                            className="mt-3"
                             onLayout={(event) => {
                                 const { height } = event.nativeEvent.layout;
                                 if (textHeight === 0) {
@@ -66,7 +70,13 @@ const ExpandableText = ({ text, initialHeight = 200 }) => {
                                 }
                             }}
                         >
-                            {text}
+                            <RenderHtml
+                                contentWidth={width}
+                                source={{
+                                    html:text
+                                      
+                                }}
+                            />
                         </Text>
                     )}
                 </Animated.View>
@@ -75,7 +85,7 @@ const ExpandableText = ({ text, initialHeight = 200 }) => {
                 {!collapsed && (
                     <TouchableOpacity onPress={toggleExpand} className="flex items-center">
                         <Text style={{ color: 'blue', marginTop: 10 }}>
-                            {expanded ? 'Show More' :  'Show Less'}
+                            {expanded ? 'Show More' : 'Show Less'}
                         </Text>
                     </TouchableOpacity>
                 )}
