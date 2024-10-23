@@ -155,7 +155,7 @@ export const screensDrawer = (t) => [
 
     }
     ,
-    {   
+    {
         label: t?.('draw.privacy'),
         name: configs.screenName.privacy,
         component: Policy,
@@ -171,12 +171,13 @@ export const screensDrawer = (t) => [
     {
         label: t?.('draw.terms'),
         name: configs.screenName.termAndCondition,
-        component: Profile,
+        component: Term,
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
                 <IconM name="privacy-tip" size={20} color={color} />
             ),
+            headerShown: false
         },
 
     },
