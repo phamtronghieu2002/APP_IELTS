@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
+import RenderHtml from "react-native-render-html";
 import {
     View,
     Text,
@@ -13,7 +14,9 @@ import {
     Pressable,
 } from 'react-native';
 import IconA from 'react-native-vector-icons/FontAwesome5';
+import { useWindowDimensions } from "react-native";
 const Explain = ({ is_correct, explain, anwser }) => {
+    const { width } = useWindowDimensions();
     const icon = is_correct ? 'https://res.cloudinary.com/dzpj1y0ww/image/upload/v1728032233/ielts/happy-face_1_r8nulh.png' : 'https://res.cloudinary.com/dzpj1y0ww/image/upload/v1728032427/ielts/sad_1_gnhkwx.png';
     const colorText = is_correct ? 'text-green-500' : 'text-red-500';
     const colorIcon = is_correct ? 'yellow' : 'red';
@@ -45,9 +48,13 @@ const Explain = ({ is_correct, explain, anwser }) => {
                 <Text className="text-blue-800 text-lg mb-2">
                     Explain
                 </Text>
-                <Text className="">
-                {explain}
-                </Text>
+                
+                <RenderHtml
+                contentWidth={width}
+                source={{
+                  html: explain,
+                }}
+              />
             </View>
         </View>
     );

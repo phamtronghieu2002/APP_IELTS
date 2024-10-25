@@ -19,7 +19,7 @@ import configs from '../configs';
 import { TouchableOpacity } from 'react-native';
 import { store } from '../app/store';
 import { setGradient, setShowHeaderDraw } from '../fetures/interfaceSlice';
-
+import  useLang from '..//hooks/useLang'
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Khởi tạo Drawer Navigator
@@ -43,6 +43,7 @@ export const InitStack = ({ navigation, route }) => {
 
 // Tab Navigator 
 export const MyTabs = () => {
+  const { t } = useLang();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -59,7 +60,7 @@ export const MyTabs = () => {
         options={{
           headerShown: false,
 
-          tabBarLabel: 'Home', // Nhãn cho tab
+          tabBarLabel:  t('menuBottom.home'), // Nhãn cho tab
 
           tabBarIcon: ({ color, size }) => (
             <Icon name="home-outline" size={size} color={color} />
@@ -86,7 +87,7 @@ export const MyTabs = () => {
         component={Statistic}
         options={{
           headerShown: false,
-          tabBarLabel: 'Statistic', // Nhãn cho tab
+          tabBarLabel: t('menuBottom.statiatis'), // Nhãn cho tab
           tabBarIcon: ({ color, size }) => (
             <Icon name="stats-chart-outline" color={color} size={size} />
           ),
@@ -110,7 +111,7 @@ export const MyTabs = () => {
         component={Setting}
         options={{
           headerShown: false,
-          tabBarLabel: 'Setting', // Nhãn cho tab
+          tabBarLabel:  t('menuBottom.setting'), // Nhãn cho tab
           tabBarIcon: ({ color, size }) => (
             <Icon name="settings-outline" color={color} size={size} />
           ),
@@ -136,7 +137,7 @@ export const MyTabs = () => {
 // Drawer Navigator
 const MyDrawer = () => {
   const isShowHeaderDraw = store.getState().interface.isShowHeaderDraw;
-
+  const { t } = useLang();
   return (
     <Drawer.Navigator
 
@@ -150,10 +151,11 @@ const MyDrawer = () => {
           width: Dimensions.get('window').width / 1.25,
         },
       })}
+      
       initialRouteName={configs?.screenName?.home}>
       <Drawer.Screen name={configs?.screenName?.home} component={MyTabs} />
       {
-        screensDrawer.map((screen, index) => (
+        screensDrawer(t).map((screen, index) => (
           <Drawer.Screen key={index} {...screen} />
         ))
       }

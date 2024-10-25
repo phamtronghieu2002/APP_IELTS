@@ -4,6 +4,21 @@
     "slug": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
+
+    "plugins": [
+      [
+         
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone.",
+          "speechRecognitionPermission": "Allow $(PRODUCT_NAME) to use speech recognition.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox"
+          ]
+        }
+      ]
+   
+    ],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -26,10 +41,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "1f7e63e5-0528-407d-a4be-3fe1ed2d121d"
+        "projectId": "8bdba1ca-ae76-4f43-985d-1b9767d6d55f"
       }
     },
-    "scheme": "mycoolredirect",
-    "owner": "phamhieu2002iuh"
+    "scheme": "mycoolredirect"
   }
 }

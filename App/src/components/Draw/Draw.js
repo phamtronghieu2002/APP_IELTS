@@ -11,14 +11,17 @@ import {
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { screensDrawer } from '../../navigators/config';
 import Icon from 'react-native-vector-icons/Ionicons';
+import useLang from '../../hooks/useLang';
 const DrawCustom = (props) => {
 
+    const { t } = useLang();
     return (
         <DrawerContentScrollView
             style={{
                 zIndex: 999,
                 width: '100%',
                 position: 'relative',
+                borderBottomRightRadius: 20,
             }}
             {...props}>
             <TouchableOpacity
@@ -51,10 +54,12 @@ const DrawCustom = (props) => {
             </View>
 
             {props.state.routes.map((route, index) => {
-                const screen = screensDrawer.find((item) => item.name === route.name);
-     
+                console.log("route.name", route.name);
                 
-          
+                const screen = screensDrawer(t).find((item) => item.name === route.name);
+
+
+
                 return (
                     <TouchableOpacity
                         className="border-gray-100 font-light"
@@ -69,7 +74,7 @@ const DrawCustom = (props) => {
                             paddingLeft: 15,
                             backgroundColor: route.name === props.state.routeNames[props.state.index] ? '#e0e0e0' : '#fff',
                         }}
-                        onPress={() => { props.navigation.navigate(route.name) }}
+                        onPress={() => { props.navigation.navigate(route.name,{}) }}
                     >
                         <View className="flex justify-end flex-row items-end w-7">
                             {screen?.options?.drawerIcon && screen.options.drawerIcon({ focused: true, color: '#6c706d', size: 20 })}

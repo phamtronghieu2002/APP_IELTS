@@ -29,3 +29,14 @@ export const handleAddQuestion = async (req, res, next) => {
     }
 }
 
+// export const handleAddTextResult = async (req, res, next) => {
+//     try {
+//         const { test_id, type } = req.query;
+//         const data = req.body?.anwser;
+//         const result = await testServices?.addQuestion(test_id, type, data);
+//         return res.status(StatusCodes.CREATED).json(result);
+
+//     } catch (error) {
+//         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
+//     }
+// }

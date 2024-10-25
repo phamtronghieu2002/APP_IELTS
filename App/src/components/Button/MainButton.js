@@ -13,7 +13,7 @@ import {
     Pressable,
 } from 'react-native';
 
-const MainButton = ({ onPress, title, style, className, width, height, roundedfull }) => {
+const MainButton = ({ onPress, title, style, className, width, height, roundedfull, disabled}) => {
     return (
         <Pressable
             className={roundedfull ? 'rounded-full' : 'rounded-lg'}
@@ -24,9 +24,9 @@ const MainButton = ({ onPress, title, style, className, width, height, roundedfu
                 alignItems: 'center',
                 justifyContent: 'center',
                 width,
-                height
+                height,
             }, style]}
-
+            disabled={disabled}
             onPress={onPress}>
             <Text className='text-lime-50 text-[16px]'>{title}</Text>
         </Pressable>
@@ -34,6 +34,7 @@ const MainButton = ({ onPress, title, style, className, width, height, roundedfu
 };
 
 MainButton.propTypes = {
+    disabled: PropTypes.bool,
     onPress: PropTypes.func,
     title: PropTypes.string,
     style: PropTypes.object,

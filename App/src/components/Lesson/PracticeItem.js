@@ -15,7 +15,7 @@ const PraticeItem = ({
     _id,
     name_test,
     percent_correct,
- 
+
 
 }) => {
 
@@ -25,7 +25,7 @@ const PraticeItem = ({
 
         onPress?.();
     }
-    const colorPercent = percent_correct > 0 ? 'border-red-400 text-red-500' : 'bg-gray-200';
+    const colorPercent = percent_correct > 0 ? 'border-red-400 text-red-500' : 'bg-light-200';
     return (
         <View
             onPressIn={(e) => e.stopPropagation()}  // Stop the event from reaching parent
@@ -33,14 +33,23 @@ const PraticeItem = ({
 
             className='p-3 pb-0 pt-0'>
             <Pressable
+                 style={
+                    {
+                        borderBottomColor: '#f9f1f3',
+                         borderBottomWidth: 1,
+                    }
+                 }
                 onPress={handlePress}
-                className="border-b-2  border-gray-200 pt-3 pb-3 flex flex-row items-center min-h-[40px]">
+                className="pt-3 pb-3 flex flex-row items-center min-h-[40px]">
                 <IconO
                     color={'#f9f1f3'}
                     name='dot-fill'
                     size={20}
                 />
-                <Text className="ml-3">
+                <Text
+                    numberOfLines={2} // Giới hạn số dòng là 2
+                    ellipsizeMode="tail" // Thêm dấu "..." nếu vượt quá số dòng
+                    className="ml-3">
                     {name_test}
                 </Text>
                 <View className="flex flex-row flex-1 justify-end">
@@ -53,7 +62,7 @@ const PraticeItem = ({
                         }}
                     >
                         <Text className={`${colorPercent}`}>
-                            {`${percent_correct}%`}
+                            {`${percent_correct.toFixed(0)}%`}
                         </Text>
                     </View>
                 </View>

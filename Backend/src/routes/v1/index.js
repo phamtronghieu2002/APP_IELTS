@@ -12,7 +12,7 @@ import privacyRoute from "./PrivacyAndTermRoute";
 import tipRoute from "./TipRoute";
 import toturialRoute from "./totutialRoute";
 import vocRoute from "./VocRoute";
-
+import gptRoute from "./GPTRoute";
 import { veryfyUser } from "~/middlewares/authMiddleware";
 const initAPIRoutes = (app) => {
 
@@ -29,6 +29,7 @@ const initAPIRoutes = (app) => {
       app.use("/api/v1/tip", tipRoute);
       app.use("/api/v1/toturial", toturialRoute);
       app.use("/api/v1/voc", vocRoute);
+      app.use("/api/v1/gpt", gptRoute);
 
 }
 
