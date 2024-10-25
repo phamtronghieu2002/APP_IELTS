@@ -95,7 +95,6 @@ export const screensStack = [
         component: TipContent,
         options: { title: "Welcome profile", headerShown: false },
     },
-
     {
         name: configs.screenName.about,
         component: About,
