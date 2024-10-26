@@ -112,6 +112,7 @@ const RadioButtonForm = ({
             anwser={
               item.options.find((a) => a.is_correct)?.text
             }
+            type= "normal"
           />
         )}
       </View>

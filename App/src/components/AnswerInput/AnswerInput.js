@@ -68,6 +68,7 @@ const AnswerInputArea = ({
               is_correct={checkiscorrect(item.is_correct,index)}
               explain={item.explain}
               anwser={item.is_correct}
+              type= "normal"
             />
           </View>
     )
