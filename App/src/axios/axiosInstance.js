@@ -4,7 +4,7 @@ import { getToken } from "../utils/token";
 axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-  baseURL: `http://192.168.85.187:8080/api/v1`,
+  baseURL: `http://192.168.78.133:8080/api/v1`,
 });
 
 instance.interceptors.request.use(async function (config) {
