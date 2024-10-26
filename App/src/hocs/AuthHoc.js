@@ -18,7 +18,6 @@ export default function AuthHoc({ children, navigation }) {
         
         if (data) {
             console.log("acessToken>>:",data?.accessToken);
-            
             dispatch(loginUser(data))
             navigation.navigate(configs?.screenName.initStack, { home: 123 });
             return

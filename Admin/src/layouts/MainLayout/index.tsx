@@ -15,7 +15,7 @@ import { UserHead } from "./components/UserHead"
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai"
 import { AppMainTab } from "../../pages/AppMainTab"
 import { LayoutSideBar } from "./components/SideBar"
-import ManagerLesson from "../../pages/Manager/ManagerLesson/ManagerLesson"
+
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -44,7 +44,7 @@ export const MainLayout: React.FC<IProps> = ({
           <Content>
             <div className="h-[100vh] relative">
               <div className="h-full z-[9] relative">
-                <ManagerLesson />
+          
               </div>
               <div
                 style={{

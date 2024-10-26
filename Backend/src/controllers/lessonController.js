@@ -55,5 +55,14 @@ const handleUpdateLesson = async (req, res, next) => {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
     }
 }
+const  handleGetLessonById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await lessonServices?.getLessonById(id);
+        return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
+    }
+}
 
-module.exports = { handleAddLesson,handleGetLessons ,handleAddTest,handleDeleteLesson,handleUpdateLesson}
+module.exports = { handleAddLesson,handleGetLessons ,handleAddTest,handleDeleteLesson,handleUpdateLesson,handleGetLessonById}

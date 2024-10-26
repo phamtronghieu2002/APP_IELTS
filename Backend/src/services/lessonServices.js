@@ -13,8 +13,8 @@ const addlesson = async (lesson) => {
 const getLessonsByCateId = async (cate_id, keyword) => {
     // Tạo điều kiện tìm kiếm chung
     let searchCondition = { cate_id: cate_id };
-  console.log("keyword",keyword);
-  
+    console.log("keyword", keyword);
+
     // Nếu có keyword, thêm điều kiện tìm kiếm cho tất cả các field
     if (keyword) {
         const keywordRegex = new RegExp(keyword, 'i'); // 'i' để tìm kiếm không phân biệt hoa thường
@@ -44,7 +44,19 @@ const getLessonsByCateId = async (cate_id, keyword) => {
         errCode: 0,
     };
 };
+const getLessonById = async (id) => {
 
+
+    const lesson = await lessonModel.findById(id).populate('cate_id').populate({
+        path: 'tests',
+        populate: { path: 'questions' }
+    }).exec();
+    return {
+        data: lesson,
+        message: "Get Lesson successfully",
+        errCode: 0,
+    };
+}
 
 const addTest = async (id, data) => {
     const test_id = data?.test;
@@ -53,7 +65,7 @@ const addTest = async (id, data) => {
     const testObject = test?.toObject();
 
 
-    const count_question = testObject?.questions[0]?.total_question;
+    const count_question = testObject?.questions[0]?.total_question || 0;
 
     const result = await lessonModel.findOneAndUpdate({ _id: id }, { $push: { tests: test_id }, $inc: { total_question: count_question } }, { new: true });
     return {
@@ -90,5 +102,5 @@ const updateLesson = async (id, data) => {
 
 
 module.exports = {
-    addlesson, getLessonsByCateId, addTest, deleteLesson, updateLesson
+    addlesson, getLessonsByCateId, addTest, deleteLesson, updateLesson, getLessonById
 }

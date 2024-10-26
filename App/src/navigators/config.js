@@ -21,6 +21,13 @@ import ReadingTest from "../components/Lesson/Test/ReadingTest";
 import ListeningTest from "../components/Lesson/Test/ListeningTest";
 import SpeakingTest from "../components/Lesson/Test/SpeakingTest";
 import WritingTest from "../components/Lesson/Test/WritingTest";
+import Policy from "../screens/Policy/Policy";
+import AboutIelts from "../screens/About/AboutIelts";
+import AboutDetail from "../screens/About/AboutDetail";
+import Tip from "../screens/Tips/Tips";
+import TipDetail from "../screens/Tips/TipDetail";
+import TipContent from "../screens/Tips/TipContent";
+import Record from "../screens/Record/Record";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -31,11 +38,16 @@ export const screensStack = [
         name: 'initTab',
         options: { title: "Welcome MyTab", headerShown: false },
     },
-
+    
     {
         name: configs.screenName.setting,
         component: Setting,
         options: { title: "Welcome profile", headerShown: true },
+    },
+    {
+        name: configs.screenName.record,
+        component: Record,
+        options: { title: "Welcome profile", headerShown: false },
     },
     {
         name: configs.screenName.overview,
@@ -89,12 +101,26 @@ export const screensStack = [
     },
     {
         name: configs.screenName.tips,
-        component: Tips,
+        component: Tip,
+        options: { title: "Welcome profile", headerShown: false },
+    }, {
+        name: configs.screenName.tipDetail,
+        component: TipDetail,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    , {
+        name: configs.screenName.tipContent,
+        component: TipContent,
         options: { title: "Welcome profile", headerShown: false },
     },
     {
         name: configs.screenName.about,
         component: About,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.about_detail,
+        component: AboutDetail,
         options: { title: "Welcome profile", headerShown: false },
     },
     {
@@ -125,14 +151,21 @@ export const screensStack = [
         options: { title: "Welcome Logins", headerShown: false, },
 
     },
+    // {
+    //     name: configs.screenName.about,
+    //     component: AboutIelts,
+    //     options: { title: "Welcome Logins", headerShown: false, },
+
+    // },
 
 
 ]
 
-export const screensDrawer = [
+export const screensDrawer = (t) => [
     // tôi cần chỗ này 
 
     {
+        label: t?.('draw.profile'),
         name: configs.screenName.profile,
         component: Profile,
         options: {
@@ -140,11 +173,13 @@ export const screensDrawer = [
             drawerIcon: ({ focused, color, size }) => (
                 <Icon name="user" size={size} color={color} />
             ),
+            headerShown: false
         },
 
 
     },
     {
+        label: t?.('draw.feedback'),
         name: configs.screenName.feedback,
         component: Profile,
         options: {
@@ -156,6 +191,8 @@ export const screensDrawer = [
 
     },
     {
+        label: t?.('draw.share'),
+
         name: configs.screenName.share,
         component: Profile,
         options: {
@@ -168,25 +205,28 @@ export const screensDrawer = [
     }
     ,
     {
+        label: t?.('draw.privacy'),
         name: configs.screenName.privacy,
-        component: Profile,
+        component: Policy,
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
                 <IconM name="folder" size={20} color={color} />
             ),
+            headerShown: false
         },
 
     },
     {
-        label: "Term and Condition",
+        label: t?.('draw.terms'),
         name: configs.screenName.termAndCondition,
-        component: Profile,
+        component: Term,
         options: {
             title: "Welcome Profile", headerShown: true,
             drawerIcon: ({ focused, color, size }) => (
                 <IconM name="privacy-tip" size={20} color={color} />
             ),
+            headerShown: false
         },
 
     },

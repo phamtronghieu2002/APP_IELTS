@@ -8,66 +8,66 @@ import configs from '../../configs';
 import { storeData, getData } from '../../utils/asyncStore';
 import { register } from '../../services/authService';
 import Toast from 'react-native-toast-message';
-// import {
-//     GoogleSignin,
-//     GoogleSigninButton,
-//     statusCodes,
-//   } from '@react-native-google-signin/google-signin';
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+  } from '@react-native-google-signin/google-signin';
 const webClientId = "1013873615823-cl9jhtcai95mcuhenqp2j5kvg8nvpekr.apps.googleusercontent.com";
 const androidClientId = "1013873615823-0r8ku736ooi3fiuaghi2bsrtfjfabv78.apps.googleusercontent.com";
 
 
-// GoogleSignin.configure({
-//     webClientId, // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
-//     scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-//     offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-//     hostedDomain: '', // specifies a hosted domain restriction
-//     forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
-//     accountName: '', // [Android] specifies an account name on the device that should be used
-//     androidClientId, // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-//     googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. "GoogleService-Info-Staging"
-//     openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
-//     profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
-//   });
+GoogleSignin.configure({
+    webClientId, // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+    scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+    offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+    hostedDomain: '', // specifies a hosted domain restriction
+    forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+    accountName: '', // [Android] specifies an account name on the device that should be used
+    // androidClientId, // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. "GoogleService-Info-Staging"
+    openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
+    profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
+  });
 const Login = ({ navigation, route }) => {
 
     const isIntro = route?.params?.isIntro;
     const dispatch = useDispatch();
-    // const signIn = async () => {
-    //     try {
-    //       await GoogleSignin.hasPlayServices();
-    //       const response = await GoogleSignin.signIn();
-    //       if (isSuccessResponse(response)) {
-    //         // Get the users ID token
-    //         const userInfo = response?.data;
-    //         navigation?.navigate(configs?.screenName?.home, { userInfo });
-    //       } else {
-
-    //       }
-    //     } catch (error) {
-    //       if (isErrorWithCode(error)) {
-    //         switch (error.code) {
-    //           case statusCodes.IN_PROGRESS:
-    //             // operation (eg. sign in) already in progress
-    //             break;
-    //           case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-    //             // Android only, play services not available or outdated
-    //             break;
-    //           default:
-    //           // some other error happened
-    //         }
-    //       } else {
-    //         // an error that's not related to google sign in occurred
-    //       }
-    //     }
-    //   };
-
     const signIn = async () => {
+        try {
+          await GoogleSignin.hasPlayServices();
+          const response = await GoogleSignin.signIn();
+ 
+          
+          if (response) {
+            // Get the users ID token
+            const userInfo = response?.data;
+            console.log("userInfo >>", userInfo);
+            
+            navigation?.navigate(configs?.screenName?.home, { userInfo });
+          } else {
 
+          }
+        } catch (error) {
+            console.log("error >>", error);
+            
+          if (isErrorWithCode(error)) {
+            switch (error.code) {
+              case statusCodes.IN_PROGRESS:
+                // operation (eg. sign in) already in progress
+                break;
+              case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+                // Android only, play services not available or outdated
+                break;
+              default:
+              // some other error happened
+            }
+          } else {
+            // an error that's not related to google sign in occurred
+          }
+        }
+      };
 
-
-
-    };
 
 
     const handleContinueAsGuest = async () => {
@@ -81,7 +81,7 @@ const Login = ({ navigation, route }) => {
             if (user) {
                 dispatch(loginUser(user));
                 // lưu user vào async storage
-                storeData?.('user', JSON.stringify(user));
+                storeData?.('user', user);
                 Toast.show({
                     type: 'success',
                     text1: 'Login success fully !!',

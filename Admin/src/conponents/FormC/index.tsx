@@ -38,6 +38,7 @@ export interface IFieldC {
 }
 
 interface IProps {
+  onChange?: (name: string,value:string) => void
   props?: FormProps
   fields: (IFieldC | null | string)[]
   initialValues?: {
@@ -54,6 +55,7 @@ interface IProps {
 export const FormC = forwardRef<FormInstance<any>, IProps>(
   (
     {
+      onChange,
       props = {},
       fields = [],
       initialValues = {},
@@ -128,6 +130,7 @@ export const FormC = forwardRef<FormInstance<any>, IProps>(
                             className={item?.className}
                             disabled={item?.disabled}
                             onChange={(e) => {
+                              onChange?.("name_test",e.target.value)
                               item?.onChange && item?.onChange(e, item?.name)
                             }}
                             addonAfter={item?.addonAfter}

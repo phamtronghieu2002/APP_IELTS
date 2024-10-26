@@ -4,9 +4,12 @@ import axios from "./axiosInstance"
 export const getLessonByCategory = async (category: any, keyword: string) => {
   return axios.get(`/lesson/category/${category}?keyword=${keyword}`)
 }
+// lấy lesson theo id
+export const getLessonById = async (id: string) => {
+  return axios.get(`/lesson/${id}`)
+}
 
 //thêm lesson
-
 export const addLesson = async (data: {
   name_lesson: string
   cate_id: string

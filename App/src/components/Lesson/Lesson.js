@@ -77,7 +77,7 @@ const Lesson = ({ navigation, route }) => {
                             key={index}
                             navigation={navigation}
                             tests={test}
-                            total_question={10}
+                            total_question={lesson?.total_question}
                             {...lesson}
                             category={category || "Reading"}
                             icon={<IconF

@@ -38,23 +38,28 @@ const Profile = ({ navigation, route }) => {
     }
     return (
 
-        <LoginLayout
-            profile
-            Image={<Image className=""
-                source={require('..//..//..//assets//avatar.png')}
-                style={{
-                    width: 150,
-                    height: 150,
-                    marginBottom: 20
-                }} />}
+        <View className="">
+            <Text className="">
+                xin chao
+            </Text>
+        </View>
+        // <LoginLayout
+        //     profile
+        //     Image={<Image className=""
+        //         source={require('..//..//..//assets//avatar.png')}
+        //         style={{
+        //             width: 150,
+        //             height: 150,
+        //             marginBottom: 20
+        //         }} />}
 
-        >
-            <Form
-                formFields={formFields}
-                onSubmit={handeUpdateProfile}
-                title='update'
-            />
-        </LoginLayout>
+        // >
+        //     <Form
+        //         formFields={formFields}
+        //         onSubmit={handeUpdateProfile}
+        //         title='update'
+        //     />
+        // </LoginLayout>
 
 
     );

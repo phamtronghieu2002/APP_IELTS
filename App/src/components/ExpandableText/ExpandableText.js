@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Animated, Button } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Button, useWindowDimensions} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import RenderHtml from "react-native-render-html";
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icon
 import { Audio } from 'expo-av';
 import Slider from '@react-native-community/slider';
@@ -146,15 +147,21 @@ const ExpandableText = ({ text, initialHeight = 200 , type}) => {
                     {!collapsed && type == "text" && (
                         <Text
                         className="mt-3"
-                          onLayout={(event) => {
-                              const { height } = event.nativeEvent.layout;
-                              if (textHeight === 0) {
-                                  setTextHeight(height); // Lưu chiều cao thật của văn bản
-                              }
-                          }}
-                      >
-                          {text}
-                      </Text>
+                        onLayout={(event) => {
+                            const { height } = event.nativeEvent.layout;
+                            if (textHeight === 0) {
+                                setTextHeight(height); // Lưu chiều cao thật của văn bản
+                            }
+                        }}
+                    >
+                        <RenderHtml
+                            contentWidth={width}
+                            source={{
+                                html:text
+                                  
+                            }}
+                        />
+                    </Text>
                     )}
                     {!collapsed && type == "audio" && (
                         <View
@@ -194,7 +201,7 @@ const ExpandableText = ({ text, initialHeight = 200 , type}) => {
                 {!collapsed && (
                     <TouchableOpacity onPress={toggleExpand} className="flex items-center">
                         <Text style={{ color: 'blue', marginTop: 10 }}>
-                            {expanded ? 'Show More' :  'Show Less'}
+                            {expanded ? 'Show More' : 'Show Less'}
                         </Text>
                     </TouchableOpacity>
                 )}

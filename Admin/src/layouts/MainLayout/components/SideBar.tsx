@@ -7,7 +7,7 @@ import { UserHead } from "./UserHead"
 import { memo, useState } from "react"
 
 export const LayoutSideBar: React.FC = memo(() => {
-  const [collapsed, setCollapsed] = useState(true)
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
     <ConfigProvider

@@ -19,11 +19,11 @@ const handleGetQuestions = async (req, res, next) => {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
     }
 }
-const handleUpdateQuestionByTestId = async (req, res, next) => {
+const handleupdateQuestionById = async (req, res, next) => {
     try {
         const { id } = req.params;
         const data = req.body;
-        const result = await questionServices?.updateQuestionByTestId(id, data);
+        const result = await questionServices?.updateQuestionById(id, data);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
@@ -32,9 +32,20 @@ const handleUpdateQuestionByTestId = async (req, res, next) => {
 
 const handleDeleteQuestionById = async (req, res, next) => {
     try {
-        const  questionid  = req.query?.questionid;
-        const  testid  = req.params.id
-        const result = await questionServices?.deleteQuestion(testid,questionid);
+        const sub_question_id = req.query?.sub_q_id;
+        const question_id = req.query?.q_id;
+        const lesson_id  = req.query?.lesson_id;
+        const result = await questionServices?.deleteQuestion(question_id,sub_question_id,lesson_id);
+        return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
+    }
+}
+
+const handleGetQuestionById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await questionServices?.getQuestionById(id);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
@@ -42,4 +53,4 @@ const handleDeleteQuestionById = async (req, res, next) => {
 }
 
 
-module.exports = { handleAddQuestion ,handleGetQuestions,handleUpdateQuestionByTestId,handleDeleteQuestionById}
+module.exports = { handleAddQuestion, handleGetQuestions, handleupdateQuestionById, handleDeleteQuestionById, handleGetQuestionById }

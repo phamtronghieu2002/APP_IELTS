@@ -39,6 +39,13 @@ import storage from "./storage"
 type REALTIME_PROMISE_DATA = "gps" | "info" | "alarm"
 
 export const _app = {
+
+  randomId(){
+    return  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  },
+  getImageUrl: (url: string) => {
+    return `${import.meta.env.VITE_SERVER_IELTS_DOMAIN}/files/${url}`
+  },
   logout: async () => {
     logoutService().finally(() => {
       storage.clearToken?.()
