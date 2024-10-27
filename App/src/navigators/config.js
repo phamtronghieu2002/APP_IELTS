@@ -18,6 +18,9 @@ import Intro from "../screens/Intro/Intro";
 import Lesson from "../components/Lesson/Lesson";
 import Overview from "../screens/Overview/Overview";
 import ReadingTest from "../components/Lesson/Test/ReadingTest";
+import ListeningTest from "../components/Lesson/Test/ListeningTest";
+import SpeakingTest from "../components/Lesson/Test/SpeakingTest";
+import WritingTest from "../components/Lesson/Test/WritingTest";
 import Policy from "../screens/Policy/Policy";
 import AboutIelts from "../screens/About/AboutIelts";
 import AboutDetail from "../screens/About/AboutDetail";
@@ -57,6 +60,21 @@ export const screensStack = [
     {
         name: configs.screenName.reading,
         component: ReadingTest,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.listening,
+        component: ListeningTest,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.speaking,
+        component: SpeakingTest,
+        options: { title: "Welcome profile", headerShown: false },
+    },
+    {
+        name: configs.screenName.writing,
+        component: WritingTest,
         options: { title: "Welcome profile", headerShown: false },
     },
     {

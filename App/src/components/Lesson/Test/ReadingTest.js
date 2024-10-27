@@ -1,28 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
   ScrollView,
   SafeAreaView,
-  ProgressBarAndroid,
-  Pressable,
 } from "react-native";
 import * as Progress from "react-native-progress";
 import HeaderScreen from "../../Header/HeaderScreen";
-import { getTestById, updateIsDoing } from "../../../services/testService";
+import { getTestById } from "../../../services/testService";
 import ExpandableText from "../../ExpandableText/ExpandableText";
-import RadioButton from "../../RadioButton/RadioButton";
-import Explain from "../../Explain/Explain";
 import { useWindowDimensions } from "react-native";
 import RenderHtml from "react-native-render-html";
-import WebView from "react-native-webview";
-import { TextInput } from "react-native";
 import AnswerInputArea from "../../AnswerInput/AnswerInput";
-import ResultBar from "../../ResultBar/ResultBar";
-import {
-  addAnwserToTestResult,
-  addTestResult,
-} from "../../../services/testResultServices";
 import { _testTypes } from "../../../utils/constant";
 import MainButton from "../../Button/MainButton";
 import RadioButtonForm from "../../RadioButton/RadioButtonForm";
@@ -103,7 +92,7 @@ const ReadingTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 mb-3"
         >
-          <ExpandableText text={questions?.question_text} />
+          <ExpandableText text={questions?.question_text} type={"text"}/>
         </View>
         <View
           style={{
