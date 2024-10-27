@@ -99,7 +99,7 @@ const Setting = () => {
             <View className="mr-2">
               <Switch
                 
-          
+               
                 circleSize={20}
                 backgroundActive={'#06ba39'}
                 activeText={''}
@@ -113,6 +113,7 @@ const Setting = () => {
             </View>
           </View>
           <Notify
+         
             textStyle="text-sm ml-[-30px]"
             circleSize={20}
             rounded={''}

@@ -25,6 +25,9 @@ import Tip from "../screens/Tips/Tips";
 import TipDetail from "../screens/Tips/TipDetail";
 import TipContent from "../screens/Tips/TipContent";
 import Record from "../screens/Record/Record";
+import { removeData } from "../utils/asyncStore";
+import { store } from "../app/store";
+import { logoutUser } from "../fetures/userSlice";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -35,7 +38,7 @@ export const screensStack = [
         name: 'initTab',
         options: { title: "Welcome MyTab", headerShown: false },
     },
-    
+
     {
         name: configs.screenName.setting,
         component: Setting,
@@ -213,6 +216,8 @@ export const screensDrawer = (t) => [
 
     },
     {
+        label: t?.('draw.login'),
+        lable2: t?.('draw.logout'),
         name: configs.screenName.login,
         component: Login,
         options: {
@@ -223,6 +228,11 @@ export const screensDrawer = (t) => [
             ),
 
         },
+        cb: () => {
+            removeData('user')
+            store?.dispatch(logoutUser())
+
+        }
 
 
     },

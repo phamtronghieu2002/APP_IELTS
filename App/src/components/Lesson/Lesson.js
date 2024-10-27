@@ -41,7 +41,7 @@ const getLessonIcon = (type) => {
 
 const Lesson = ({ navigation, route }) => {
 
-    const test = [1, 2, 3, 4, 5, 6]
+
 
     const category = route?.params?.category;// lấy ra category từ route 
     
@@ -76,7 +76,7 @@ const Lesson = ({ navigation, route }) => {
                         <LessonItem
                             key={index}
                             navigation={navigation}
-                            tests={test}
+                
                             total_question={lesson?.total_question}
                             {...lesson}
                             category={category || "Reading"}

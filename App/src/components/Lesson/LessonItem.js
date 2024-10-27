@@ -21,6 +21,9 @@ const LessonItem = ({
     category,
     navigation
 }) => {
+
+    console.log("tests: ", tests);
+    
     const [expanded, setExpanded] = useState(false); // Manage dropdown state
     const animation = useRef(new Animated.Value(0)).current; // Animated value for dropdown
     const contentRef = useRef(null);
