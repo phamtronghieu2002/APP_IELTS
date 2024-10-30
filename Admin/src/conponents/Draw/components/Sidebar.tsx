@@ -68,7 +68,6 @@ const Sidebar: FC<SidebarProps> = ({
     })
   }
 
-
   useEffect(() => {
     fetchTest()
   }, [])
@@ -192,9 +191,7 @@ const Sidebar: FC<SidebarProps> = ({
           <div className="body mt-3">
             {testSelected && (
               <div className="actions flex gap-3 flex-wrap">
-                {type_category != "Listening" && type_category != "Writing" ? (
-                  <></>
-                ) : (
+                {type_category != "Speaking" && type_category != "Writing" ? (
                   <ModalQuestion
                     lesson_id={lesson_id}
                     button={
@@ -207,6 +204,8 @@ const Sidebar: FC<SidebarProps> = ({
                     title="Thêm câu hỏi"
                     type="add"
                   />
+                ) : (
+                  <></>
                 )}
                 {drawStore?.sub_question_select && (
                   <ModalQuestion

@@ -16,6 +16,7 @@ const ExpandableText = ({ text, initialHeight = 200 , type}) => {
     const [duration, setDuration] = useState(0);
     const [position, setPosition] = useState(0);
     const intervalRef = useRef(null);
+    const { width } = useWindowDimensions();
 
     async function loadSound() {
         const { sound } = await Audio.Sound.createAsync(

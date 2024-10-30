@@ -42,7 +42,7 @@ const MainContent: FC<MainContentProps> = ({
   )
   const [explain, setExplain] = useState<string>("")
 
-  _log("question_text >>>", question_text)
+  _log("question_select >>", question_select)
 
   useEffect(() => {
     setTimeout(() => {

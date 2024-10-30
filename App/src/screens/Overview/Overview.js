@@ -14,17 +14,27 @@ import { Icon } from 'react-native-elements';
 import { addAnwserToTestResult } from '../../services/testResultServices';
 import { _testTypes } from '../../utils/constant';
 const Overview = ({ navigation, route }) => {
+
+
     const name_test = route?.params?.name_test;
     const id_test = route?.params?.test_id;
+    const type = route?.params?.type;
+    const testResults = route?.params?.testResults;
+    const refresh = route?.params?.cb;
+
+
+
+
+
 
     const practiceNow = async () => {
-        try {
-            await addAnwserToTestResult(id_test, _testTypes?.renew, {
-              anwser: {}
-            });
-          } catch (error) {
-            console.error(error);
-          }
+        // try {
+        //     await addAnwserToTestResult(id_test, _testTypes?.renew, {
+        //         anwser: {}
+        //     });
+        // } catch (error) {
+        //     console.error(error);
+        // }
     };
 
 
@@ -32,6 +42,7 @@ const Overview = ({ navigation, route }) => {
     return (
         <SafeAreaView>
             <HeaderScreen
+                onPress={refresh}
                 navigation={navigation}
                 style="mt-5"
                 label={name_test}
@@ -43,7 +54,7 @@ const Overview = ({ navigation, route }) => {
                         progressValueColor='red'
                         progressValueFontSize={30}
                         title='Correct'
-                        value={90}
+                        value={testResults?.[0]?.percent_test_correct?.toFixed(0)}
                         radius={100}
                         inActiveStrokeOpacity={0.7}
                         activeStrokeWidth={20}
@@ -71,7 +82,7 @@ const Overview = ({ navigation, route }) => {
 
                             className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => {
                                 practiceNow();
-                                navigation.navigate('Reading', { nameTest: name_test, test_id: id_test });
+                                navigation.navigate(type, { nameTest: name_test, test_id: id_test,testResults: testResults?.[0] });
                             }}>
                             <Text className="text-white font-bold text-lg">
                                 Practice now
@@ -109,7 +120,9 @@ const Overview = ({ navigation, route }) => {
                             </View>
                             <View className="flex-1 items-center justify-center flex-row gap-7 pl-10">
                                 <Text className="text-green-500 font-bold text-lg">
-                                    2
+                                    {
+                                        testResults?.[0]?.total_correct
+                                    }
                                 </Text>
                                 <Pressable className="" onPress={() => { }}>
                                     <Text className="text-red-400 text-lg">
@@ -147,7 +160,10 @@ const Overview = ({ navigation, route }) => {
                             </View>
                             <View className="flex-1 items-center justify-center flex-row gap-7 pl-10">
                                 <Text className="text-red-600 font-bold text-lg">
-                                    2
+                                    {
+                                        testResults?.[0]?.total_incorrect
+
+                                    }
                                 </Text>
                                 <Pressable className="" onPress={() => {
 

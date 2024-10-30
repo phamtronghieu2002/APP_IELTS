@@ -100,7 +100,7 @@ const Lesson: FC<ContentProps> = ({ category_id, type_category }) => {
     const lessons = res.data?.map((lesson: any, index: number) => {
       return {
         ...lesson,
-        total_test: lesson?.tests?.length,
+        total_test: lesson?.tests?.[0]?._id ? lesson?.tests?.length : 0,
         key: index,
         stt: index + 1,
         category_id,

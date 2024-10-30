@@ -13,6 +13,7 @@ import { screensDrawer } from '../../navigators/config';
 import Icon from 'react-native-vector-icons/Ionicons';
 import useLang from '../../hooks/useLang';
 import { useDispatch, useSelector } from 'react-redux';
+import { getData } from '../../utils/asyncStore';
 const DrawCustom = (props) => {
     const user = useSelector((state) => state.user)
     const { t } = useLang();
@@ -77,10 +78,15 @@ const DrawCustom = (props) => {
                             paddingLeft: 15,
                             backgroundColor: route.name === props.state.routeNames[props.state.index] ? '#e0e0e0' : '#fff',
                         }}
-                        onPress={() => {
-                            screen?.cb?.()
+                        onPress={async() => {
+                            const exitsEmail = user?.user?.email ? true : false
+                            if (exitsEmail) {
+                                screen?.cb?.()
+                            }
+                            const userStore = await getData('user')
+
                             props.navigation.navigate(route.name, {
-                                isGuest: user?.user?.email ? false : true,
+                                isGuest: userStore ? true : false,
                                 isIntro: true
                             })
                         }}

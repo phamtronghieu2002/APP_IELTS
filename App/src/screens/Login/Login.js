@@ -33,6 +33,9 @@ const Login = ({ navigation, route }) => {
 
     const isIntro = route?.params?.isIntro;
     const isGuest = route?.params?.isGuest;
+
+ 
+    
     const dispatch = useDispatch();
     const signIn = async () => {
         try {
@@ -42,6 +45,7 @@ const Login = ({ navigation, route }) => {
 
             if (response) {
                 const userStorage = await getData('user');
+     
                 const userInfo = response?.data?.user;
                 const data = {
                     email: userInfo?.email,
@@ -49,12 +53,13 @@ const Login = ({ navigation, route }) => {
                     avatarPicture: userInfo?.photo,
                     user_id: userStorage?._id,
                 }
+      
                 const fb = await register(data);
 
-
+  
+                storeData('user', fb);
                 dispatch(loginUser(fb));
 
-                storeData?.('user', fb);
                 navigation?.navigate(configs?.screenName?.initStack, { screen: "Home" });
             } else {
 

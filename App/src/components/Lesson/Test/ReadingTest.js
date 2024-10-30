@@ -15,17 +15,24 @@ import AnswerInputArea from "../../AnswerInput/AnswerInput";
 import { _testTypes } from "../../../utils/constant";
 import MainButton from "../../Button/MainButton";
 import RadioButtonForm from "../../RadioButton/RadioButtonForm";
+import { useDispatch, useSelector } from "react-redux";
+import configs from "../../../configs";
+import { use } from "i18next";
 const ReadingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
-
   const [questions, setQuestions] = React.useState({});
-  const test_id = route?.params?.test_id;
-
   const [answers, setAnswers] = React.useState([]);
-
   const [choiceQuestions, setChoiceQuestions] = React.useState([]);
+
+  const test_id = route?.params?.test_id;
+  const refresh = route?.params?.cb;
+  // hieu viet them
+  const name_test = route?.params?.nameTest;
+  const type = route?.params?.type;
+  const testResults = route?.params?.testResults;
+  // 
   const fetchTestById = async () => {
     try {
       const response = await getTestById(test_id);
@@ -45,23 +52,48 @@ const ReadingTest = ({ navigation, route }) => {
     fetchTestById();
   }, []);
 
+  // useEffect(() => {
+  //   const sub_questions = questions?.questions;
+  //   if (sub_questions?.length > 0) {
+  //     if (testResults) {
+
+
+  //       const answers = testResults?.answers;
+  //       const question_filter = sub_questions.filter((item) => answers?.some((a) => a.question_id === item.question_id));
+  //       questions?.questions = question_filter;
+  //       setQuestions([...questions]);
+  //     }
+
+
+  //   }
+  // }, [questions]);
+
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [partQuestion, setPartQuestion] = React.useState(0);
   const [countProgress, setCountProgress] = React.useState(0);
+  const [showNextQuestion, setShowNextQuestion] = React.useState(false);
+  const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
+  const [isShowExplain, setIsShowExplain] = React.useState(true);
+
+  // hieu viet
+  const testStore = useSelector((state) => state.test);
+  const dispatch = useDispatch();
+
+
 
   const handleProgressUpdate = () => {
     setCountProgress((prevCount) => prevCount + 1);
   };
-  const [showNextQuestion, setShowNextQuestion] = React.useState(false);
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
   };
   const fill_in_blank_question = [];
-  const [isShowExplain, setIsShowExplain] = React.useState(true);
-  const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
   return (
     <SafeAreaView>
-      <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
+      <HeaderScreen
+        onPress={refresh}
+        label={route?.params?.nameTest}
+        navigation={navigation} />
       <View className="flex flex-row justify-center items-center pl-5 pr-5">
         <Text className="font-bold mr-3 text-red-600">
           {countProgress + "/" + questions.total_question}
@@ -92,7 +124,7 @@ const ReadingTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 mb-3"
         >
-          <ExpandableText text={questions?.question_text} type={"text"}/>
+          <ExpandableText text={questions?.question_text} type={"text"} />
         </View>
         <View
           style={{
@@ -143,6 +175,8 @@ const ReadingTest = ({ navigation, route }) => {
               }
               return <View></View>; // Return null for cases where no condition matches
             })}
+
+
             {fill_in_blank_question.length > 0 && partQuestion == 1 && (
               <View>
                 <Text className="mb-10">
@@ -155,15 +189,14 @@ const ReadingTest = ({ navigation, route }) => {
                   contentWidth={width}
                   source={{
                     html: fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .question_text,
+                      .question_text || ""
                   }}
                 />
                 <AnswerInputArea
                   key={currentQuestion_fill_in_blank} // Adding a unique key for each question
                   currentquestion={currentQuestion_fill_in_blank}
                   data={
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .options
+                    fill_in_blank_question[currentQuestion_fill_in_blank]?.options
                   }
                   test_id={test_id}
                   is_doing={test?.is_doing}
@@ -197,6 +230,12 @@ const ReadingTest = ({ navigation, route }) => {
               title={"Next question"}
               roundedfull
               onPress={() => {
+                // hieu them
+                if (countProgress == questions.total_question) {
+                  navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
+
+                }
+                // 
                 if (
                   currentQuestion <
                   questions?.questions?.length - choiceQuestions.length

@@ -7,26 +7,43 @@ const register = async ({
   displayname,
   avatarPicture,
 }) => {
-   
-  console.log('====================================');
-  console.log("user_id", user_id);
-  console.log('====================================');
+
+
+
+
+
   // nếu có user_id thì update user
-  if (user_id) {
-    const user = await
-      UserModel
-        .findByIdAndUpdate(user_id, {
-          email,
-          phonenumber,
-          displayname,
-          avatarPicture,
-        }, { new: true });
-    return {
-      data: user,
-      message: "User updated successfully",
-      errCode: 0,
+  if (user_id || email) {
+
+    const user = await UserModel.findOneAndUpdate(
+      {
+        $or: [{ _id: user_id }, { email }]
+      },
+      {
+        email,
+        phonenumber,
+        displayname,
+        avatarPicture
+      },
+      { new: true }
+    );
+
+    console.log("user ngoài ", user);
+
+    if (user) {
+      console.log("user trong đây", user);
+      
+      const token = create_access_token({ userid: user._id }, "30d")
+      const user_fb = user.toObject();
+      user_fb.accessToken = token;
+      return {
+        data: user_fb,
+        message: "User updated successfully",
+        errCode: 0
+      };
     }
   }
+
   const newUser = new UserModel({
     email,
     phonenumber,
