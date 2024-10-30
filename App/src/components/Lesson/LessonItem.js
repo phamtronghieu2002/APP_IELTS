@@ -19,8 +19,11 @@ const LessonItem = ({
     total_question,
     percent_correct,
     category,
-    navigation
+    navigation,
+    refresh
 }) => {
+
+
     const [expanded, setExpanded] = useState(false); // Manage dropdown state
     const animation = useRef(new Animated.Value(0)).current; // Animated value for dropdown
     const contentRef = useRef(null);
@@ -64,16 +67,16 @@ const LessonItem = ({
 
 
 
-            const is_doing = test?.is_doing;
+            const is_doing = test?.testResults?.[0]?.anwsers?.length > 0 ? true : false;
             if (is_doing) {
-                navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, name_test: test?.name_test, type: category?.type })
+                navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, name_test: test?.name_test, type: category?.type, testResults: test?.testResults })
 
 
             } else {
                 await addTestResult({
                     test_id: test?._id,
                 })
-                navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id })
+                navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id, type: category?.type, cb: refresh })
             }
 
 
@@ -133,7 +136,7 @@ const LessonItem = ({
                             width={100}
                         />
                         <Text className={colorPercent}>
-                            {percent_correct.toFixed(0)}%
+                            {percent_correct??0?.toFixed(0)}%
                         </Text>
                     </View>
                 </View>
@@ -153,6 +156,8 @@ const LessonItem = ({
                                     <PraticeItem
                                         key={index}
                                         {...item}
+
+                                        percent_correct={item?.testResults?.[0] ? item?.testResults?.[0]?.percent_test_correct : 0}
                                         category={category}
                                         navigation={navigation}
                                         onPress={() => {

@@ -12,7 +12,10 @@ export const storeData = async (key, value) => {
 export const getData = async (key) => {
     try {
         const jsonValue = await AsyncStorage.getItem(key);
-        return jsonValue != null ? JSON.parse(jsonValue) : null;
+        if (jsonValue) {
+            return JSON.parse(jsonValue);
+        }
+        return null;
     } catch (e) {
         console.log("error", e);
 

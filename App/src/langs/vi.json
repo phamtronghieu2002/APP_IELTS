@@ -6,8 +6,10 @@
   },
   "draw": {
     "home": "Trang chủ",
+
     "profile": "Hồ sơ",
     "logout": "Đăng xuất",
+    "login": "Đăng nhập",
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản",
     "share": "Chia sẻ",

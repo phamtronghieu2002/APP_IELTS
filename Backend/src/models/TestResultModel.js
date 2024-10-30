@@ -15,6 +15,21 @@ const TestResultSchema = new mongoose.Schema(
             ref: 'Tests',
           
         },
+        total_correct: {
+            type: Number,
+            require: false,
+            default: 0,
+        },
+        total_incorrect: {
+            type: Number,
+            require: false,
+            default: 0,
+        },
+        percent_test_correct:{
+            type: Number,
+            require: false,
+            default: 0,
+        },
         anwsers: {
             type: Array,
             require: false,

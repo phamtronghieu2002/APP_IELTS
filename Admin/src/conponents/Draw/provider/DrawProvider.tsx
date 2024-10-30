@@ -83,7 +83,7 @@ const DrawProvider: React.FC<DrawProviderProps> = ({ children }) => {
         }))
         break
       case "SET_CONFIRM_CREATE_TYPE_QUESTION":
-        alert("SET_CONFIRM_CREATE_TYPE_QUESTION")
+     
         setDrawStore((prev: any) => ({
           ...prev,
           confirm_create_type_question: {},

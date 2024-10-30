@@ -16,7 +16,7 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const AboutChosen = ({ NameChosen, numWord, icon, classNames ,onPress}) => {
-  console.log("classNames", classNames);
+
   
   return (
     <Pressable

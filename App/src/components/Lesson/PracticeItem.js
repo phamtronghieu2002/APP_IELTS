@@ -15,6 +15,7 @@ const PraticeItem = ({
     _id,
     name_test,
     percent_correct,
+    refresh
 
 
 }) => {
@@ -25,7 +26,7 @@ const PraticeItem = ({
 
         onPress?.();
     }
-    const colorPercent = percent_correct > 0 ? 'border-red-400 text-red-500' : 'bg-light-200';
+    const colorPercent = percent_correct??0 > 0 ? percent_correct??0?.toFixed(0) < 100 ? 'border-red-400 text-red-500':"border-green-500 text-green-500" : 'bg-light-200';
     return (
         <View
             onPressIn={(e) => e.stopPropagation()}  // Stop the event from reaching parent
@@ -62,7 +63,7 @@ const PraticeItem = ({
                         }}
                     >
                         <Text className={`${colorPercent}`}>
-                            {`${percent_correct.toFixed(0)}%`}
+                            {`${percent_correct?.toFixed(0)}%`}
                         </Text>
                     </View>
                 </View>

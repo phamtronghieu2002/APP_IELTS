@@ -39,11 +39,6 @@ const WritingTest = ({ navigation, route }) => {
   );
   const [countProgress, setCountProgress] = React.useState(0);
 
-  const handleProgressUpdate = () => {
-    setCountProgress((prevCount) => prevCount + 1);
-  };
-  const [isShowExplain, setIsShowExplain] = React.useState(true);
-
   const [selectedValue, setSelectedValue] = React.useState(0);
   const options_SwitchSelector = [
     { label: "Your Response", value: 0 },
@@ -53,17 +48,6 @@ const WritingTest = ({ navigation, route }) => {
   return (
     <SafeAreaView>
       <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
-      <View className="flex flex-row justify-center items-center pl-5 pr-5">
-        <Text className="font-bold">
-          {countProgress + "/" + questions.total_question}
-        </Text>
-        <Progress.Bar
-          progress={countProgress / questions.total_question || 0}
-          className="max-w-full ml-2"
-          width={150}
-          color="#FF0505"
-        />
-      </View>
       <ScrollView className="p-7">
         <View
           style={{

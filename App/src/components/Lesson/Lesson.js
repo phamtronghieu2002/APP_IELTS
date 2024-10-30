@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'
 import {
     View,
@@ -17,6 +17,7 @@ import configs from '../../configs';
 import LessonItem from './LessonItem';
 import IconF from 'react-native-vector-icons/Feather';
 import { getLessonByCategory } from '../../services/lessonService';
+import { getData } from '../../utils/asyncStore';
 
 
 const IconLesson = [
@@ -41,7 +42,7 @@ const getLessonIcon = (type) => {
 
 const Lesson = ({ navigation, route }) => {
 
-    const test = [1, 2, 3, 4, 5, 6]
+    const [key, setKey] = useState(Date.now()); // Khởi tạo key với timestamp
 
     const category = route?.params?.category;// lấy ra category từ route 
     
@@ -50,23 +51,37 @@ const Lesson = ({ navigation, route }) => {
     const fetchLesson = async () => {
         try {
             const cate_id = category?._id;
-            const res = await getLessonByCategory(cate_id);
+            const user =await getData("user");
+            const res = await getLessonByCategory(cate_id,user?._id);
             setLessons(res?.data);
 
         } catch (error) {
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+          setKey(Date.now()); // Cập nhật lại key khi quay về màn hình A
+        });
+    
+        return unsubscribe;
+      }, [navigation]);
+
+   console.log("key >>",key);
+   
     React.useEffect(() => {
   
         fetchLesson();
-    }, [category])
+    }, [key])
     return (
-        <SafeAreaView className="">
+        <SafeAreaView 
+        key={key}
+        className="">
             <HeaderScreen
                 navigation={navigation}
                 style="mt-5"
-                label={`Reading`}
+                label={route?.params?.category?.type}
             />
             <ScrollView
                 className="p-4 pl-6 pr-6"
@@ -76,7 +91,9 @@ const Lesson = ({ navigation, route }) => {
                         <LessonItem
                             key={index}
                             navigation={navigation}
-                            tests={test}
+                            refresh ={()=>{                                
+                                setKey(Date.now());
+                            }}
                             total_question={lesson?.total_question}
                             {...lesson}
                             category={category || "Reading"}
