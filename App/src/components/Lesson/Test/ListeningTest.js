@@ -15,6 +15,7 @@ import AnswerInputArea from "../../AnswerInput/AnswerInput";
 import { _testTypes } from "../../../utils/constant";
 import MainButton from "../../Button/MainButton";
 import RadioButtonForm from "../../RadioButton/RadioButtonForm";
+import { useFocusEffect } from "@react-navigation/native";
 const ListeningTest = ({ navigation, route }) => {
     const { width } = useWindowDimensions();
 
@@ -28,22 +29,25 @@ const ListeningTest = ({ navigation, route }) => {
     const [choiceQuestions, setChoiceQuestions] = React.useState([]);
     const fetchTestById = async () => {
       try {
-        const response = await getTestById(test_id);
-        const data = response.data;
-        setTest(data);
-        setQuestions(data.questions[0]);
-        const choices = data.questions[0].questions.filter(
-          (item) => item.question_type === "choice"
-        );
-        setChoiceQuestions(choices);
+          const response = await getTestById(test_id);
+          const data = response.data;
+          setTest(data);
+          setQuestions(data.questions[0]);
+          const choices = data.questions[0].questions.filter(
+              (item) => item.question_type === "choice"
+          );
+          setChoiceQuestions(choices);
       } catch (error) {
-        console.error(error);
+          console.error(error);
       }
-    };
-  
-    React.useEffect(() => {
-      fetchTestById();
-    }, []);
+  };
+
+  // Sử dụng useFocusEffect để gọi hàm fetch khi màn hình được focus
+  useFocusEffect(
+      React.useCallback(() => {
+          fetchTestById();
+      }, [test_id]) // Thêm test_id vào dependencies nếu cần
+  );
   
     const [currentQuestion, setCurrentQuestion] = React.useState(0);
     const [partQuestion, setPartQuestion] = React.useState(0);

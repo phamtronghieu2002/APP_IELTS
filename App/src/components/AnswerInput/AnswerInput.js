@@ -32,15 +32,15 @@ const AnswerInputArea = ({
     let testResult = new Map();
     data.map((item, index) => {
       if (item.is_correct === userAnswer[index]) {
-        testResult.set(item.question_id, true); // Use set to add key-value pairs
+        testResult.set(item.option_id, true); // Use set to add key-value pairs
       } else {
-        testResult.set(item.question_id, false); // Use set to add key-value pairs
+        testResult.set(item.option_id, false); // Use set to add key-value pairs
       }
       onProgressUpdate()
     });
     const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct }));
   
-    testResultArray.map(async (item) => {
+    testResultArray.forEach(async (item) => {
       try {
         await addAnwserToTestResult(test_id, _testTypes?.new, {
           anwser: item

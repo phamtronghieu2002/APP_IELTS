@@ -16,6 +16,7 @@ import { _testTypes } from '../../utils/constant';
 const Overview = ({ navigation, route }) => {
     const name_test = route?.params?.name_test;
     const id_test = route?.params?.test_id;
+    const type = route?.params?.type;
 
     const practiceNow = async () => {
         try {
@@ -71,7 +72,7 @@ const Overview = ({ navigation, route }) => {
 
                             className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => {
                                 practiceNow();
-                                navigation.navigate('Reading', { nameTest: name_test, test_id: id_test });
+                                navigation.navigate(type, { nameTest: name_test, test_id: id_test });
                             }}>
                             <Text className="text-white font-bold text-lg">
                                 Practice now

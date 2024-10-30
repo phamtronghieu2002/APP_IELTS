@@ -2,11 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, Button, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import RenderHtml from "react-native-render-html";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Record from '../AudioPlayer/Record';
 
 
-const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
+const ExpandableWriting = ({ text, initialHeight = 200}) => {
     const { width } = useWindowDimensions();
     const [expanded, setExpanded] = React.useState(false);
     const [collapsed, setCollapsed] = React.useState(false);
@@ -30,30 +28,11 @@ const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
         setExpanded(!expanded);
     };
 
-    const toggleCollapse = () => {
-        setCollapsed(!collapsed);
-        setExpanded(false);
-        Animated.timing(animatedHeight, {
-            toValue: collapsed ? initialHeight : 0,
-            duration: 300,
-            useNativeDriver: false,
-        }).start();
-    };
-
     return (
         <View>
-            <View className="flex flex-row items-center justify-between">
-                <Text className="font-bold">
-                    {name}
-                </Text>
-                <TouchableOpacity onPress={toggleCollapse} style={{ alignSelf: 'flex-end' }}>
-                    <Icon name={collapsed ? 'visibility' : 'visibility-off'} size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-
             <ScrollView>
                 <Animated.View style={{ height: collapsed ? 0 : expanded ? null : animatedHeight }}>
-                    {!collapsed && type === "text" && (
+                    
                         <View className="mt-3" onLayout={(event) => {
                             const { height } = event.nativeEvent.layout;
                             if (textHeight === 0) {
@@ -65,20 +44,7 @@ const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
                                 source={{ html: text }}
                             />
                         </View>
-                    )}
-                    {!collapsed && type === "audio" && (
-                        <View
-                            className="mt-3"
-                            onLayout={(event) => {
-                                const { height } = event.nativeEvent.layout;
-                                if (textHeight === 0) {
-                                    setTextHeight(height);
-                                }
-                            }}
-                        >
-                                <Record />
-                        </View>
-                    )}
+                    
                 </Animated.View>
                 {!collapsed && (
                     <TouchableOpacity onPress={toggleExpand} className="flex items-center">
@@ -92,4 +58,4 @@ const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
     );
 };
 
-export default ExpandableText;
+export default ExpandableWriting;
