@@ -25,8 +25,19 @@ const handleGetProfile= async (req, res, next) => {
   }
 };
 
+const handleLogin = async (req, res, next) => {
+  try {
+    const data = req.body;
+    const result = await authServices?.login(data);
+    return res.status(StatusCodes?.CREATED).json(result);
+  } catch (error) {
+    const newError = new ApiError(500, error.message, error.stack);
+    next(newError);
+  }
+}
 
 module.exports = {
   handleRegister,
-  handleGetProfile
+  handleGetProfile,
+  handleLogin
 };

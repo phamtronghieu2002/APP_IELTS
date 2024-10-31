@@ -4,6 +4,8 @@ import TestModel from '../models/TestsModel.js';
 
 export const addTestResult = async (data) => {
     try {
+        console.log("data >>>>>>>>>>>>>>>>>>>>>>>>>>>", data);
+
         const testResult = await TestResultModel.findOne({ test_id: data.test_id });
         if (testResult) {
             return {
@@ -25,21 +27,38 @@ export const addTestResult = async (data) => {
 }
 
 export const addQuestion = async (test_id, type, data) => {
-    const { question_id } = data;
-    let result = {}
+    const { question_id, is_correct } = data;
+    let result = {};
+
     switch (type) {
         case "new":
-            // nếu là new thì push data vào mảng anwsers
-            result = await TestResultModel.findOneAndUpdate({ test_id },
+            // Kiểm tra xem câu trả lời đã tồn tại hay chưa
+            result = await TestResultModel.findOneAndUpdate(
+                { test_id, "anwsers.question_id": question_id },
                 {
-                    $push: {
-                        anwsers: data
-                    }
+                    // Nếu tồn tại, cập nhật lại trường `is_correct`
+                    $set: { "anwsers.$.is_correct": is_correct }
                 },
                 {
                     new: true,
-                })
-            break
+                }
+            );
+
+            // Nếu không tìm thấy câu trả lời với `question_id`, thêm mới câu trả lời vào mảng
+            if (!result) {
+                result = await TestResultModel.findOneAndUpdate(
+                    { test_id },
+                    {
+                        $push: { anwsers: data }
+                    },
+                    {
+                        new: true,
+                    }
+                );
+            }
+            break;
+
+
         case "redo":
             // nếu là redo thì update lại data trong mảng anwsers
             result = await TestResultModel.findOneAndUpdate({ test_id: test_id, "anwsers.question_id": question_id }, {
@@ -76,18 +95,31 @@ export const addQuestion = async (test_id, type, data) => {
 
     const test = await TestModel.findById(test_id)?.populate('questions').exec();
     const total_questions_of_test = test?.toObject().questions?.[0]?.total_question;
+    await TestResultModel.findOneAndUpdate(
+        { test_id },
+        {
+            $set: {
+                total_correct,
+                total_incorrect,
+                percent_test_correct: (total_correct / total_questions_of_test) * 100
 
-    // cập nhật collection test
-    await TestModel.findByIdAndUpdate(test_id, {
-        $set: {
-            total_correct,
-            total_incorrect,
-            percent_correct: (total_correct / total_questions_of_test) * 100
-
+            }
+        },
+        {
+            new: true
         }
-    }, {
-        new: true
-    })
+    )
+    // cập nhật collection test
+    // await TestModel.findByIdAndUpdate(test_id, {
+    //     $set: {
+    //         total_correct,
+    //         total_incorrect,
+    //         percent_correct: (total_correct / total_questions_of_test) * 100
+
+    //     }
+    // }, {
+    //     new: true
+    // })
 
     return {
         data: result,

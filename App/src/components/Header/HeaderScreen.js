@@ -19,11 +19,12 @@ const HeaderScreen = ({
     navigationTo,
     navigation,
     label,
-    textMode = "dark"
+    textMode = "dark",
+    onPress
 }) => {
 
     console.log('====================================');
-    console.log("style", style);
+    console.log("label", label);
     console.log('====================================');
     return (
 
@@ -31,6 +32,7 @@ const HeaderScreen = ({
             <Pressable
                 className="mr-2"
                 onPress={() => {
+                    onPress?.()
                     navigation?.goBack()
                 }}>
                 <IconF

@@ -11,6 +11,8 @@ import {
   addTestResult,
 } from "../../services/testResultServices";
 import Explain from "../Explain/Explain";
+import { useDispatch, useSelector } from "react-redux";
+import { setTestStore } from "../../fetures/testSlice";
 
 const RadioButtonForm = ({
   item,
@@ -18,11 +20,17 @@ const RadioButtonForm = ({
   onShowNextQuestion,
   ...props
 }) => {
-  const countQuestion = 1;
-  const countlastQuestion = 5;
+
   const [answers, setAnswers] = React.useState([]);
   const { test_id, test} = props;
   const { width } = useWindowDimensions();
+
+     
+  // hieu viet
+  const testStore  = useSelector((state) => state.test);
+  const dispatch = useDispatch();
+
+
   const handleChooseAnswer = async (question_id, options) => {
     try {
       const is_doing = test?.is_doing;
@@ -37,13 +45,16 @@ const RadioButtonForm = ({
         if (isExits) {
           return prev;
         } else {
-          addAnwserToTestResult(test_id, _testTypes?.new, {
+           addAnwserToTestResult(test_id, _testTypes?.new, {
             anwser: {
               question_id,
               is_correct: options.is_correct,
             },
           })
-            .then((fb) => {})
+            .then((fb) => {
+                 const data = fb.data;
+                 dispatch(setTestStore({testResults:data}));                  
+            })
             .catch((err) => {
               console.log("error >>>>", err);
             });
@@ -75,7 +86,9 @@ const RadioButtonForm = ({
               />
         {item.options.map((a, index) => {
           return (
-            <View className="mb-1">
+            <View
+            key={index} 
+            className="mb-1">
               <RadioButton
               
                 isShowAnswer={answers?.some(
@@ -112,6 +125,7 @@ const RadioButtonForm = ({
             anwser={
               item.options.find((a) => a.is_correct)?.text
             }
+            type= "normal"
           />
         )}
       </View>

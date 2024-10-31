@@ -1,28 +1,28 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Animated, useWindowDimensions } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, TouchableOpacity, Animated, Button, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import RenderHtml from "react-native-render-html";
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Import icon
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Record from '../AudioPlayer/Record';
 
-const ExpandableText = ({ text, initialHeight = 200 }) => {
-    const [expanded, setExpanded] = React.useState(true); // State cho show more/less
-    const [collapsed, setCollapsed] = React.useState(false); // State cho việc ẩn toàn bộ nội dung
-    const [textHeight, setTextHeight] = React.useState(0); // Chiều cao thật của văn bản
-    const animatedHeight = React.useRef(new Animated.Value(initialHeight)).current;
+
+const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
     const { width } = useWindowDimensions();
-
+    const [expanded, setExpanded] = React.useState(true);
+    const [collapsed, setCollapsed] = React.useState(false);
+    const [textHeight, setTextHeight] = React.useState(0);
+    const animatedHeight = React.useRef(new Animated.Value(initialHeight)).current;
+    
     const toggleExpand = () => {
         if (expanded) {
-            // Thu gọn văn bản
             Animated.timing(animatedHeight, {
-                toValue: initialHeight, // Chiều cao ban đầu khi thu gọn
+                toValue: initialHeight,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
         } else {
-            // Mở rộng văn bản
             Animated.timing(animatedHeight, {
-                toValue: textHeight, // Chiều cao thật của văn bản
+                toValue: textHeight,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
@@ -30,12 +30,11 @@ const ExpandableText = ({ text, initialHeight = 200 }) => {
         setExpanded(!expanded);
     };
 
-    // Logic để thu gọn toàn bộ văn bản khi nhấn vào biểu tượng con mắt
     const toggleCollapse = () => {
         setCollapsed(!collapsed);
-        setExpanded(false); // Thu gọn văn bản nếu đang mở rộng
+        setExpanded(false);
         Animated.timing(animatedHeight, {
-            toValue: collapsed ? initialHeight : 0, // Nếu nhấn vào con mắt thì chiều cao thành 0
+            toValue: collapsed ? initialHeight : 0,
             duration: 300,
             useNativeDriver: false,
         }).start();
@@ -45,43 +44,42 @@ const ExpandableText = ({ text, initialHeight = 200 }) => {
         <View>
             <View className="flex flex-row items-center justify-between">
                 <Text className="font-bold">
-                    Reading passage
+                    {name}
                 </Text>
-                {/* Biểu tượng con mắt để ẩn/hiện toàn bộ nội dung */}
                 <TouchableOpacity onPress={toggleCollapse} style={{ alignSelf: 'flex-end' }}>
                     <Icon name={collapsed ? 'visibility' : 'visibility-off'} size={24} color="black" />
                 </TouchableOpacity>
             </View>
 
             <ScrollView>
-
                 <Animated.View style={{ height: collapsed ? 0 : expanded ? null : animatedHeight }}>
-
-
-                    {!collapsed && (
-
-
-                        <Text
+                    {!collapsed && type === "text" && (
+                        <View className="mt-3" onLayout={(event) => {
+                            const { height } = event.nativeEvent.layout;
+                            if (textHeight === 0) {
+                                setTextHeight(height);
+                            }
+                        }}>
+                            <RenderHtml
+                                contentWidth={width}
+                                source={{ html: text }}
+                            />
+                        </View>
+                    )}
+                    {!collapsed && type === "audio" && (
+                        <View
                             className="mt-3"
                             onLayout={(event) => {
                                 const { height } = event.nativeEvent.layout;
                                 if (textHeight === 0) {
-                                    setTextHeight(height); // Lưu chiều cao thật của văn bản
+                                    setTextHeight(height);
                                 }
                             }}
                         >
-                            <RenderHtml
-                                contentWidth={width}
-                                source={{
-                                    html:text
-                                      
-                                }}
-                            />
-                        </Text>
+                                <Record />
+                        </View>
                     )}
                 </Animated.View>
-
-                {/* Nút Show More/Less */}
                 {!collapsed && (
                     <TouchableOpacity onPress={toggleExpand} className="flex items-center">
                         <Text style={{ color: 'blue', marginTop: 10 }}>

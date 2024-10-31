@@ -16,8 +16,12 @@ const handleGetLessons = async (req, res, next) => {
     try {
 
         const categoryid = req.params.id || "";
+        const user_id = req.query.user_id || "";
+        console.log('====================================');
+        console.log("user_id",user_id);
+        console.log('====================================');
         const keyword = req.query.keyword || "";
-        const result = await lessonServices?.getLessonsByCateId(categoryid,keyword);
+        const result = await lessonServices?.getLessonsByCateId(categoryid,keyword,user_id);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));

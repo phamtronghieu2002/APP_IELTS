@@ -13,18 +13,31 @@ import IconO from 'react-native-vector-icons/Octicons';
 import { Icon } from 'react-native-elements';
 import { addAnwserToTestResult } from '../../services/testResultServices';
 import { _testTypes } from '../../utils/constant';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { Circle } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
 const Overview = ({ navigation, route }) => {
+
+
     const name_test = route?.params?.name_test;
     const id_test = route?.params?.test_id;
+    const type = route?.params?.type;
+    const testResults = route?.params?.testResults;
+    const refresh = route?.params?.cb;
+
+
+
+
+
 
     const practiceNow = async () => {
-        try {
-            await addAnwserToTestResult(id_test, _testTypes?.renew, {
-              anwser: {}
-            });
-          } catch (error) {
-            console.error(error);
-          }
+        // try {
+        //     await addAnwserToTestResult(id_test, _testTypes?.renew, {
+        //         anwser: {}
+        //     });
+        // } catch (error) {
+        //     console.error(error);
+        // }
     };
 
 
@@ -32,18 +45,51 @@ const Overview = ({ navigation, route }) => {
     return (
         <SafeAreaView>
             <HeaderScreen
+                onPress={refresh}
                 navigation={navigation}
                 style="mt-5"
                 label={name_test}
             />
             <View className="p-7">
                 <View className="min-h-[300px] bg-white flex flex-col justify-center items-center p-7 rounded-lg">
-                    <CircularProgress
+
+
+                    <AnimatedCircularProgress
+
+                        size={150}
+                        width={13}
+                        fill={testResults?.[0]?.percent_test_correct?.toFixed(0)}
+                        tintColor="red"
+                        lineCap='round'
+                        onAnimationComplete={() => console.log('onAnimationComplete')}
+                        backgroundColor="#3d5870"
+
+                    >
+
+
+                        {
+                            (fill) => (
+                                <View className="">
+                                    <Text
+                                        className="text-red-400 font-bold text-lg text-center"
+                                        style={{ fontSize: 20 }}>
+                                        {`${fill.toFixed(0)}%`}
+                                    </Text>
+                                    <Text className="text-center text-sm">
+                                        Correct
+                                    </Text>
+                                </View>
+                            )
+                        }
+
+                    </AnimatedCircularProgress>
+                    {/* <CircularProgress
+                    
                         titleStyle={{ fontSize: 15, fontWeight: '', color: 'gray' }}
                         progressValueColor='red'
                         progressValueFontSize={30}
                         title='Correct'
-                        value={90}
+                        value={100}
                         radius={100}
                         inActiveStrokeOpacity={0.7}
                         activeStrokeWidth={20}
@@ -57,21 +103,20 @@ const Overview = ({ navigation, route }) => {
                             count: 50,
                             width: 4,
 
-
                         }}
                         strokeColorConfig={[
                             { color: '#ff707e', value: 0 },
                             { color: '#db5c69', value: 50 },
                             { color: '#800512', value: 100 },
                         ]}
-                    />
+                    /> */}
                     <View className="mt-10">
 
                         <Pressable
 
                             className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => {
-                                practiceNow();
-                                navigation.navigate('Reading', { nameTest: name_test, test_id: id_test });
+
+                                navigation.navigate(type, { nameTest: name_test, test_id: id_test, testResults: testResults?.[0] });
                             }}>
                             <Text className="text-white font-bold text-lg">
                                 Practice now
@@ -109,9 +154,17 @@ const Overview = ({ navigation, route }) => {
                             </View>
                             <View className="flex-1 items-center justify-center flex-row gap-7 pl-10">
                                 <Text className="text-green-500 font-bold text-lg">
-                                    2
+                                    {
+                                        testResults?.[0]?.total_correct
+                                    }
                                 </Text>
-                                <Pressable className="" onPress={() => { }}>
+                                <Pressable className="" onPress={() => {
+
+                                    const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === true);
+                                    navigation.navigate(type, { nameTest: name_test, test_id: id_test, testResults: correct_anwser });
+
+
+                                }}>
                                     <Text className="text-red-400 text-lg">
                                         Practice now
                                     </Text>
@@ -147,10 +200,14 @@ const Overview = ({ navigation, route }) => {
                             </View>
                             <View className="flex-1 items-center justify-center flex-row gap-7 pl-10">
                                 <Text className="text-red-600 font-bold text-lg">
-                                    2
+                                    {
+                                        testResults?.[0]?.total_incorrect
+
+                                    }
                                 </Text>
                                 <Pressable className="" onPress={() => {
-
+                                    const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === false);
+                                    navigation.navigate(type, { nameTest: name_test, test_id: id_test, testResults: correct_anwser });
 
                                 }}>
                                     <Text className="text-red-400 text-lg">

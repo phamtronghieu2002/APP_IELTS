@@ -1,6 +1,7 @@
 const express = require("express");
 const Router = express.Router();
 import { StatusCodes } from "http-status-codes";
+import { veryfyUser } from "~/middlewares/authMiddleware";
 const lessonController = require("../../controllers/lessonController");
 const { lessonValidation } = require("../../validations/lessonValidation");
 
