@@ -1,121 +1,150 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types'
+import React, { useState } from "react";
 import {
   View,
   Text,
-  Image,
-  ScrollView,
-  SafeAreaView,
-  FlatList,
-  SectionList,
   TextInput,
+  ActivityIndicator,
   TouchableOpacity,
-  Pressable,
-} from 'react-native';
-import MainButton from '../Button/MainButton';
-import { addAnwserToTestResult } from '../../services/testResultServices';
-import { _testTypes } from '../../utils/constant';
-import Explain from "../Explain/Explain";
+} from "react-native";
+import MainButton from "../Button/MainButton";
+import { useWindowDimensions } from "react-native";
+import RenderHtml from "react-native-render-html";
+import { AiWritingTest } from "../../services/RatingWriting";
 
-const AnswerInputWriting = ({
-  data,...props
-}) => {
-  const {test_id} = props;
-  const { is_correct, anwser, isShow, onProgressUpdate} = props;
-
-
-  const [userAnswer, setUserAnswer] = React.useState([]);
-  const [isClickCheck, setIsClickCheck] = useState(false);
-  const [showExplain, setShowExplain] = useState(isShow);
-
-  const checkAnswer = async () => {
-    let testResult = new Map();
-    data.map((item, index) => {
-      if (item.is_correct === userAnswer[index]) {
-        testResult.set(item.question_id, true); // Use set to add key-value pairs
-      } else {
-        testResult.set(item.question_id, false); // Use set to add key-value pairs
-      }
-      onProgressUpdate()
-    });
-    const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct }));
-  
-    testResultArray.map(async (item) => {
-      try {
-        await addAnwserToTestResult(test_id, _testTypes?.new, {
-          anwser: item
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    );
-    setIsClickCheck(true);
-    setShowExplain(true);
-  };
-  
-  const checkiscorrect = (anwser ,index) => {
-    if (anwser === userAnswer[index]) {
-      return true;
-    }
-    return false;
-  }
-  const handelShowExplain = ({item, index}) => {
-    return (
-      <View className= "mb-3"> 
-            <Explain
-              is_correct={checkiscorrect(item.is_correct,index)}
-              explain={item.explain}
-              anwser={item.is_correct}
-              type= "writing"
-            />
-          </View>
-    )
-  }
+const AnswerInputWriting = ({ data }) => {
+  const { width } = useWindowDimensions();
+  const [userAnswer, setUserAnswer] = useState("");
+  const [responseList, setResponseList] = useState([]);
   const [countWord, setCountWord] = useState(0);
-  return (
-    <View className="">
-      {data.map((item, index) => {
-        return (
-          <View>
-            <View
-            key={index}
-            className="flex border-2 border-gray-200 mb-3 rounded-xl
-            ">
-              <View className="pl-1 pt-1 mb-3 bg-white">
-                <Text className="mt-1 font-bold">Your response</Text>
-                <Text className="mt-1 text-gray-500 text-xs" >Your words: {countWord}</Text>
-              </View>
-            <TextInput
-              key={index}
-              multiline = {true}
-              numberOfLines = {4}
-              className="text-lg pl-4 pt-1 bg-gray-50 max-w-full mr-2 ml-2 mb-2 border border-gray-300 shadow-lg rounded-lg"
-              placeholder="Type your answer....."
-              onChangeText={(text) => {
-                const words = text.split(' ');
-                setCountWord(words.length);
-                let temp = [...userAnswer];
-                temp[index] = text;
-                setUserAnswer(temp);
-              }
-              }
-              editable={!isClickCheck}
-            />
-          </View>
-          {
-            isClickCheck && showExplain && handelShowExplain({ is_correct, item, anwser , index})
-          }
-          
-          </View>
-        );
-      })
+  const [isLoading, setIsLoading] = useState(false);
+  const [expandedItems, setExpandedItems] = useState(
+    Array(responseList.length).fill(false) // Initialize with false for all items
+  );
+
+  // Toggle function for expanding/collapsing an item
+  const toggleExpand = (index) => {
+    setExpandedItems((prev) => {
+      const newExpandedItems = [...prev];
+      newExpandedItems[index] = !newExpandedItems[index]; // Toggle the current index
+      return newExpandedItems;
+    });
+  };
+
+  const fetchRating = async () => {
+    setIsLoading(true); 
+    try {
+      console.log("data.question_text", data.question_text);
+      console.log("userAnswer", userAnswer);
+      const response = await AiWritingTest({ text: userAnswer, topic: data.question_text });
+      return response;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false); 
+    }
+  };
+
+  const handleRatingAnswer = async () => {
+    if (userAnswer) {
+      try {
+        const rating = await fetchRating();
+        const newResponse = {
+          countWord: countWord,
+          userAnswer: userAnswer,
+          rating: rating,
+        };
+        setResponseList((prevList) => [...prevList, newResponse]);
+        setUserAnswer("");
+        setCountWord(0);
+      } catch (error) {
+        console.error("Error fetching rating:", error);
       }
+    }
+  };
+
+  return (
+    <View>
+      <View className="flex border-2 border-gray-200 mb-3 rounded-xl">
+        <View className="pl-1 pt-1 mb-3 bg-white">
+          <Text className="mt-1 font-bold">Your response</Text>
+          <Text className="mt-1 text-gray-500 text-xs">
+            Your words: {countWord}
+          </Text>
+        </View>
+        <TextInput
+          multiline={true}
+          numberOfLines={4}
+          className="text-lg pl-4 pt-1 bg-gray-50 max-w-full mr-2 ml-2 mb-2 border border-gray-300 shadow-lg rounded-lg"
+          placeholder="Type your answer....."
+          onChangeText={(text) => {
+            const words = text.trim().split(/\s+/);
+            setCountWord(words.filter(Boolean).length);
+            setUserAnswer(text);
+          }}
+          value={userAnswer}
+        />
+      </View>
+      
+      {/* Hiển thị Loading */}
+      {isLoading && (
+        <View className="flex items-center">
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Loading rating...</Text>
+        </View>
+      )}
+
+      {responseList.map((item, index) => (
+        <View key={index} className="mt-3 p-2 border-t border-gray-300">
+          <Text className="font-bold text-xl text-green-500">Response {index + 1}</Text>
+          <Text className="font-bold italic mt-1">User Answer: {item.userAnswer}</Text>
+          <Text className="font-bold italic mt-1">Word Count: {item.countWord}</Text>
+          <Text className="font-bold italic text-red-800 mt-1 mb-2">Point: {item.rating.ielts_writing_score_rating}</Text>
+          <View>
+            {expandedItems[index] ? (
+              <View>
+                  <View>
+                    <Text className="font-bold text-lg text-red-500">Rating your response :</Text>
+                    <Text className="font-bold italic">1. Grammar Errors</Text>
+                    <Text>{item.rating.grammar_errors}</Text>
+                  </View>
+                  <View>
+                    <Text className="font-bold italic">2. Vocabulary Errors</Text>
+                    <Text>{item.rating.vocabulary_errors}</Text>
+                  </View>
+                  <View>
+                    <Text className="font-bold italic">3. Sentence Structure Errors</Text>
+                    <Text>{item.rating.sentence_structure_errors}</Text>
+                  </View>
+                  <View>
+                    <Text className="font-bold italic">4. Coherence Errors</Text>
+                    <Text>{item.rating.coherence_errors}</Text>
+                  </View>
+                  <View>
+                    <Text className="font-bold italic">5. Cohesion Errors</Text>
+                    <Text>{item.rating.cohesion_errors}</Text>
+                  </View>
+                  <View>
+                    <Text className="font-bold italic">6. Detailed Solutions To Improve Writing</Text>
+                    <Text>{item.rating.detailed_solutions_to_improve_writing}</Text>
+                  </View>
+              </View>
+            ) : (
+              // Show a truncated version or just a summary here
+              <Text>{item.rating.grammar_errors.substring(0, 0)}...</Text>
+            )}
+          </View>
+          <TouchableOpacity onPress={() => toggleExpand(index)}>
+            <Text className="text-blue-500">
+              {expandedItems[index] ? 'Show Less' : 'Show More'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+      
       <MainButton
-        title={"Check"}
+        title={"Rate my answer"}
         roundedfull
-        onPress={checkAnswer}
-        disabled={isClickCheck}
+        onPress={handleRatingAnswer}
       />
     </View>
   );

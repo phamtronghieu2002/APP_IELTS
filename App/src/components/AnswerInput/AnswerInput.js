@@ -21,7 +21,7 @@ const AnswerInputArea = ({
   data, ...props
 }) => {
   const { test_id, is_doing } = props;
-  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, onShowNextQuestion } = props;
+  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, onShowNextQuestion, parrent_question } = props;
 
 
   const [userAnswer, setUserAnswer] = React.useState([]);
@@ -33,12 +33,17 @@ const AnswerInputArea = ({
     data.map((item, index) => {
       if (item.is_correct === userAnswer[index]) {
         testResult.set(item.option_id, true); // Use set to add key-value pairs
+
       } else {
         testResult.set(item.option_id, false); // Use set to add key-value pairs
+
+
       }
       onProgressUpdate()
     });
-    const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct }));
+
+    
+    const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct, parrent_question_id: parrent_question?.question_id}));
 
     testResultArray.forEach(async (item) => {
       try {

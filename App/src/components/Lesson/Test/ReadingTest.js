@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -32,6 +32,7 @@ const ReadingTest = ({ navigation, route }) => {
   const name_test = route?.params?.nameTest;
   const type = route?.params?.type;
   const testResults = route?.params?.testResults;
+  const [is_doing, setIsDoing] = React.useState(false);
   // 
   const fetchTestById = async () => {
     try {
@@ -52,21 +53,46 @@ const ReadingTest = ({ navigation, route }) => {
     fetchTestById();
   }, []);
 
-  // useEffect(() => {
-  //   const sub_questions = questions?.questions;
-  //   if (sub_questions?.length > 0) {
-  //     if (testResults) {
+  useEffect(() => {
 
 
-  //       const answers = testResults?.answers;
-  //       const question_filter = sub_questions.filter((item) => answers?.some((a) => a.question_id === item.question_id));
-  //       questions?.questions = question_filter;
-  //       setQuestions([...questions]);
-  //     }
+    const count_total_question = (questions) => {
+      let total = 0;
+      questions?.questions?.map((item) => {
+        if (item.question_type == "choice") {
+          total += 1;
+        } else {
+          total += item.options.length;
+        }
+      })
+      return total;
+    }
+    const sub_questions = questions?.questions;
+    if (sub_questions?.length > 0) {
+      if (testResults?.length > 0 && !is_doing) {
+        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id || a.parrent_question_id === item.question_id));
+
+        if (question_filter?.[0]?.question_type == "fill_in_blank") {
+          setPartQuestion(1);
+        }
 
 
-  //   }
-  // }, [questions]);
+        questions.questions = question_filter;
+        questions.total_question = count_total_question(questions);
+        setChoiceQuestions(questions?.questions?.filter(item => item.question_type == "choice"));
+
+
+        setQuestions({ ...questions });
+        setIsDoing(true);
+      }
+
+
+    }
+  }, [questions]);
+
+
+
+
 
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [partQuestion, setPartQuestion] = React.useState(0);
@@ -87,7 +113,11 @@ const ReadingTest = ({ navigation, route }) => {
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
   };
-  const fill_in_blank_question = [];
+
+
+
+
+
   return (
     <SafeAreaView>
       <HeaderScreen
@@ -155,74 +185,56 @@ const ReadingTest = ({ navigation, route }) => {
                     html: questions?.questions?.[currentQuestion].question_text,
                   }}
                 /> */}
-            {questions?.questions?.map((item, index) => {
-              if (item.question_type === "choice" && partQuestion === 0) {
-                return (
-                  <View key={index}>
-                    <RadioButtonForm
-                      item={item}
+            {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
+              return partQuestion == 0 ? <View key={index}>
+                <RadioButtonForm
+                  item={item}
+                  test_id={test_id}
+                  test={test}
+                  onProgressUpdate={handleProgressUpdate}
+                  onShowNextQuestion={handelShowNextQuestion}
+                />
+              </View> : <></>
+            })}
+
+
+            {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
+              if (partQuestion == 1) {
+
+                
+                return index == currentQuestion_fill_in_blank ? (
+                  <View>
+                    <Text className="mb-10">
+                      {item.description}
+                    </Text>
+                    <RenderHtml
+                      contentWidth={width}
+                      source={{
+                        html: item.question_text || ""
+                      }}
+                    />
+                    <AnswerInputArea
+                      parrent_question={item}
+                      key={currentQuestion_fill_in_blank} // Adding a unique key for each question
+                      currentquestion={currentQuestion_fill_in_blank}
+                      data={item?.options}
                       test_id={test_id}
-                      test={test}
+                      is_doing={test?.is_doing}
+                      is_correct={answers.find((a) => a.question_id === item.question_id)?.options.is_correct}
+                      explain={item.explain}
+                      anwser={item.options.find((a) => a.is_correct)?.text}
+                      isShow={isShowExplain}
                       onProgressUpdate={handleProgressUpdate}
                       onShowNextQuestion={handelShowNextQuestion}
                     />
                   </View>
-                );
-              } else if (item.question_type === "fill_in_blank") {
-                fill_in_blank_question.push(item); // Use push instead of append
+                ) : <></>
 
-                return <View></View>; // Ensure you return something
               }
-              return <View></View>; // Return null for cases where no condition matches
+              return <></>
             })}
 
 
-            {fill_in_blank_question.length > 0 && partQuestion == 1 && (
-              <View>
-                <Text className="mb-10">
-                  {
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .description
-                  }
-                </Text>
-                <RenderHtml
-                  contentWidth={width}
-                  source={{
-                    html: fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .question_text || ""
-                  }}
-                />
-                <AnswerInputArea
-                  key={currentQuestion_fill_in_blank} // Adding a unique key for each question
-                  currentquestion={currentQuestion_fill_in_blank}
-                  data={
-                    fill_in_blank_question[currentQuestion_fill_in_blank]?.options
-                  }
-                  test_id={test_id}
-                  is_doing={test?.is_doing}
-                  is_correct={
-                    answers.find(
-                      (a) =>
-                        a.question_id ===
-                        fill_in_blank_question[currentQuestion_fill_in_blank]
-                          .question_id
-                    )?.options.is_correct
-                  }
-                  explain={
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .explain
-                  }
-                  anwser={
-                    fill_in_blank_question[
-                      currentQuestion_fill_in_blank
-                    ].options.find((a) => a.is_correct)?.text
-                  }
-                  isShow={isShowExplain}
-                  onProgressUpdate={handleProgressUpdate}
-                  onShowNextQuestion={handelShowNextQuestion}
-                />
-              </View>
-            )}
           </View>
 
           {showNextQuestion && (
@@ -231,6 +243,10 @@ const ReadingTest = ({ navigation, route }) => {
               roundedfull
               onPress={() => {
                 // hieu them
+                console.log("currentQuestion  >>>", currentQuestion);
+                console.log(" questions?.questions?.length  >>>",  questions?.questions?.length);
+                console.log("choiceQuestions.length  >>>", choiceQuestions.length);
+                
                 if (countProgress == questions.total_question) {
                   navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
 
@@ -240,8 +256,9 @@ const ReadingTest = ({ navigation, route }) => {
                   currentQuestion <
                   questions?.questions?.length - choiceQuestions.length
                 ) {
-                  console.log("choice_question1", choiceQuestions.length);
 
+                  console.log("co lot vao ");
+                  
                   setPartQuestion(1);
                   setCurrentQuestion(currentQuestion + 1);
                 }
