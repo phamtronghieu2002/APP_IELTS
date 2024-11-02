@@ -19,6 +19,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 const Overview = ({ navigation, route }) => {
 
 
+   console.log("route >>", route.params);
+   
+
     const name_test = route?.params?.name_test;
     const id_test = route?.params?.test_id;
     const type = route?.params?.type;
@@ -58,7 +61,7 @@ const Overview = ({ navigation, route }) => {
 
                         size={150}
                         width={13}
-                        fill={testResults?.[0]?.percent_test_correct?.toFixed(0)}
+                        fill={Number(testResults?.[0]?.percent_test_correct?.toFixed(0))}
                         tintColor="red"
                         lineCap='round'
                         onAnimationComplete={() => console.log('onAnimationComplete')}
@@ -116,7 +119,7 @@ const Overview = ({ navigation, route }) => {
 
                             className="rounded-full w-[250px] h-[50px] bg-red-400 flex items-center justify-center" onPress={() => {
 
-                                navigation.navigate(type, { nameTest: name_test, test_id: id_test, testResults: testResults?.[0] });
+                                navigation.navigate(type, {type, nameTest: name_test, test_id: id_test, testResults: testResults?.[0] });
                             }}>
                             <Text className="text-white font-bold text-lg">
                                 Practice now
@@ -159,9 +162,10 @@ const Overview = ({ navigation, route }) => {
                                     }
                                 </Text>
                                 <Pressable className="" onPress={() => {
+                                    console.log("type dịkushfisuhfjksdf >>", type);
 
                                     const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === true);
-                                    navigation.navigate(type, { nameTest: name_test, test_id: id_test, testResults: correct_anwser });
+                                    navigation.navigate(type, { type,nameTest: name_test, test_id: id_test, testResults: correct_anwser });
 
 
                                 }}>
@@ -207,7 +211,7 @@ const Overview = ({ navigation, route }) => {
                                 </Text>
                                 <Pressable className="" onPress={() => {
                                     const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === false);
-                                    navigation.navigate(type, { nameTest: name_test, test_id: id_test, testResults: correct_anwser });
+                                    navigation.navigate(type, {type, nameTest: name_test, test_id: id_test, testResults: correct_anwser });
 
                                 }}>
                                     <Text className="text-red-400 text-lg">

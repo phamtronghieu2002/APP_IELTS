@@ -33,8 +33,6 @@ const AnswerInputWriting = ({ data }) => {
   const fetchRating = async () => {
     setIsLoading(true); 
     try {
-      console.log("data.question_text", data.question_text);
-      console.log("userAnswer", userAnswer);
       const response = await AiWritingTest({ text: userAnswer, topic: data.question_text });
       return response;
     } catch (error) {

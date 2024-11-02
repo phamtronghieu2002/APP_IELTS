@@ -10,6 +10,8 @@ const { testResultValidation, addAnwserToToTestResultValidation } = require("../
 
 Router.post("/", [veryfyUser, testResultValidation], testResultController?.handleAddTestResult);
 Router.post("/addAnwser", addAnwserToToTestResultValidation, testResultController?.handleAddQuestion);
+Router.get("/", veryfyUser, testResultController?.handleGetTestResult);
+Router.delete("/", testResultController?.handleDeleteTestResult);
 
 
 

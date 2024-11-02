@@ -57,7 +57,6 @@ export default function App() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
     });
 
     return () => {
@@ -161,7 +160,6 @@ export default function App() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync({ projectId: '8bdba1ca-ae76-4f43-985d-1b9767d6d55f' })).data;
-      console.log(token);
     } else {
       alert('Must use physical device for Push Notifications');
     }

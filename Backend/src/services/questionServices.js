@@ -1,6 +1,7 @@
 
 import questionModel from '../models/QuestionsModel.js';
 import lessonModel from '../models/LessonModel.js';
+import CategoriesModel from '~/models/CategoriesModel.js';
 
 const addQuestion = async (data) => {
     const question_id = data?.question_id;
@@ -48,6 +49,8 @@ const addQuestion = async (data) => {
                 { new: true }
             );
 
+
+
             // Cập nhật `total_question` trong bảng `lessonModel`
             const lesson = await lessonModel.findById(lesson_id)
                 .populate({
@@ -55,6 +58,11 @@ const addQuestion = async (data) => {
                     populate: { path: 'questions' }
                 })
                 .exec();
+            const cate_id = lesson.cate_id;
+            // tăng total_question của cate_id
+
+            await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : existingQuestionIndex !== -1 ? 0 : 1 } }, { new: true });
+
 
             let total_question = 0;
             lesson.tests.forEach(test => {
@@ -128,6 +136,7 @@ const deleteQuestion = async (question_id, sub_id, lesson_id) => {
             { new: true }
         );
 
+        // giảm đi số câu hỏi của cate_id
 
 
         const lesson = await lessonModel.findById(lesson_id)
@@ -137,10 +146,17 @@ const deleteQuestion = async (question_id, sub_id, lesson_id) => {
             })
             .exec();
 
+        const cate_id = lesson.cate_id;
+        
         let total_question = 0;
         lesson.tests.forEach(test => {
             total_question += test.questions[0]?.total_question || 0;
         });
+
+
+        await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: -1 } }, { new: true });
+
+
 
         await lessonModel.findByIdAndUpdate(lesson_id, { total_question }, { new: true });
 

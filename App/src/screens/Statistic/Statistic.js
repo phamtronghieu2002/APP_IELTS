@@ -15,25 +15,26 @@ import ProgressSkill from '../../components/ProgressSkill/ProgressSkill';
 import Weekquestions from '../../components/WeekQuestions/WeekQuestions';
 import Gradient from '../../components/Gradient/Gradient';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setShowHeaderDraw } from '../../fetures/interfaceSlice';
+import Radarchart from './components/RadarChart';
 const Statistic = () => {
 
     const [scrollOffset, setScrollOffset] = useState(0);
-     
+
     const dispatch = useDispatch()
 
 
     const handleScroll = (event) => {
         const currentOffset = event.nativeEvent.contentOffset.y;
         if (currentOffset > scrollOffset && currentOffset > 20) {
-                dispatch(setShowHeaderDraw(false))
+            dispatch(setShowHeaderDraw(false))
         } else {
-      
-      
+
+
         }
         setScrollOffset(currentOffset);
-      };
+    };
 
     const [selectedValue, setSelectedValue] = useState(0);
     const options_SwitchSelector = [
@@ -135,6 +136,8 @@ const Statistic = () => {
                             </View>
                         </View>
                     )}
+                    {/* static */}
+                    <Radarchart />
                 </Gradient>
                 {/* SwitchSelector */}
 

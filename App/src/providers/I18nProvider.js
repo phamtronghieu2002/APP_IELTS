@@ -12,9 +12,6 @@ function I18nProvider({ children }) {
     useEffect(() => {
         const getLang = async () => {
             const language = await getData('lang');
-            console.log('====================================');
-            console.log('language', language);
-            console.log('====================================');
             if (language) {
                 i18n.changeLanguage(language);
             }

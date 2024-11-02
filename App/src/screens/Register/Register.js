@@ -42,7 +42,6 @@ const Register = () => {
             isPassword: true
         }]
     const handleRegister = (formData) => {
-        console.log
     }
     return (
         <LoginLayout

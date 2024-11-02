@@ -31,6 +31,7 @@ const ReadingTest = ({ navigation, route }) => {
   // hieu viet them
   const name_test = route?.params?.nameTest;
   const type = route?.params?.type;
+
   const testResults = route?.params?.testResults;
   const [is_doing, setIsDoing] = React.useState(false);
   // 
@@ -201,7 +202,7 @@ const ReadingTest = ({ navigation, route }) => {
             {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
               if (partQuestion == 1) {
 
-                
+
                 return index == currentQuestion_fill_in_blank ? (
                   <View>
                     <Text className="mb-10">
@@ -243,10 +244,7 @@ const ReadingTest = ({ navigation, route }) => {
               roundedfull
               onPress={() => {
                 // hieu them
-                console.log("currentQuestion  >>>", currentQuestion);
-                console.log(" questions?.questions?.length  >>>",  questions?.questions?.length);
-                console.log("choiceQuestions.length  >>>", choiceQuestions.length);
-                
+
                 if (countProgress == questions.total_question) {
                   navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
 
@@ -257,8 +255,8 @@ const ReadingTest = ({ navigation, route }) => {
                   questions?.questions?.length - choiceQuestions.length
                 ) {
 
-                  console.log("co lot vao ");
-                  
+
+
                   setPartQuestion(1);
                   setCurrentQuestion(currentQuestion + 1);
                 }
@@ -267,7 +265,7 @@ const ReadingTest = ({ navigation, route }) => {
                   questions?.questions?.length - choiceQuestions.length &&
                   partQuestion == 1
                 ) {
-                  console.log("choice_question2", choiceQuestions.length);
+
                   setCurrentQuestion_fill_in_blank(
                     currentQuestion_fill_in_blank + 1
                   );

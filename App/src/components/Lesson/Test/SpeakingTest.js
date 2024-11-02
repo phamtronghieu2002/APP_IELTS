@@ -197,7 +197,6 @@ const SpeakingTest = ({ navigation, route }) => {
                     currentQuestion <
                     questions?.questions?.length - choiceQuestions.length
                   ) {
-                    console.log("choice_question1", choiceQuestions.length);
   
                     setPartQuestion(1);
                     setCurrentQuestion(currentQuestion + 1);
@@ -207,7 +206,6 @@ const SpeakingTest = ({ navigation, route }) => {
                       questions?.questions?.length - choiceQuestions.length &&
                     partQuestion == 1
                   ) {
-                    console.log("choice_question2", choiceQuestions.length);
                     setCurrentQuestion_fill_in_blank(
                       currentQuestion_fill_in_blank + 1
                     );
