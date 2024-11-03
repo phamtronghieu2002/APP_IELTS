@@ -1,81 +1,58 @@
-import React, { useState } from 'react';
-import { View, Button, Text, PermissionsAndroid, Platform } from 'react-native';
-import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
+import * as React from "react";
+import { Text, View, StyleSheet, Button } from "react-native";
+import { Audio } from "expo-av";
 
-const VoiceRecord = () => {
-  const [recording, setRecording] = useState();
-  const [recordingUri, setRecordingUri] = useState('');
+export default function VoiceRecord() {
+  const [recording, setRecording] = React.useState();
 
-  // Request microphone permission
-  const requestPermissions = async () => {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
-      );
-      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Microphone permission denied');
-        return false;
-      }
-    }
-    return true;
-  };
-
-  const startRecording = async () => {
-    const hasPermission = await requestPermissions();
-    if (!hasPermission) return;
-
+  async function startRecording() {
     try {
-      const { recording } = await Audio.Recording.createAsync(
+      console.log("Requesting permissions..");
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: true,
+      });
+      console.log("Starting recording..");
+      const recording = new Audio.Recording({
+        audioEncoder: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH,
+        extension: ".m4a",
+      });
+      await recording.prepareToRecordAsync(
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
+      await recording.startAsync();
       setRecording(recording);
-      console.log('Recording started');
+      console.log("Recording started");
     } catch (err) {
-      console.error('Failed to start recording', err);
+      console.error("Failed to start recording", err);
     }
-  };
+  }
 
-  const stopRecording = async () => {
+  async function stopRecording() {
+    console.log("Stopping recording..");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
-    setRecordingUri(uri);
-    console.log('Recording stopped and stored at', uri);
-
-    // Save the recording to the file system
-    const newPath = `${FileSystem.documentDirectory}recording.m4a`;
-    await FileSystem.moveAsync({
-      from: uri,
-      to: newPath,
-    });
-    console.log('Recording moved to:', newPath);
-
-    // Share the recording file
-    await shareRecording(newPath);
-  };
-
-  const shareRecording = async (uri) => {
-    try {
-      await Sharing.shareAsync(uri);
-      console.log('Sharing successful');
-    } catch (error) {
-      console.error('Error sharing', error);
-    }
-  };
+    console.log("Recording stopped and stored at", uri);
+  }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Button
-        title={recording ? 'Stop Recording' : 'Start Recording'}
+        title={recording ? "Stop Recording" : "Start Recording"}
         onPress={recording ? stopRecording : startRecording}
       />
-      {recordingUri ? (
-        <Text>Recording saved at: {recordingUri}</Text>
-      ) : null}
     </View>
   );
-};
+}
 
-export default VoiceRecord;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#ecf0f1",
+    padding: 10,
+  },
+});
