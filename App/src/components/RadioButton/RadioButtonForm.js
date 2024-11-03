@@ -17,10 +17,9 @@ import { setTestStore } from "../../fetures/testSlice";
 const RadioButtonForm = ({
   item,
   onProgressUpdate,
-  onShowNextQuestion,
+  handelShowChoiceNextQuestion,
   ...props
 }) => {
-
   const [answers, setAnswers] = React.useState([]);
   const { test_id, test} = props;
   const { width } = useWindowDimensions();
@@ -59,7 +58,7 @@ const RadioButtonForm = ({
               console.log("error >>>>", err);
             });
             onProgressUpdate();
-            onShowNextQuestion();
+            handelShowChoiceNextQuestion();
           return [
             ...prev,
             {

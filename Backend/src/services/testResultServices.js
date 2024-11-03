@@ -95,7 +95,7 @@ export const addQuestion = async (test_id, type, data) => {
 
     const test = await TestModel.findById(test_id)?.populate('questions').exec();
     const total_questions_of_test = test?.toObject().questions?.[0]?.total_question;
-    await TestResultModel.findOneAndUpdate(
+   const fb=  await TestResultModel.findOneAndUpdate(
         { test_id },
         {
             $set: {
@@ -122,9 +122,54 @@ export const addQuestion = async (test_id, type, data) => {
     // })
 
     return {
-        data: result,
+        data: fb,
         message: "question added successfully",
         errCode: 0,
     }
 
 };
+
+
+export const getTestResult = async (test_id,user_id) => {
+    try {
+        const testResult = await TestResultModel.findOne({ test_id, user_id });
+        if (!testResult) {
+            return {
+                data: {},
+                message: "Test result not found",
+                errCode: 0,
+            }
+        }
+        return {
+            data: testResult,
+            message: "Test result fetched successfully",
+            errCode: 0,
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+
+export const deleteTestResult = async (test_id, question_id) => {
+    try {
+        const result = await TestResultModel.findOneAndUpdate(
+            { test_id },
+            {
+                $pull: { anwsers: { question_id } }
+            },
+            {
+                new: true
+            }
+        );
+        return {
+            data: result,
+            message: "Test result deleted successfully",
+            errCode: 0,
+        }
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+
+}

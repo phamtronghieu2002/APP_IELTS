@@ -25,6 +25,7 @@ const ReadingTest = ({ navigation, route }) => {
   const [questions, setQuestions] = React.useState({});
   const [answers, setAnswers] = React.useState([]);
   const [choiceQuestions, setChoiceQuestions] = React.useState([]);
+  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
 
   const test_id = route?.params?.test_id;
   const refresh = route?.params?.cb;
@@ -86,6 +87,14 @@ const ReadingTest = ({ navigation, route }) => {
   };
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
+  };
+  const handelShowChoiceNextQuestion = () => {
+    if(partQuestion == 0 && countChoiceAnswer+1 == choiceQuestions.length){
+      handelShowNextQuestion();
+    }
+    else{
+      setCountChoiceAnswer(countChoiceAnswer + 1);
+    }
   };
   const fill_in_blank_question = [];
   return (
@@ -163,8 +172,9 @@ const ReadingTest = ({ navigation, route }) => {
                       item={item}
                       test_id={test_id}
                       test={test}
+                      total_question_choice={choiceQuestions.length}
                       onProgressUpdate={handleProgressUpdate}
-                      onShowNextQuestion={handelShowNextQuestion}
+                      handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
                     />
                   </View>
                 );

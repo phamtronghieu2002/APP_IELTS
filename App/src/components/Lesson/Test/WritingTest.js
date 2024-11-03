@@ -37,7 +37,6 @@ const WritingTest = ({ navigation, route }) => {
       fetchTestById();
     }, [test_id]) // Thêm test_id vào dependencies nếu cần
   );
-  const [countProgress, setCountProgress] = React.useState(0);
 
   const [selectedValue, setSelectedValue] = React.useState(0);
   const options_SwitchSelector = [
@@ -133,6 +132,7 @@ const WritingTest = ({ navigation, route }) => {
           {selectedValue === 0 && (
              <View className="mb-5 border-b-2 border-gray-200 pb-3">
              <AnswerInputWriting
+               test_id={test_id}
                data={questions?.questions?.[0]}
              />
            </View>

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Animated, Button, useWindowDimensions } f
 import { ScrollView } from 'react-native-gesture-handler';
 import RenderHtml from "react-native-render-html";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Record from '../AudioPlayer/Record';
+import AudioPlayerUI from '../AudioPlayer/AudioPlayerUI';
 
 
 const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
@@ -76,7 +76,7 @@ const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
                                 }
                             }}
                         >
-                                <Record />
+                                <AudioPlayerUI />
                         </View>
                     )}
                 </Animated.View>

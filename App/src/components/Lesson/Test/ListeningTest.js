@@ -55,6 +55,7 @@ const ListeningTest = ({ navigation, route }) => {
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [partQuestion, setPartQuestion] = React.useState(0);
   const [countProgress, setCountProgress] = React.useState(0);
+  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
 
   const handleProgressUpdate = () => {
     setCountProgress((prevCount) => prevCount + 1);
@@ -62,6 +63,14 @@ const ListeningTest = ({ navigation, route }) => {
   const [showNextQuestion, setShowNextQuestion] = React.useState(false);
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
+  };
+  const handelShowChoiceNextQuestion = () => {
+    if(partQuestion == 0 && countChoiceAnswer+1 == choiceQuestions.length){
+      handelShowNextQuestion();
+    }
+    else{
+      setCountChoiceAnswer(countChoiceAnswer + 1);
+    }
   };
   const fill_in_blank_question = [];
   const [isShowExplain, setIsShowExplain] = React.useState(true);
@@ -126,7 +135,7 @@ const ListeningTest = ({ navigation, route }) => {
                       test_id={test_id}
                       test={test}
                       onProgressUpdate={handleProgressUpdate}
-                      onShowNextQuestion={handelShowNextQuestion}
+                      handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
                     />
                   </View>
                 );
