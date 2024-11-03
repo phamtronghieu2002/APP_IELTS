@@ -5,7 +5,7 @@ import Slider from "@react-native-community/slider";
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
 
-export default function Record({ audio_url }) {
+export default function AudioPlayerUI() {
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);

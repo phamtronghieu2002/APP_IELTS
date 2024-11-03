@@ -67,7 +67,6 @@ const ListeningTest = ({ navigation, route }) => {
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
   };
-
   const handelShowChoiceNextQuestion = () => {
     if(partQuestion == 0 && countChoiceAnswer+1 == choiceQuestions.length){
       handelShowNextQuestion();
@@ -76,41 +75,6 @@ const ListeningTest = ({ navigation, route }) => {
       setCountChoiceAnswer(countChoiceAnswer + 1);
     }
   };
-  // hieu them v_2
-  useEffect(() => {
-    const count_total_question = (questions) => {
-      let total = 0;
-      questions?.questions?.map((item) => {
-        if (item.question_type == "choice") {
-          total += 1;
-        } else {
-          total += item.options.length;
-        }
-      })
-      return total;
-    }
-    const sub_questions = questions?.questions;
-    if (sub_questions?.length > 0) {
-      if (testResults?.length > 0 && !is_doing) {
-        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id || a.parrent_question_id === item.question_id));
-
-        if (question_filter?.[0]?.question_type == "fill_in_blank") {
-          setPartQuestion(1);
-        }
-
-
-        questions.questions = question_filter;
-        questions.total_question = count_total_question(questions);
-        setChoiceQuestions(questions?.questions?.filter(item => item.question_type == "choice"));
-        setQuestions({ ...questions });
-        setIsDoing(true);
-      }
-
-
-    }
-  }, [questions]);
-
-
   const fill_in_blank_question = [];
   const [isShowExplain, setIsShowExplain] = React.useState(true);
   const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] =
@@ -215,7 +179,7 @@ const ListeningTest = ({ navigation, route }) => {
                       anwser={item.options.find((a) => a.is_correct)?.text}
                       isShow={isShowExplain}
                       onProgressUpdate={handleProgressUpdate}
-                      onShowNextQuestion={handelShowNextQuestion}
+                      handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
                     />
                   </View>
                 ) : <></>

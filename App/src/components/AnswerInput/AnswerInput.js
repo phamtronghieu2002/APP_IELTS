@@ -23,7 +23,7 @@ const AnswerInputArea = ({
   data, ...props
 }) => {
   const { test_id, is_doing } = props;
-  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, onShowNextQuestion, parrent_question } = props;
+  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, handelShowNextQuestion, parrent_question } = props;
 
 
   const [userAnswer, setUserAnswer] = React.useState([]);
@@ -64,7 +64,7 @@ const AnswerInputArea = ({
     );
     setIsClickCheck(true);
     setShowExplain(true);
-    onShowNextQuestion();
+    handelShowNextQuestion();
   };
 
   const checkiscorrect = (anwser, index) => {

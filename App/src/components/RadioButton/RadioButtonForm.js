@@ -20,7 +20,6 @@ const RadioButtonForm = ({
   handelShowChoiceNextQuestion,
   ...props
 }) => {
-
   const [answers, setAnswers] = React.useState([]);
   const { test_id, test} = props;
   const { width } = useWindowDimensions();

@@ -1,222 +1,210 @@
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
-import * as Progress from "react-native-progress";
+import { View, Text, ScrollView, SafeAreaView, Pressable, TextInput } from "react-native";
 import HeaderScreen from "../../Header/HeaderScreen";
 import { getTestById } from "../../../services/testService";
 import ExpandableText from "../../ExpandableText/ExpandableText";
 import { useWindowDimensions } from "react-native";
 import RenderHtml from "react-native-render-html";
-import AnswerInputArea from "../../AnswerInput/AnswerInput";
+import AnswerInputWriting from "../../AnswerInput/AnswerInputWriting";
 import { _testTypes } from "../../../utils/constant";
+import { useFocusEffect } from "@react-navigation/native";
+import SwitchSelector from "react-native-switch-selector";
+import ExpandableWriting from "../../ExpandableWriting/ExpandableWriting";
+import Svg, { Circle } from 'react-native-svg';
+import Button from "../../Button/Button";
 import MainButton from "../../Button/MainButton";
-import RadioButtonForm from "../../RadioButton/RadioButtonForm";
+import VoiceRecord from "../../VoiceRecord/VoiceRecord";
 
-const SpeakingTest = ({ navigation, route }) => {
-    const { width } = useWindowDimensions();
+const WritingTest = ({ navigation, route }) => {
+  const test_id = route?.params?.test_id;
+  
+  const { width } = useWindowDimensions();
+  const [test, setTest] = React.useState({});
+  const [questions, setQuestions] = React.useState({});
+  const [count, setCount] = React.useState(15);
+  const [phase, setPhase] = React.useState('down15'); // 'down15' -> 'up5' -> 'down5'
+  const [showView, setShowView] = React.useState(false);
 
-    const [test, setTest] = React.useState({});
+
+  React.useEffect(() => {
+    let timer;
+
+    if (phase === 'down15' && count > 0) {
+      timer = setInterval(() => setCount((prevCount) => prevCount - 1), 1000);
+    } else if (phase === 'down15' && count === 0) {
+      clearInterval(timer);
+      setPhase('down5');
+      setCount(5);
+    } else if (phase === 'down5' && count > 0) {
+      timer = setInterval(() => setCount((prevCount) => prevCount - 1), 1000);
+    } else if (phase === 'down5' && count === 0) {
+      clearInterval(timer);
+      setShowView(true);
+    }
+
+    return () => clearInterval(timer);
+  }, [count, phase]);
   
-    const [questions, setQuestions] = React.useState({});
-    const test_id = route?.params?.test_id;
-  
-    const [answers, setAnswers] = React.useState([]);
-  
-    const [choiceQuestions, setChoiceQuestions] = React.useState([]);
-    const fetchTestById = async () => {
-      try {
-        const response = await getTestById(test_id);
-        const data = response.data;
-        setTest(data);
-        setQuestions(data.questions[0]);
-        const choices = data.questions[0].questions.filter(
-          (item) => item.question_type === "choice"
-        );
-        setChoiceQuestions(choices);
-      } catch (error) {
-        console.error(error);
-      }
+
+  const fetchTestById = async () => {
+    try {
+      const response = await getTestById(test_id);
+      const data = response.data;
+      setTest(data);
+      setQuestions(data.questions[0]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const options_SwitchSelector = [
+    { label: "Your Response", value: 0 },
+    { label: "Model Answer", value: 1 },
+  ];
+  const countDownScreen = ({title, count}) => {
+    const formatTime = (totalSeconds) => {
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
     };
-  
-    React.useEffect(() => {
-      fetchTestById();
-    }, []);
-  
-    const [currentQuestion, setCurrentQuestion] = React.useState(0);
-    const [partQuestion, setPartQuestion] = React.useState(0);
-    const [countProgress, setCountProgress] = React.useState(0);
-  
-    const handleProgressUpdate = () => {
-      setCountProgress((prevCount) => prevCount + 1);
-    };
-    const [showNextQuestion, setShowNextQuestion] = React.useState(false);
-    const handelShowNextQuestion = () => {
-      setShowNextQuestion(true);
-    };
-    const fill_in_blank_question = [];
-    const [isShowExplain, setIsShowExplain] = React.useState(true);
-    const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
     return (
-      <SafeAreaView>
-        <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
-        <View className="flex flex-row justify-center items-center pl-5 pr-5">
-          <Text className="font-bold">
-            {countProgress + "/" + questions.total_question}
-          </Text>
-          <Progress.Bar
-            progress={countProgress / questions.total_question || 0}
-            className="max-w-full ml-2"
-            width={150}
-            color="#FF0505"
-          />
+      <View className="flex flex-col items-center justify-center">
+        <View style={{
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
+                }}
+                className="rounded-lg w-[70%] h-[50%] items-center flex justify-center bg-white 
+              shadow-2xl mb-5">
+        <Text className="text-2xl font-bold text-blue-500">{formatTime(count)}</Text>
         </View>
-        <ScrollView className="p-7">
-          <View
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            }}
-            className="rounded-md bg-white p-5 mb-3"
-          >
-            <ExpandableText text={questions?.audio_url} type={"audio"}/>
-          </View>
-          <View
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            }}
-            className="rounded-md bg-white p-5 pb-32"
-          >
-            {partQuestion == 0 && (
-              <Text className="mb-10">
-                Lựa chọn các đáp án sau sao cho phù hợp
-              </Text>
-            )}
-  
-            <View className="mb-5 border-b-2 border-gray-200 pb-3">
-              {/* {question_type == "fill_in_blank" && (
-                    <Text className="">{questions?.questions?.[currentQuestion].description}</Text>
-                  )}
-                  <RenderHtml
-                    contentWidth={width}
-                    source={{
-                      html: questions?.questions?.[currentQuestion].question_text,
-                    }}
-                  /> */}
-              {questions?.questions?.map((item, index) => {
-                if (item.question_type === "choice" && partQuestion === 0) {
-                  return (
-                    <View key={index}>
-                      <RadioButtonForm
-                        item={item}
-                        test_id={test_id}
-                        test={test}
-                        onProgressUpdate={handleProgressUpdate}
-                        onShowNextQuestion={handelShowNextQuestion}
-                      />
-                    </View>
-                  );
-                } else if (item.question_type === "fill_in_blank") {
-                  fill_in_blank_question.push(item); // Use push instead of append
-  
-                  return <View></View>; // Ensure you return something
-                }
-                return <View></View>; // Return null for cases where no condition matches
-              })}
-              {fill_in_blank_question.length > 0 && partQuestion == 1 && (
-                <View>
-                  <Text className="mb-10">
-                    {
-                      fill_in_blank_question[currentQuestion_fill_in_blank]
-                        .description
-                    }
-                  </Text>
-                  <RenderHtml
-                    contentWidth={width}
-                    source={{
-                      html: fill_in_blank_question[currentQuestion_fill_in_blank]
-                        .question_text,
-                    }}
-                  />
-                  <AnswerInputArea
-                    key={currentQuestion_fill_in_blank} // Adding a unique key for each question
-                    currentquestion={currentQuestion_fill_in_blank}
-                    data={
-                      fill_in_blank_question[currentQuestion_fill_in_blank]
-                        .options
-                    }
-                    test_id={test_id}
-                    is_doing={test?.is_doing}
-                    is_correct={
-                      answers.find(
-                        (a) =>
-                          a.question_id ===
-                          fill_in_blank_question[currentQuestion_fill_in_blank]
-                            .question_id
-                      )?.options.is_correct
-                    }
-                    explain={
-                      fill_in_blank_question[currentQuestion_fill_in_blank]
-                        .explain
-                    }
-                    anwser={
-                      fill_in_blank_question[
-                        currentQuestion_fill_in_blank
-                      ].options.find((a) => a.is_correct)?.text
-                    }
-                    isShow={isShowExplain}
-                    onProgressUpdate={handleProgressUpdate}
-                    onShowNextQuestion={handelShowNextQuestion}
-                  />
-                </View>
-              )}
-            </View>
-  
-            {showNextQuestion && (
-              <MainButton
-                title={"Next question"}
-                roundedfull
-                onPress={() => {
-                  if (
-                    currentQuestion <
-                    questions?.questions?.length - choiceQuestions.length
-                  ) {
-  
-                    setPartQuestion(1);
-                    setCurrentQuestion(currentQuestion + 1);
-                  }
-                  if (
-                    currentQuestion <
-                      questions?.questions?.length - choiceQuestions.length &&
-                    partQuestion == 1
-                  ) {
-                    setCurrentQuestion_fill_in_blank(
-                      currentQuestion_fill_in_blank + 1
-                    );
-                  }
-                  setShowNextQuestion(false);
+        <Text className="text-blue-500">{title}</Text>
+      </View>
+    )
+  }
+const CountdownCircleTimer = ({title, count }) => {
+  const radius = 50; 
+  const strokeWidth = 10; 
+  const circumference = 2 * Math.PI * radius; 
+
+  const progress = (count / 5) * circumference;
+
+  return (
+    <View className='items-center justify-center'>
+      <Svg height="120" width="120">
+        <Circle
+          stroke="#e6e6e6"
+          fill="none"
+          cx="60"
+          cy="60"
+          r={radius}
+          strokeWidth={strokeWidth}
+        />
+        <Circle
+          stroke="cyan"
+          fill="none"
+          cx="60"
+          cy="60"
+          r={radius}
+          strokeWidth={strokeWidth}
+          strokeDasharray={`${circumference} ${circumference}`}
+          strokeDashoffset={circumference - progress}
+          rotation="-90"
+          origin="60, 60"
+        />
+      </Svg>
+      <View className='absolute'>
+        <Text className='text-2xl font-bold text-blue-500 pb-3'>{count}</Text>
+      </View>
+      <Text className="text-blue-500">{title}</Text>
+    </View>
+  );
+};
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchTestById();
+    }, [test_id])
+  );
+  return (
+    <SafeAreaView>
+      <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
+      <ScrollView className="p-7">
+        <View
+          style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+          className="rounded-md bg-white p-5 mb-3"
+        >
+          <View className="flex flex-row bg-green-100 items-center justify-center">
+            <Text className="font-bold bg-red-100">Question: </Text>
+            <View className="flex-1 max-w-full max-h-40 overflow-hidden">
+              <RenderHtml
+                contentWidth={width}
+                source={{ html: questions?.question_text }}
+                // Thêm style cho RenderHtml
+                style={{
+                  maxHeight: "100%",
+                  maxWidth: "100%", // Giới hạn chiều rộng
+                  overflow: "hidden", // Ẩn nội dung vượt quá
                 }}
               />
-            )}
+            </View>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  };
-export default SpeakingTest;
+          <View
+            className="bg-gray-100 rounded-mg"
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+          >
+            <ExpandableWriting text={questions?.questions?.[0].question_text} />
+          </View>
+        </View>
+        <View
+          style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+          className="rounded-md bg-white p-5 pb-32"
+        >
+           {showView ? (
+        <View >
+          <VoiceRecord />
+        </View>
+      ) : (
+          <View>
+            {phase === 'down15' ? countDownScreen({title:'Preparation Time', count: count }) : CountdownCircleTimer({ title:"Ready In",count: count })}
+          </View>
+      )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+export default WritingTest;

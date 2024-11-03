@@ -10,42 +10,17 @@ import MainButton from "../Button/MainButton";
 import { useWindowDimensions } from "react-native";
 import RenderHtml from "react-native-render-html";
 import { AiWritingTest } from "../../services/RatingWriting";
-import { addAnwserToTestResult, getTestResult } from '../../services/testResultServices';
-import { _testTypes } from '../../utils/constant';
 
-const AnswerInputWriting = ({test_id, data }) => {
-  const [userAnswer, setUserAnswer] = useState("");
+const ResponseVoice = ({ userAnswer ,data }) => {
+  const { width } = useWindowDimensions();
   const [responseList, setResponseList] = useState([]);
   const [countWord, setCountWord] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedItems, setExpandedItems] = useState(
-    Array(responseList.length).fill(false)
+    Array(responseList.length).fill(false) // Initialize with false for all items
   );
-  
-  const [count, setCount] = React.useState(0);
-  const [isCounting, setIsCounting] = useState(false);
 
-  React.useEffect(() => {
-    let interval;
-    if (isCounting) {
-      interval = setInterval(() => {
-        setCount(prevCount => prevCount + 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isCounting]);
-
-  const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-  
-    return [
-      hrs.toString().padStart(2, '0'),
-      mins.toString().padStart(2, '0'),
-      secs.toString().padStart(2, '0')
-    ].join(':');
-  };
+  // Toggle function for expanding/collapsing an item
   const toggleExpand = (index) => {
     setExpandedItems((prev) => {
       const newExpandedItems = [...prev];
@@ -57,6 +32,8 @@ const AnswerInputWriting = ({test_id, data }) => {
   const fetchRating = async () => {
     setIsLoading(true); 
     try {
+      console.log("data.question_text", data.question_text);
+      console.log("userAnswer", userAnswer);
       const response = await AiWritingTest({ text: userAnswer, topic: data.question_text });
       return response;
     } catch (error) {
@@ -67,80 +44,31 @@ const AnswerInputWriting = ({test_id, data }) => {
   };
 
   const handleRatingAnswer = async () => {
-    
-    setIsCounting(false);
     if (userAnswer) {
       try {
         const rating = await fetchRating();
         const newResponse = {
-          question_id: new Date().getTime().toString(),
-          time: count,
           countWord: countWord,
           userAnswer: userAnswer,
           rating: rating,
         };
         setResponseList((prevList) => [...prevList, newResponse]);
-        handleChooseAnswer(newResponse);
         setUserAnswer("");
         setCountWord(0);
-        setCount(0);
       } catch (error) {
         console.error("Error fetching rating:", error);
       }
     }
   };
 
-  const handleChooseAnswer = async (newResponse) => {
-    try {
-      await addAnwserToTestResult(test_id, _testTypes?.new, {
-        anwser: newResponse
-      })
-        .then((fb) => {
-          const data = fb.data;
-          console.log("data", data);                
-        })
-        .catch((err) => {
-          console.log("error >>>>", err);
-        });
-    } catch (error) {
-      console.log("error >>>>", error);
-    }
-  };
-const fetchGetRating = async () => {
-    getTestResult(test_id)
-      .then((fb) => {
-        const data = fb.data;
-        console.log("data", data);
-        data.anwsers.map((item) => {
-          const newResponse = {
-            question_id: item.question_id,
-            time: item.time,
-            countWord: item.countWord,
-            userAnswer: item.userAnswer,
-            rating: item.rating,
-          };
-          setResponseList((prevList) => [...prevList, newResponse]);
-        });
-      })
-      .catch((err) => {
-        console.log("error >>>>", err);
-      });
-    };
- React.useEffect(() => {
-  fetchGetRating();
-  }, []);
-
   return (
     <View>
       <View className="flex border-2 border-gray-200 mb-3 rounded-xl">
         <View className="pl-1 pt-1 mb-3 bg-white">
-          <View>
           <Text className="mt-1 font-bold">Your response</Text>
           <Text className="mt-1 text-gray-500 text-xs">
             Your words: {countWord}
           </Text>
-          </View>
-          <View><Text>{formatTime(count)}</Text></View>
         </View>
         <TextInput
           multiline={true}
@@ -152,7 +80,6 @@ const fetchGetRating = async () => {
             setCountWord(words.filter(Boolean).length);
             setUserAnswer(text);
           }}
-          onFocus={() => setIsCounting(true)}
           value={userAnswer}
         />
       </View>
@@ -168,7 +95,6 @@ const fetchGetRating = async () => {
       {responseList.map((item, index) => (
         <View key={index} className="mt-3 p-2 border-t border-gray-300">
           <Text className="font-bold text-xl text-green-500">Response {index + 1}</Text>
-          <Text className="font-bold italic mt-1">Time: {formatTime(item.time)}</Text>
           <Text className="font-bold italic mt-1">User Answer: {item.userAnswer}</Text>
           <Text className="font-bold italic mt-1">Word Count: {item.countWord}</Text>
           <Text className="font-bold italic text-red-800 mt-1 mb-2">Point: {item.rating.ielts_writing_score_rating}</Text>
@@ -223,4 +149,4 @@ const fetchGetRating = async () => {
   );
 };
 
-export default AnswerInputWriting;
+export default ResponseVoice;

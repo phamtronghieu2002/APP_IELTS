@@ -58,8 +58,7 @@ const Explain = ({ is_correct, explain, anwser, type }) => {
           <View className="">
             <View className="flex flex-row gap-3 mb-1 items-center">
               <Text className="font-bold text-lg">Answers</Text>
-              <Text className="">
-                <RenderHtml
+              <Text className=""><RenderHtml
               contentWidth={width}
               source={{
                 html: anwser,

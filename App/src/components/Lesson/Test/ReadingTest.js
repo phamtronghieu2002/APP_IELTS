@@ -25,6 +25,7 @@ const ReadingTest = ({ navigation, route }) => {
   const [questions, setQuestions] = React.useState({});
   const [answers, setAnswers] = React.useState([]);
   const [choiceQuestions, setChoiceQuestions] = React.useState([]);
+  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
 
   const test_id = route?.params?.test_id;
   const refresh = route?.params?.cb;
@@ -101,7 +102,6 @@ const ReadingTest = ({ navigation, route }) => {
   const [showNextQuestion, setShowNextQuestion] = React.useState(false);
   const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
   const [isShowExplain, setIsShowExplain] = React.useState(true);
-  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
 
   // hieu viet
   const testStore = useSelector((state) => state.test);
@@ -115,7 +115,6 @@ const ReadingTest = ({ navigation, route }) => {
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
   };
-
   const handelShowChoiceNextQuestion = () => {
     if(partQuestion == 0 && countChoiceAnswer+1 == choiceQuestions.length){
       handelShowNextQuestion();
@@ -124,11 +123,7 @@ const ReadingTest = ({ navigation, route }) => {
       setCountChoiceAnswer(countChoiceAnswer + 1);
     }
   };
-
-
-
-
-
+  const fill_in_blank_question = [];
   return (
     <SafeAreaView>
       <HeaderScreen
@@ -229,13 +224,10 @@ const ReadingTest = ({ navigation, route }) => {
                       currentquestion={currentQuestion_fill_in_blank}
                       data={item?.options}
                       test_id={test_id}
-                      is_doing={test?.is_doing}
-                      is_correct={answers.find((a) => a.question_id === item.question_id)?.options.is_correct}
-                      explain={item.explain}
-                      anwser={item.options.find((a) => a.is_correct)?.text}
-                      isShow={isShowExplain}
+                      test={test}
+                      total_question_choice={choiceQuestions.length}
                       onProgressUpdate={handleProgressUpdate}
-                      onShowNextQuestion={handelShowNextQuestion}
+                      handelShowNextQuestion={handelShowNextQuestion}
                     />
                   </View>
                 ) : <></>

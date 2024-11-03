@@ -21,3 +21,8 @@ export const addAnwserToTestResult = async (test_id, type, data) => {
      return axios.post(`/testResult/addAnwser?test_id=${test_id}&type=${type}`, data);
 
 }
+// http://{{host}}:8080/api/v1/testResult?test_id=6720e79748888bd16daf215e
+export const getTestResult = async (test_id) => {
+     return axios.get('/testResult?test_id='+test_id);
+
+}

@@ -21,6 +21,7 @@ import { _groupCategories } from '../../utils/constant';
 import { useColorScheme } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
 import Loading from '../../components/Loading/Loading';
+import VoiceRecord from '../../components/VoiceRecord/VoiceRecord';
 const Home = ({ navigation, route }) => {
 
 
@@ -198,14 +199,21 @@ const Home = ({ navigation, route }) => {
         <Text className="text-red-600 text-xl font-bold mt-3">
           IELTS Prep
         </Text>
-        <Pressable className="h-[50px] rounded-lg bg-white flex flex-row items-center justify-center"
-          onPress={() => {
-            navigation.navigate(configs?.screenName.record, {})
-          }}>
-          <Text className="">
-            Nhấn vô đây để test phần record
-          </Text>
-        </Pressable>
+        <View className="h-[50px] rounded-lg bg-white flex flex-row items-center justify-center"
+          style={{
+            // shadown bottom
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <VoiceRecord />
+        </View>
         <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
           {
             categories?.prepare?.map((item, index) =>
