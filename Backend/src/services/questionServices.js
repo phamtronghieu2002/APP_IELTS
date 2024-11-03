@@ -135,10 +135,7 @@ const deleteQuestion = async (question_id, sub_id, lesson_id) => {
             },
             { new: true }
         );
-
         // giảm đi số câu hỏi của cate_id
-
-
         const lesson = await lessonModel.findById(lesson_id)
             .populate({
                 path: 'tests',

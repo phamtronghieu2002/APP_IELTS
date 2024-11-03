@@ -17,7 +17,7 @@ import { setTestStore } from "../../fetures/testSlice";
 const RadioButtonForm = ({
   item,
   onProgressUpdate,
-  onShowNextQuestion,
+  handelShowChoiceNextQuestion,
   ...props
 }) => {
 
@@ -62,7 +62,7 @@ const RadioButtonForm = ({
               console.log("error >>>>", err);
             });
             onProgressUpdate();
-            onShowNextQuestion();
+            handelShowChoiceNextQuestion();
           return [
             ...prev,
             {

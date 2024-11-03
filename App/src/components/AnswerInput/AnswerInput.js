@@ -33,7 +33,7 @@ const AnswerInputArea = ({
   const checkAnswer = async () => {
     let testResult = new Map();
     data.map((item, index) => {
-      if (item.is_correct === userAnswer[index]) {
+      if (item.is_correct?.toLowerCase() === userAnswer[index]?.toLowerCase()) {
         testResult.set(item.option_id, true); // Use set to add key-value pairs
 
       } else {
@@ -68,7 +68,7 @@ const AnswerInputArea = ({
   };
 
   const checkiscorrect = (anwser, index) => {
-    if (anwser === userAnswer[index]) {
+    if (anwser?.toLowerCase() === userAnswer[index]?.toLowerCase()) {
       return true;
     }
     return false;

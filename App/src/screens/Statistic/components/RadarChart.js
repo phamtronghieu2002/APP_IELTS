@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     chart: {
+        marginTop:400,
         padding: 10,
         width: 350,
         height: 350,

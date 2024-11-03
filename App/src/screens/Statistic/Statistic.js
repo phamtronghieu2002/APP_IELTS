@@ -18,7 +18,12 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { setShowHeaderDraw } from '../../fetures/interfaceSlice';
 import Radarchart from './components/RadarChart';
-const Statistic = () => {
+import { _groupCategories } from '../../utils/constant';
+import { use } from 'i18next';
+import { getCategories } from '../../services/categoryServices';
+import configs from '../../configs';
+
+const Statistic = ({ navigation }) => {
 
     const [scrollOffset, setScrollOffset] = useState(0);
 
@@ -36,11 +41,32 @@ const Statistic = () => {
         setScrollOffset(currentOffset);
     };
 
+
+
     const [selectedValue, setSelectedValue] = useState(0);
     const options_SwitchSelector = [
         { label: 'Progress', value: 0 },
         { label: 'Activity', value: 1 },
     ];
+
+    const [categories, setCategories] = React.useState([]);
+
+
+
+    const fetchCategory = async () => {
+        try {
+            const res = await getCategories(_groupCategories.all);
+            setCategories(res?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchCategory();
+    }, []);
+
 
     return (
         <View className="flex-row h-75">
@@ -81,10 +107,9 @@ const Statistic = () => {
                                     The chart reflects your completion progress
                                     by skills
                                 </Text>
+                            <Radarchart />
                             </View>
                             <View className="flex justify-center pr-5 pl-5 flex-col items-center">
-                                {/* Radar Chart */}
-                                {/* notthing */}
                             </View>
                         </View>
                     )}
@@ -137,7 +162,7 @@ const Statistic = () => {
                         </View>
                     )}
                     {/* static */}
-                    <Radarchart />
+              
                 </Gradient>
                 {/* SwitchSelector */}
 
@@ -161,48 +186,40 @@ const Statistic = () => {
                         </View>
 
                         <View className="flex h-31.25 flex-wrap flex-row justify-between">
-                            <ProgressSkill
-                                skill={'Listening'}
-                                questionDone={20}
-                                allQuestion={1689}
-                                progress={((20 * 100) / 1689).toFixed(0)}
-                                icon={require('../../../assets/home/reading.png')}
-                            />
-                            <ProgressSkill
-                                skill={'Listening'}
-                                questionDone={20}
-                                allQuestion={1689}
-                                progress={((20 * 100) / 1689).toFixed(0)}
-                                icon={require('../../../assets/home/reading.png')}
-                            />
-                            <ProgressSkill
-                                skill={'Listening'}
-                                questionDone={20}
-                                allQuestion={1689}
-                                progress={((20 * 100) / 1689).toFixed(0)}
-                                icon={require('../../../assets/home/reading.png')}
-                            />
-                            <ProgressSkill
-                                skill={'Listening'}
-                                questionDone={20}
-                                allQuestion={1689}
-                                progress={((20 * 100) / 1689).toFixed(0)}
-                                icon={require('../../../assets/home/reading.png')}
-                            />
-                            <ProgressSkill
-                                skill={'Listening'}
-                                questionDone={20}
-                                allQuestion={1689}
-                                progress={((20 * 100) / 1689).toFixed(0)}
-                                icon={require('../../../assets/home/reading.png')}
-                            />
-                            <ProgressSkill
-                                skill={'Listening'}
-                                questionDone={20}
-                                allQuestion={1689}
-                                progress={((20 * 100) / 1689).toFixed(0)}
-                                icon={require('../../../assets/home/reading.png')}
-                            />
+                            {
+                                categories?.filter(item => item?.group == "skills")?.map((item, index) => (
+                                    <ProgressSkill
+                                        onPress={() => {
+                                            navigation.navigate(configs?.screenName?.lesson, { category: item })
+                                        }}
+                                        key={index}
+                                        skill={item?.type}
+                                        questionDone={item?.total_correct}
+                                        allQuestion={item?.total_question}
+                                        progress={(item?.total_correct / item?.total_question || 0) * 100}
+                                        icon={{ uri: item?.thumb }}
+                                    />
+                                ))
+
+
+                            }
+                            {
+                                categories?.filter(item => item?.group !== "skills")?.map((item, index) => (
+                                    <ProgressSkill
+
+                                        onPress={() => {
+                                            navigation.navigate(configs?.screenName?.lesson, { category: item })
+                                        }}
+                                        key={index}
+                                        skill={item?.type}
+                                        questionDone={item?.total_correct}
+                                        allQuestion={item?.total_question}
+                                        progress={(item?.total_correct / item?.total_question || 0) * 100}
+                                        icon={{ uri: item?.thumb }}
+                                    />
+                                ))
+                            }
+
                         </View>
                     </View>
                 )}

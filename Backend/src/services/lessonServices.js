@@ -149,14 +149,10 @@ const getLessonsByCateId = async (cate_id, keyword, user_id) => {
             const tests = lesson.tests;
             tests.forEach(test => {
                 const total_corect = test.testResults?.[0]?._id ? test.testResults?.[0]?.total_correct : 0;
-                console.log('====================================');
-                console.log('total_corect',total_corect);
-                console.log('====================================');
+ 
                 total_correct_question_test += total_corect;
             });
-            console.log('====================================');
-            console.log("total_correct_question_test >>>>>>>>>>>",total_correct_question_test);
-            console.log('====================================');
+
             lesson.percent_correct = (total_correct_question_test / total_question_lesson) * 100;
             lesson.total_correct = total_correct_question_test;
       

@@ -101,6 +101,7 @@ const ReadingTest = ({ navigation, route }) => {
   const [showNextQuestion, setShowNextQuestion] = React.useState(false);
   const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
   const [isShowExplain, setIsShowExplain] = React.useState(true);
+  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
 
   // hieu viet
   const testStore = useSelector((state) => state.test);
@@ -113,6 +114,15 @@ const ReadingTest = ({ navigation, route }) => {
   };
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
+  };
+
+  const handelShowChoiceNextQuestion = () => {
+    if(partQuestion == 0 && countChoiceAnswer+1 == choiceQuestions.length){
+      handelShowNextQuestion();
+    }
+    else{
+      setCountChoiceAnswer(countChoiceAnswer + 1);
+    }
   };
 
 
@@ -193,11 +203,10 @@ const ReadingTest = ({ navigation, route }) => {
                   test_id={test_id}
                   test={test}
                   onProgressUpdate={handleProgressUpdate}
-                  onShowNextQuestion={handelShowNextQuestion}
+                  handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
                 />
               </View> : <></>
             })}
-
 
             {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
               if (partQuestion == 1) {

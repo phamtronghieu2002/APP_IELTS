@@ -24,6 +24,7 @@ const ListeningTest = ({ navigation, route }) => {
   const [answers, setAnswers] = React.useState([]);
 
   const [choiceQuestions, setChoiceQuestions] = React.useState([]);
+  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
   const fetchTestById = async () => {
     try {
       const response = await getTestById(test_id);
@@ -38,7 +39,7 @@ const ListeningTest = ({ navigation, route }) => {
       console.error(error);
     }
   };
-
+// cái này để ngắt âm thanh khi thay đổi màn hình nhé fen
   // Sử dụng useFocusEffect để gọi hàm fetch khi màn hình được focus
   useFocusEffect(
     React.useCallback(() => {
@@ -46,17 +47,19 @@ const ListeningTest = ({ navigation, route }) => {
     }, [test_id]) // Thêm test_id vào dependencies nếu cần
   );
 
+  
+  
   const name_test = route?.params?.nameTest;
   const type = route?.params?.type;
   const testResults = route?.params?.testResults;
   const [is_doing, setIsDoing] = React.useState(false);
   const testStore = useSelector((state) => state.test);
   const dispatch = useDispatch();
-
+  
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [partQuestion, setPartQuestion] = React.useState(0);
   const [countProgress, setCountProgress] = React.useState(0);
-
+  
   const handleProgressUpdate = () => {
     setCountProgress((prevCount) => prevCount + 1);
   };
@@ -65,7 +68,15 @@ const ListeningTest = ({ navigation, route }) => {
     setShowNextQuestion(true);
   };
 
-// hieu them v_2
+  const handelShowChoiceNextQuestion = () => {
+    if(partQuestion == 0 && countChoiceAnswer+1 == choiceQuestions.length){
+      handelShowNextQuestion();
+    }
+    else{
+      setCountChoiceAnswer(countChoiceAnswer + 1);
+    }
+  };
+  // hieu them v_2
   useEffect(() => {
     const count_total_question = (questions) => {
       let total = 0;
@@ -171,7 +182,7 @@ const ListeningTest = ({ navigation, route }) => {
                   test_id={test_id}
                   test={test}
                   onProgressUpdate={handleProgressUpdate}
-                  onShowNextQuestion={handelShowNextQuestion}
+                  handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
                 />
               </View> : <></>
             })}
