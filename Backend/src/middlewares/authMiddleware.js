@@ -4,10 +4,7 @@ import env from "~/config/env";
 import jwt from "jsonwebtoken";
 const { StatusCodes } = require("http-status-codes");
 export const veryfyUser = async (req, res, next) => {
-    const accessToken = req.headers["authorization"]?.split(" ")[1];
-
-
-    
+    const accessToken = req.headers["authorization"]?.split(" ")[1];    
     if (accessToken) {
         try {
             const decoded_token = jwt.verify(

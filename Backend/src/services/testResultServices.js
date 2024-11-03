@@ -88,9 +88,13 @@ export const addQuestion = async (test_id, type, data) => {
 
 
     const dataO = result.toObject();
-
+     
+    console.log('====================================');
+    console.log('dataO', dataO);
+    console.log('====================================');
     const total_correct = dataO.anwsers.filter(item => item.is_correct === true).length;
     const total_incorrect = dataO.anwsers.filter(item => item.is_correct === false).length;
+    
 
 
     const test = await TestModel.findById(test_id)?.populate('questions').exec();
