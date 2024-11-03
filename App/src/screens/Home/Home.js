@@ -22,6 +22,7 @@ import { useColorScheme } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
 import Loading from '../../components/Loading/Loading';
 import VoiceRecord from '../../components/VoiceRecord/VoiceRecord';
+import Recorder from '../../components/recorder/Recorder';
 const Home = ({ navigation, route }) => {
 
 
@@ -153,7 +154,7 @@ const Home = ({ navigation, route }) => {
 
 
         </View>
-        {/*  */}
+        <Recorder />
 
         {
           categories?.practices?.map((item, index) =>
