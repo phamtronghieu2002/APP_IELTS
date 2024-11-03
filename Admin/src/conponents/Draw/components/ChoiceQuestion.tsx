@@ -177,6 +177,7 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
               type: "SET_TYPE_ACTION",
               payload: "add",
             })
+            
             dispathCategory({ type: "SET_REFRESH" })
           }}
           className="bg-gradient-to-r p-5 from-sky-500 to-fuchsia-500 text-lime-50"

@@ -17,9 +17,7 @@ const handleGetLessons = async (req, res, next) => {
 
         const categoryid = req.params.id || "";
         const user_id = req.query.user_id || "";
-        console.log('====================================');
-        console.log("user_id",user_id);
-        console.log('====================================');
+
         const keyword = req.query.keyword || "";
         const result = await lessonServices?.getLessonsByCateId(categoryid,keyword,user_id);
         return res.status(StatusCodes.OK).json(result);

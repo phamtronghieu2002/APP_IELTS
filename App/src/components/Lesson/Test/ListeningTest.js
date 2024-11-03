@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, ScrollView, SafeAreaView } from "react-native";
 import * as Progress from "react-native-progress";
 import HeaderScreen from "../../Header/HeaderScreen";
@@ -24,6 +24,7 @@ const ListeningTest = ({ navigation, route }) => {
   const [answers, setAnswers] = React.useState([]);
 
   const [choiceQuestions, setChoiceQuestions] = React.useState([]);
+  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
   const fetchTestById = async () => {
     try {
       const response = await getTestById(test_id);
@@ -38,7 +39,7 @@ const ListeningTest = ({ navigation, route }) => {
       console.error(error);
     }
   };
-
+// cái này để ngắt âm thanh khi thay đổi màn hình nhé fen
   // Sử dụng useFocusEffect để gọi hàm fetch khi màn hình được focus
   useFocusEffect(
     React.useCallback(() => {
@@ -46,17 +47,19 @@ const ListeningTest = ({ navigation, route }) => {
     }, [test_id]) // Thêm test_id vào dependencies nếu cần
   );
 
+  
+  
   const name_test = route?.params?.nameTest;
   const type = route?.params?.type;
   const testResults = route?.params?.testResults;
+  const [is_doing, setIsDoing] = React.useState(false);
   const testStore = useSelector((state) => state.test);
   const dispatch = useDispatch();
-
+  
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [partQuestion, setPartQuestion] = React.useState(0);
   const [countProgress, setCountProgress] = React.useState(0);
-  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
-
+  
   const handleProgressUpdate = () => {
     setCountProgress((prevCount) => prevCount + 1);
   };
@@ -84,10 +87,15 @@ const ListeningTest = ({ navigation, route }) => {
           {countProgress + "/" + questions.total_question}
         </Text>
         <Progress.Bar
+          style={{
+            backgroundColor: "white",
+            borderColor: "white",
+          }}
           progress={countProgress / questions.total_question || 0}
-          className="max-w-full ml-2"
-          width={150}
-          color="#FF0505"
+          color="red"
+          width={300}
+          height={10}
+          borderRadius={15}
         />
       </View>
       <ScrollView className="p-7">
@@ -104,7 +112,12 @@ const ListeningTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 mb-3"
         >
-          <ExpandableText text={questions?.audio_url} type={"audio"} />
+          <ExpandableText 
+          isToggle={false}
+          classnames={"mt-1"}
+          initialHeight={320}
+          text={questions?.audio_url}
+          type={"audio"} />
         </View>
         <View
           style={{
@@ -126,73 +139,55 @@ const ListeningTest = ({ navigation, route }) => {
           )}
 
           <View className="mb-5 border-b-2 border-gray-200 pb-3">
-            {questions?.questions?.map((item, index) => {
-              if (item.question_type === "choice" && partQuestion === 0) {
-                return (
-                  <View key={index}>
-                    <RadioButtonForm
-                      item={item}
+          {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
+              return partQuestion == 0 ? <View key={index}>
+                <RadioButtonForm
+                  item={item}
+                  test_id={test_id}
+                  test={test}
+                  onProgressUpdate={handleProgressUpdate}
+                  handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
+                />
+              </View> : <></>
+            })}
+
+
+            {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
+              if (partQuestion == 1) {
+
+                
+                return index == currentQuestion_fill_in_blank ? (
+                  <View>
+                    <Text className="mb-10">
+                      {item.description}
+                    </Text>
+                    <RenderHtml
+                      contentWidth={width}
+                      source={{
+                        html: item.question_text || ""
+                      }}
+                    />
+                    <AnswerInputArea
+                      parrent_question={item}
+                      key={currentQuestion_fill_in_blank} // Adding a unique key for each question
+                      currentquestion={currentQuestion_fill_in_blank}
+                      data={item?.options}
                       test_id={test_id}
-                      test={test}
+                      is_doing={test?.is_doing}
+                      is_correct={answers.find((a) => a.question_id === item.question_id)?.options.is_correct}
+                      explain={item.explain}
+                      anwser={item.options.find((a) => a.is_correct)?.text}
+                      isShow={isShowExplain}
                       onProgressUpdate={handleProgressUpdate}
                       handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
                     />
                   </View>
-                );
-              } else if (item.question_type === "fill_in_blank") {
-                fill_in_blank_question.push(item); // Use push instead of append
+                ) : <></>
 
-                return <View></View>; // Ensure you return something
               }
-              return <View></View>; // Return null for cases where no condition matches
+              return <></>
             })}
-            {fill_in_blank_question.length > 0 && partQuestion == 1 && (
-              <View>
-                <Text className="mb-10">
-                  {
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .description
-                  }
-                </Text>
-                <RenderHtml
-                  contentWidth={width}
-                  source={{
-                    html: fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .question_text,
-                  }}
-                />
-                <AnswerInputArea
-                  key={currentQuestion_fill_in_blank} // Adding a unique key for each question
-                  currentquestion={currentQuestion_fill_in_blank}
-                  data={
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .options
-                  }
-                  test_id={test_id}
-                  is_doing={test?.is_doing}
-                  is_correct={
-                    answers.find(
-                      (a) =>
-                        a.question_id ===
-                        fill_in_blank_question[currentQuestion_fill_in_blank]
-                          .question_id
-                    )?.options.is_correct
-                  }
-                  explain={
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .explain
-                  }
-                  anwser={
-                    fill_in_blank_question[
-                      currentQuestion_fill_in_blank
-                    ].options.find((a) => a.is_correct)?.text
-                  }
-                  isShow={isShowExplain}
-                  onProgressUpdate={handleProgressUpdate}
-                  onShowNextQuestion={handelShowNextQuestion}
-                />
-              </View>
-            )}
+
           </View>
 
           {showNextQuestion && (
@@ -201,18 +196,13 @@ const ListeningTest = ({ navigation, route }) => {
               roundedfull
               onPress={() => {
                 if (countProgress == questions.total_question) {
-                  navigation?.navigate(configs?.screenName?.overview, {
-                    test_id,
-                    name_test,
-                    type,
-                    testResults: [testStore?.testResults],
-                  });
+                  navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
+
                 }
                 if (
                   currentQuestion <
                   questions?.questions?.length - choiceQuestions.length
                 ) {
-                  console.log("choice_question1", choiceQuestions.length);
 
                   setPartQuestion(1);
                   setCurrentQuestion(currentQuestion + 1);
@@ -222,7 +212,7 @@ const ListeningTest = ({ navigation, route }) => {
                     questions?.questions?.length - choiceQuestions.length &&
                   partQuestion == 1
                 ) {
-                  console.log("choice_question2", choiceQuestions.length);
+             
                   setCurrentQuestion_fill_in_blank(
                     currentQuestion_fill_in_blank + 1
                   );

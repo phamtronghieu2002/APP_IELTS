@@ -23,9 +23,7 @@ const HeaderScreen = ({
     onPress
 }) => {
 
-    console.log('====================================');
-    console.log("label", label);
-    console.log('====================================');
+
     return (
 
         <View className={`gap-1 flex-row justify-start items-center mt-3  h-14 pr-4 pl-4 ${style}`}>

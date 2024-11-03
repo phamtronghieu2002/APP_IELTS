@@ -136,7 +136,7 @@ const LessonItem = ({
                             width={100}
                         />
                         <Text className={colorPercent}>
-                            {percent_correct??0?.toFixed(0)}%
+                            {percent_correct?.toFixed(0)}%
                         </Text>
                     </View>
                 </View>

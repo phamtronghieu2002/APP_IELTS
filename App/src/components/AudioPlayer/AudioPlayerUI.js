@@ -12,10 +12,13 @@ export default function AudioPlayerUI() {
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1.0);
   const [volume, setVolume] = useState(1.0);
+     
 
+  
   async function loadSound() {
+    const audio_path = `${process.env.EXPO_PUBLIC_API_URL}/files/${audio_url}`;
     const { sound } = await Audio.Sound.createAsync(
-      { uri: "https://webaudioapi.com/samples/audio-tag/chrono.mp3" },
+      { uri: audio_path },
       { shouldPlay: false, rate: speed, volume }
     );
     setSound(sound);
@@ -77,7 +80,7 @@ export default function AudioPlayerUI() {
   useEffect(() => {
     loadSound();
     return sound ? () => sound.unloadAsync() : undefined;
-  }, []);
+  }, [audio_url]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -105,7 +108,7 @@ export default function AudioPlayerUI() {
           thumbStyle={styles.thumb} // Tùy chỉnh kích thước nút
           trackStyle={styles.track} // Tùy chỉnh chiều cao của thanh
           trackThickness={500}
-    thumbSize={120}
+          thumbSize={120}
           onSlidingComplete={async (value) => {
             if (sound) {
               await sound.setPositionAsync(value);

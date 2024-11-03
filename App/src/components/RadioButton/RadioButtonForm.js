@@ -52,6 +52,9 @@ const RadioButtonForm = ({
           })
             .then((fb) => {
                  const data = fb.data;
+                 console.log('====================================');
+                 console.log("data  nhâ>>>>>>", data);
+                 console.log('====================================');
                  dispatch(setTestStore({testResults:data}));                  
             })
             .catch((err) => {

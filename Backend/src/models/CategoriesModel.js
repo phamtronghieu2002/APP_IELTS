@@ -20,6 +20,11 @@ const CategoriesSchema = new mongoose.Schema(
             require: false,
             default: 0,
         },
+        total_question: {
+            type: Number,
+            require: false,
+            default: 0,
+        },
         group: {
             type: String,
             enum: ['skills', 'practices', 'prepare'],

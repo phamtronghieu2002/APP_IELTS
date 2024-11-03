@@ -16,35 +16,47 @@ import MainButton from '../Button/MainButton';
 import { addAnwserToTestResult } from '../../services/testResultServices';
 import { _testTypes } from '../../utils/constant';
 import Explain from "../Explain/Explain";
+import { useDispatch } from 'react-redux';
+import { setTestStore } from '../../fetures/testSlice';
 
 const AnswerInputArea = ({
   data, ...props
 }) => {
   const { test_id, is_doing } = props;
-  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, onShowNextQuestion } = props;
+  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, handelShowNextQuestion, parrent_question } = props;
 
 
   const [userAnswer, setUserAnswer] = React.useState([]);
   const [isClickCheck, setIsClickCheck] = useState(false);
   const [showExplain, setShowExplain] = useState(isShow);
-
+  const dispatch = useDispatch();
   const checkAnswer = async () => {
     let testResult = new Map();
     data.map((item, index) => {
-      if (item.is_correct === userAnswer[index]) {
+      if (item.is_correct?.toLowerCase() === userAnswer[index]?.toLowerCase()) {
         testResult.set(item.option_id, true); // Use set to add key-value pairs
+
       } else {
         testResult.set(item.option_id, false); // Use set to add key-value pairs
+
+
       }
       onProgressUpdate()
     });
-    const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct }));
-  
+
+
+    const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct, parrent_question_id: parrent_question?.question_id }));
+
     testResultArray.forEach(async (item) => {
       try {
-        await addAnwserToTestResult(test_id, _testTypes?.new, {
+        const res = await addAnwserToTestResult(test_id, _testTypes?.new, {
           anwser: item
         });
+        console.log('====================================');
+        console.log("res chưa nhận được >>>>>>", res);
+        console.log('====================================');
+        const data = res.data;
+        dispatch(setTestStore({ testResults: data }));
       } catch (error) {
         console.error(error);
       }
@@ -52,11 +64,11 @@ const AnswerInputArea = ({
     );
     setIsClickCheck(true);
     setShowExplain(true);
-    onShowNextQuestion();
+    handelShowNextQuestion();
   };
 
   const checkiscorrect = (anwser, index) => {
-    if (anwser === userAnswer[index]) {
+    if (anwser?.toLowerCase() === userAnswer[index]?.toLowerCase()) {
       return true;
     }
     return false;

@@ -6,13 +6,13 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import AudioPlayerUI from '../AudioPlayer/AudioPlayerUI';
 
 
-const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
+const ExpandableText = ({ text, initialHeight = 200, type, name, classnames, isToggle = true }) => {
     const { width } = useWindowDimensions();
     const [expanded, setExpanded] = React.useState(false);
     const [collapsed, setCollapsed] = React.useState(false);
     const [textHeight, setTextHeight] = React.useState(0);
     const animatedHeight = React.useRef(new Animated.Value(initialHeight)).current;
-    
+
     const toggleExpand = () => {
         if (expanded) {
             Animated.timing(animatedHeight, {
@@ -51,7 +51,9 @@ const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
                 </TouchableOpacity>
             </View>
 
-            <ScrollView>
+            <ScrollView
+                className={`mt-[-25px] ${classnames}`}
+            >
                 <Animated.View style={{ height: collapsed ? 0 : expanded ? null : animatedHeight }}>
                     {!collapsed && type === "text" && (
                         <View className="mt-3" onLayout={(event) => {
@@ -81,10 +83,14 @@ const ExpandableText = ({ text, initialHeight = 400, type, name}) => {
                     )}
                 </Animated.View>
                 {!collapsed && (
-                    <TouchableOpacity onPress={toggleExpand} className="flex items-center">
-                        <Text style={{ color: 'blue', marginTop: 10 }}>
-                            {expanded ? 'Show More' : 'Show Less'}
-                        </Text>
+                    <TouchableOpacity onPress={toggleExpand} className="flex items-center mt-3">
+
+                        {
+                            isToggle && <Text style={{ color: 'blue', marginTop: 10 }}>
+                                {!expanded ? 'Show More' : 'Show Less'}
+                            </Text>
+                        }
+
                     </TouchableOpacity>
                 )}
             </ScrollView>

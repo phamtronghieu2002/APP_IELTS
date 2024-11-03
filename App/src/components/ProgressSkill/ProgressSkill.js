@@ -33,14 +33,14 @@ const ProgressSkill = ({ skill, questionDone, allQuestion, progress, icon, onPre
           shadow-2xl mb-5">
       <View className="flex flex-row justify-between p-2">
         <Image
-          style={{ width: 70, height: 70 }}
+          style={{ width:50, height:50 }}
           source={icon} />
         <CircularProgress
           percentage={progress} // giá trị phần trăm của tiến trình
           donutWidth={1}  // độ rộng của vòng tròn
           size={55}
           progressWidth={23}     // kích thước của vòng tròn
-          children={<Text style={{ fontSize: 15, color: 'black' }}>{progress}%</Text>} // hiển thị phần trăm
+          children={<Text style={{ fontSize: 15, color: 'black' }}>{progress?.toFixed(0)}%</Text>} // hiển thị phần trăm
           blankColor="#F2B5AA" // màu của vòng tròn
           donutColor="#E66D57" // màu của vòng tròn tiến trình
         />

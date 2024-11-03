@@ -68,7 +68,6 @@ const Lesson = ({ navigation, route }) => {
         return unsubscribe;
       }, [navigation]);
 
-   console.log("key >>",key);
    
     React.useEffect(() => {
   
