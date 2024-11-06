@@ -23,7 +23,7 @@ const AnswerInputArea = ({
   data, ...props
 }) => {
   const { test_id, is_doing } = props;
-  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, handelShowNextQuestion, parrent_question } = props;
+  const { is_correct, explain, anwser, isShow, currentquestion, onProgressUpdate, handelShowNextQuestion, parrent_question, onHandleSetAnswers } = props;
 
 
   const [userAnswer, setUserAnswer] = React.useState([]);
@@ -46,15 +46,14 @@ const AnswerInputArea = ({
 
 
     const testResultArray = Array.from(testResult, ([question_id, is_correct]) => ({ question_id, is_correct, parrent_question_id: parrent_question?.question_id }));
+    onHandleSetAnswers(testResultArray);
 
     testResultArray.forEach(async (item) => {
       try {
         const res = await addAnwserToTestResult(test_id, _testTypes?.new, {
           anwser: item
         });
-        console.log('====================================');
-        console.log("res chưa nhận được >>>>>>", res);
-        console.log('====================================');
+
         const data = res.data;
         dispatch(setTestStore({ testResults: data }));
       } catch (error) {

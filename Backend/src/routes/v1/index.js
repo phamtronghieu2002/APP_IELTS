@@ -13,6 +13,8 @@ import tipRoute from "./TipRoute";
 import toturialRoute from "./totutialRoute";
 import vocRoute from "./VocRoute";
 import gptRoute from "./GPTRoute";
+import learningTimeRoute from "./LearningTimeRoute";
+import commentRoute from "./CommentRoute";
 import { veryfyUser } from "~/middlewares/authMiddleware";
 const initAPIRoutes = (app) => {
 
@@ -30,6 +32,8 @@ const initAPIRoutes = (app) => {
       app.use("/api/v1/toturial", toturialRoute);
       app.use("/api/v1/voc", vocRoute);
       app.use("/api/v1/gpt", gptRoute);
+      app.use("/api/v1/learning_time", learningTimeRoute);
+      app.use("/api/v1/comment", commentRoute);
 
 }
 

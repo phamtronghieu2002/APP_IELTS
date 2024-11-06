@@ -22,6 +22,9 @@ import { useColorScheme } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
 import Loading from '../../components/Loading/Loading';
 import VoiceRecord from '../../components/VoiceRecord/VoiceRecord';
+import Recorder from '../../components/recorder/Recorder';
+import BottomSheetExample from '../../components/Modal/ModalBookmark';
+import { ModalConfirm } from '../../components/Modal/ModalConfirm';
 const Home = ({ navigation, route }) => {
 
 
@@ -68,6 +71,9 @@ const Home = ({ navigation, route }) => {
 
   const fetchCategoriesPrepare = async () => {
     try {
+      const user = await getData('user');
+      console.log("accessToken >>>>>>>>>>>", user?.accessToken);
+
       const res = await getCategories(_groupCategories?.prepare);
       setCategories(prevState => ({
         ...prevState,
@@ -99,11 +105,9 @@ const Home = ({ navigation, route }) => {
         <Text className="text-red-600 text-xl font-bold">
           IELTS Practice Test
         </Text>
-        <Text className="">
-          {route?.params?.userInfo?.photo}
-
-
-        </Text>
+        <ModalConfirm 
+        navigation={navigation}
+        />
         {/* / */}
         <View
           className="wrapper_items mt-4 flex flex-row justify-between flex-wrap  dark:bg-white">
@@ -153,7 +157,7 @@ const Home = ({ navigation, route }) => {
 
 
         </View>
-        {/*  */}
+        <Recorder />
 
         {
           categories?.practices?.map((item, index) =>
@@ -248,6 +252,7 @@ const Home = ({ navigation, route }) => {
               </Pressable>)
           }
         </View>
+
       </MainLayout>
     )
   );

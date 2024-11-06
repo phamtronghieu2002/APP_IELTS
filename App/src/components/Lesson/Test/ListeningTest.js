@@ -1,5 +1,10 @@
-import React, { useEffect } from "react";
-import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import React, { useEffect, useMemo } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import * as Progress from "react-native-progress";
 import HeaderScreen from "../../Header/HeaderScreen";
 import { getTestById } from "../../../services/testService";
@@ -10,21 +15,29 @@ import AnswerInputArea from "../../AnswerInput/AnswerInput";
 import { _testTypes } from "../../../utils/constant";
 import MainButton from "../../Button/MainButton";
 import RadioButtonForm from "../../RadioButton/RadioButtonForm";
-import { useFocusEffect } from "@react-navigation/native";
-import { useSelector, useDispatch} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import configs from "../../../configs";
-const ListeningTest = ({ navigation, route }) => {
+import { use } from "i18next";
+import ActionBar from "../../ActionBar/ActionBar";
+import AudioPlayerUI from "../../AudioPlayer/AudioPlayerUI";
+const ReadingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
-
   const [questions, setQuestions] = React.useState({});
-  const test_id = route?.params?.test_id;
-
-  const [answers, setAnswers] = React.useState([]);
 
   const [choiceQuestions, setChoiceQuestions] = React.useState([]);
   const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
+
+  const test_id = route?.params?.test_id;
+  const refresh = route?.params?.cb;
+  // hieu viet them
+  const name_test = route?.params?.nameTest;
+  const type = route?.params?.type;
+
+  const testResults = route?.params?.testResults;
+  const [is_doing, setIsDoing] = React.useState(false);
+  // 
   const fetchTestById = async () => {
     try {
       const response = await getTestById(test_id);
@@ -39,51 +52,105 @@ const ListeningTest = ({ navigation, route }) => {
       console.error(error);
     }
   };
-// cái này để ngắt âm thanh khi thay đổi màn hình nhé fen
-  // Sử dụng useFocusEffect để gọi hàm fetch khi màn hình được focus
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchTestById();
-    }, [test_id]) // Thêm test_id vào dependencies nếu cần
-  );
 
-  
-  
-  const name_test = route?.params?.nameTest;
-  const type = route?.params?.type;
-  const testResults = route?.params?.testResults;
-  const [is_doing, setIsDoing] = React.useState(false);
-  const testStore = useSelector((state) => state.test);
-  const dispatch = useDispatch();
-  
+  React.useEffect(() => {
+    fetchTestById();
+  }, []);
+
+  useEffect(() => {
+
+
+    const count_total_question = (questions) => {
+      let total = 0;
+      questions?.questions?.map((item) => {
+        if (item.question_type == "choice") {
+          total += 1;
+        } else {
+          total += item.options.length;
+        }
+      })
+      return total;
+    }
+    const sub_questions = questions?.questions;
+    if (sub_questions?.length > 0) {
+      if (testResults?.length > 0 && !is_doing) {
+        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id || a.parrent_question_id === item.question_id));
+
+        if (question_filter?.[0]?.question_type == "fill_in_blank") {
+          setPartQuestion(1);
+        }
+
+
+        questions.questions = question_filter;
+        questions.total_question = count_total_question(questions);
+        setChoiceQuestions(questions?.questions?.filter(item => item.question_type == "choice"));
+
+
+        setQuestions({ ...questions });
+        setIsDoing(true);
+      }
+
+
+    }
+  }, [questions]);
+
+
+
+
+
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [partQuestion, setPartQuestion] = React.useState(0);
   const [countProgress, setCountProgress] = React.useState(0);
-  
+  const [showNextQuestion, setShowNextQuestion] = React.useState(false);
+  const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
+  const [isShowExplain, setIsShowExplain] = React.useState(true);
+
+  // hiếu viết tiếp nè ae
+  const [answers, setAnswers] = React.useState([]);
+
+
+  const handleSetAnswers = (answer) => {
+    if (answer?.length) {
+      setAnswers(answer);
+      return;
+    }
+    setAnswers([...answers, answer])
+  };
+
+
+  const testStore = useSelector((state) => state.test);
+  const dispatch = useDispatch();
+
+
+
   const handleProgressUpdate = () => {
     setCountProgress((prevCount) => prevCount + 1);
   };
-  const [showNextQuestion, setShowNextQuestion] = React.useState(false);
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
   };
   const handelShowChoiceNextQuestion = () => {
-    if(partQuestion == 0 && countChoiceAnswer+1 == choiceQuestions.length){
+    if (partQuestion == 0 && countChoiceAnswer + 1 == choiceQuestions.length) {
       handelShowNextQuestion();
     }
-    else{
+    else {
       setCountChoiceAnswer(countChoiceAnswer + 1);
     }
   };
-  const fill_in_blank_question = [];
-  const [isShowExplain, setIsShowExplain] = React.useState(true);
-  const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] =
-    React.useState(0);
+
+
+
   return (
-    <SafeAreaView>
-      <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
+    <SafeAreaView
+
+    >
+      <HeaderScreen
+        onPress={refresh}
+        label={route?.params?.nameTest}
+        navigation={navigation} />
+
       <View className="flex flex-row justify-center items-center pl-5 pr-5">
-        <Text className="font-bold">
+        <Text className="font-bold mr-3 text-red-600">
           {countProgress + "/" + questions.total_question}
         </Text>
         <Progress.Bar
@@ -98,132 +165,148 @@ const ListeningTest = ({ navigation, route }) => {
           borderRadius={15}
         />
       </View>
-      <ScrollView className="p-7">
-        <View
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          className="rounded-md bg-white p-5 mb-3"
-        >
-          <ExpandableText 
-          isToggle={false}
-          classnames={"mt-1"}
-          initialHeight={320}
-          text={questions?.audio_url}
-          type={"audio"} />
-        </View>
-        <View
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          className="rounded-md bg-white p-5 pb-32"
-        >
-          {partQuestion == 0 && (
-            <Text className="mb-10">
-              Lựa chọn các đáp án sau sao cho phù hợp
-            </Text>
-          )}
+      <ScrollView>
+        <View className="container p-7 pb-10">
+          <View
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+            className="rounded-md bg-white p-5 mb-3"
+          >
+            <AudioPlayerUI
+              audio_url={questions?.audio_url}
+            />
+          </View>
+          <View
+            style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+            className="rounded-md bg-white p-5 pb-1"
+          >
+            {partQuestion == 0 && (
+              <Text className="mb-10">
+                Lựa chọn các đáp án sau sao cho phù hợp
+              </Text>
+            )}
 
-          <View className="mb-5 border-b-2 border-gray-200 pb-3">
-          {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
-              return partQuestion == 0 ? <View key={index}>
-                <RadioButtonForm
-                  item={item}
-                  test_id={test_id}
-                  test={test}
-                  onProgressUpdate={handleProgressUpdate}
-                  handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
-                />
-              </View> : <></>
-            })}
+            <View className="mb-5 border-b-2 border-gray-200 pb-3">
+              {/* {question_type == "fill_in_blank" && (
+                  <Text className="">{questions?.questions?.[currentQuestion].description}</Text>
+                )}
+                <RenderHtml
+                  contentWidth={width}
+                  source={{
+                    html: questions?.questions?.[currentQuestion].question_text,
+                  }}
+                /> */}
+              {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
+                return partQuestion == 0 ? <View key={index}>
+                  <RadioButtonForm
+                    item={item}
+                    test_id={test_id}
+                    test={test}
+                    onProgressUpdate={handleProgressUpdate}
+                    onHandleSetAnswers={handleSetAnswers}
+                    handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
+                  />
+                </View> : <></>
+              })}
+
+              {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
+                if (partQuestion == 1) {
 
 
-            {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
-              if (partQuestion == 1) {
+                  return index == currentQuestion_fill_in_blank ? (
+                    <View>
+                      <Text className="mb-10">
+                        {item.description}
+                      </Text>
+                      <RenderHtml
+                        contentWidth={width}
+                        source={{
+                          html: item.question_text || ""
+                        }}
+                      />
+                      <AnswerInputArea
+                        parrent_question={item}
+                        key={currentQuestion_fill_in_blank} // Adding a unique key for each question
+                        currentquestion={currentQuestion_fill_in_blank}
+                        data={item?.options}
+                        test_id={test_id}
+                        test={test}
+                        total_question_choice={choiceQuestions.length}
+                        onProgressUpdate={handleProgressUpdate}
+                        onHandleSetAnswers={handleSetAnswers}
+                        handelShowNextQuestion={handelShowNextQuestion}
+                      />
+                    </View>
+                  ) : <></>
 
-                
-                return index == currentQuestion_fill_in_blank ? (
-                  <View>
-                    <Text className="mb-10">
-                      {item.description}
-                    </Text>
-                    <RenderHtml
-                      contentWidth={width}
-                      source={{
-                        html: item.question_text || ""
-                      }}
-                    />
-                    <AnswerInputArea
-                      parrent_question={item}
-                      key={currentQuestion_fill_in_blank} // Adding a unique key for each question
-                      currentquestion={currentQuestion_fill_in_blank}
-                      data={item?.options}
-                      test_id={test_id}
-                      is_doing={test?.is_doing}
-                      is_correct={answers.find((a) => a.question_id === item.question_id)?.options.is_correct}
-                      explain={item.explain}
-                      anwser={item.options.find((a) => a.is_correct)?.text}
-                      isShow={isShowExplain}
-                      onProgressUpdate={handleProgressUpdate}
-                      handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
-                    />
-                  </View>
-                ) : <></>
+                }
+                return <></>
+              })}
 
-              }
-              return <></>
-            })}
+
+            </View>
 
           </View>
-
-          {showNextQuestion && (
-            <MainButton
-              title={"Next question"}
-              roundedfull
-              onPress={() => {
-                if (countProgress == questions.total_question) {
-                  navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
-
-                }
-                if (
-                  currentQuestion <
-                  questions?.questions?.length - choiceQuestions.length
-                ) {
-
-                  setPartQuestion(1);
-                  setCurrentQuestion(currentQuestion + 1);
-                }
-                if (
-                  currentQuestion <
-                    questions?.questions?.length - choiceQuestions.length &&
-                  partQuestion == 1
-                ) {
-             
-                  setCurrentQuestion_fill_in_blank(
-                    currentQuestion_fill_in_blank + 1
-                  );
-                }
-                setShowNextQuestion(false);
-              }}
-            />
-          )}
         </View>
+        {showNextQuestion && <ActionBar
+          total_question={answers?.length}
+          total_correct={
+            answers?.filter((item) => item.is_correct)?.length
+          }
+          onPressNext={() => {
+
+            setAnswers([]);
+
+            if (countProgress == questions.total_question) {
+              navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
+
+            }
+            // 
+            if (
+              currentQuestion <
+              questions?.questions?.length - choiceQuestions.length
+            ) {
+
+
+
+              setPartQuestion(1);
+              setCurrentQuestion(currentQuestion + 1);
+            }
+            if (
+              currentQuestion <
+              questions?.questions?.length - choiceQuestions.length &&
+              partQuestion == 1
+            ) {
+
+              setCurrentQuestion_fill_in_blank(
+                currentQuestion_fill_in_blank + 1
+              );
+            }
+            setShowNextQuestion(false);
+          }}
+        />}
+
       </ScrollView>
+
     </SafeAreaView>
   );
 };
-export default ListeningTest;
+
+export default ReadingTest;

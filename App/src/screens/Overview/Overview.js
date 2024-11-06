@@ -162,7 +162,7 @@ const Overview = ({ navigation, route }) => {
                                     }
                                 </Text>
                                 <Pressable className="" onPress={() => {
-                                    console.log("type dịkushfisuhfjksdf >>", type);
+                               
 
                                     const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === true);
                                     navigation.navigate(type, { type,nameTest: name_test, test_id: id_test, testResults: correct_anwser });

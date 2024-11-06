@@ -26,3 +26,17 @@ export const getTestResult = async (test_id) => {
      return axios.get('/testResult?test_id='+test_id);
 
 }
+
+
+export const getAllTestResult = async () => {
+     return axios.get('/testResult/all');
+
+}
+export const addBookmark = async (test_id,note_bookmark,status=true) => {
+     return axios.post('/testResult/bookmark', {
+          test_id,
+          note_bookmark,
+          status
+     });
+
+}

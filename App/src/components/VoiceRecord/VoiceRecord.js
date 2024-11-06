@@ -4,11 +4,10 @@ import { Audio } from "expo-av";
 
 export default function VoiceRecord() {
   const [recording, setRecording] = React.useState();
-  const [audioUri, setAudioUri] = React.useState(null); // Để lưu URI của file ghi âm
+  const [audioUri, setAudioUri] = React.useState(null); 
 
   async function startRecording() {
     try {
-      console.log("Requesting permissions..");
       await Audio.requestPermissionsAsync();
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
@@ -25,7 +24,6 @@ export default function VoiceRecord() {
       );
       await recording.startAsync();
       setRecording(recording);
-      console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }
@@ -40,6 +38,9 @@ export default function VoiceRecord() {
     console.log("Recording stopped and stored at", uri);
   }
 
+
+
+  // hàm này sử lí upload file ghi âm lên server
   async function uploadAudio() {
     if (!audioUri) {
       console.log("No audio file to upload");
@@ -54,7 +55,7 @@ export default function VoiceRecord() {
     });
 
     try {
-      const response = await fetch("http://192.168.85.187:8080/api/v1/audio/uploadMobile", {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/v1/audio/upload`, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",

@@ -78,7 +78,9 @@ const ExpandableText = ({ text, initialHeight = 200, type, name, classnames, isT
                                 }
                             }}
                         >
-                                <AudioPlayerUI />
+                                <AudioPlayerUI 
+                                audio_url={text}
+                                />
                         </View>
                     )}
                 </Animated.View>

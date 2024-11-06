@@ -31,6 +31,9 @@ import Record from "../screens/Record/Record";
 import { removeData } from "../utils/asyncStore";
 import { store } from "../app/store";
 import { logoutUser } from "../fetures/userSlice";
+import Review from "../screens/Statistic/components/Review";
+import { setOpenModal } from "../fetures/settingSlice";
+import Comment from "../screens/Comment/Comment";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -98,6 +101,11 @@ export const screensStack = [
         options: { title: "Welcome MyTab", headerShown: false },
     },
     {
+        name: configs.screenName.comment,
+        component: Comment,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
+    {
         name: configs.screenName.practice,
         component: Practice,
         options: { title: "Welcome MyTab", headerShown: false },
@@ -131,6 +139,12 @@ export const screensStack = [
         component: statistic,
         options: { title: "Welcome MyTab", headerShown: false },
     },
+    {
+        name: configs.screenName.review,
+        component: Review,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
+
 
     {
         name: configs.screenName.profile,
@@ -249,6 +263,7 @@ export const screensDrawer = (t) => [
         cb: () => {
             removeData('user')
             store?.dispatch(logoutUser())
+            store?.dispatch(setOpenModal(false))
 
         }
 

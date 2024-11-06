@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,34 +22,47 @@ import { _groupCategories } from '../../utils/constant';
 import { use } from 'i18next';
 import { getCategories } from '../../services/categoryServices';
 import configs from '../../configs';
+import { i18nContext } from '../../providers/I18nProvider';
+import { getAllTestResult } from '../../services/testResultServices';
+import Toast from 'react-native-toast-message';
+import TimeChar from './components/TimeChar';
 
-const Statistic = ({ navigation }) => {
+const Statistic = ({ navigation, route }) => {
 
     const [scrollOffset, setScrollOffset] = useState(0);
 
     const dispatch = useDispatch()
 
+    const { i18n, t } = useContext(i18nContext);
+
+    const { randomKey } = route?.params;
 
     const handleScroll = (event) => {
-        const currentOffset = event.nativeEvent.contentOffset.y;
-        if (currentOffset > scrollOffset && currentOffset > 20) {
-            dispatch(setShowHeaderDraw(false))
-        } else {
+        // const currentOffset = event.nativeEvent.contentOffset.y;
+
+        // if (currentOffset > scrollOffset && currentOffset > 20) {
+        //     dispatch(setShowHeaderDraw(false))
+        // } else {
 
 
-        }
-        setScrollOffset(currentOffset);
+        // }
+        // setScrollOffset(currentOffset);
     };
 
 
 
     const [selectedValue, setSelectedValue] = useState(0);
     const options_SwitchSelector = [
-        { label: 'Progress', value: 0 },
-        { label: 'Activity', value: 1 },
+        { label: t('statistics.tabLeft'), value: 0 },
+        { label: t('statistics.tabRight'), value: 1 },
     ];
 
     const [categories, setCategories] = React.useState([]);
+    const [statisticData, setStatisticData] = React.useState([]);
+    const [testResult, setTestResult] = React.useState([]);
+
+
+
 
 
 
@@ -57,15 +70,69 @@ const Statistic = ({ navigation }) => {
         try {
             const res = await getCategories(_groupCategories.all);
             setCategories(res?.data);
+            const data_statistic = res?.data?.map((item) => {
+
+                const percent = Number(((item?.total_correct / item?.total_question || 0) * 100).toFixed(0))
+                return ({
+                    label: `${item?.type} - ${percent}%`,
+                    value: percent,
+                })
+            });
+            setStatisticData(data_statistic);
         } catch (error) {
             console.log(error);
         }
     };
 
+    const fetchTestResult = async () => {
+        try {
+            const res = await getAllTestResult();
+
+            setTestResult(res?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const calcTotalCorrect = () => {
+        let total = 0;
+
+        testResult?.map((item) => {
+            total += item?.total_correct;
+        });
+        console.log("total", total);
+
+        return total;
+    };
+
+    const calcTotalInCorrect = () => {
+        let total = 0;
+        console.log("testResult >>>>>>>>>>>>>>>>>>", testResult);
+
+        testResult?.map((item) => {
+            total += item?.total_incorrect;
+        });
+        return total;
+    };
+    const calcTotalBookmark = () => {
+        let total = 0;
+
+        const fb = testResult?.filter((item) => {
+            return item?.bookmark;
+
+        });
+
+        return fb?.length;
+    };
+
+
 
     useEffect(() => {
+
+        fetchTestResult();
         fetchCategory();
-    }, []);
+    }, [randomKey]);
+
 
 
     return (
@@ -107,7 +174,10 @@ const Statistic = ({ navigation }) => {
                                     The chart reflects your completion progress
                                     by skills
                                 </Text>
-                            <Radarchart />
+                                {/* =========================================== */}
+                                <Radarchart
+                                    dataProps={statisticData}
+                                />
                             </View>
                             <View className="flex justify-center pr-5 pl-5 flex-col items-center">
                             </View>
@@ -156,13 +226,17 @@ const Statistic = ({ navigation }) => {
                                 </View>
                             </View>
                             <View className="flex justify-center pr-5 pl-5 flex-col items-center">
-                                {/* Radar Chart */}
-                                {/* notthing */}
+
+
+                                <TimeChar
+                                    freshKey={randomKey}
+                                />
+
                             </View>
                         </View>
                     )}
                     {/* static */}
-              
+
                 </Gradient>
                 {/* SwitchSelector */}
 
@@ -204,7 +278,7 @@ const Statistic = ({ navigation }) => {
 
                             }
                             {
-                                categories?.filter(item => item?.group !== "skills")?.map((item, index) => (
+                                categories?.filter(item => item?.group == "practices")?.map((item, index) => (
                                     <ProgressSkill
 
                                         onPress={() => {
@@ -242,20 +316,59 @@ const Statistic = ({ navigation }) => {
                         </View>
 
                         <View className="flex h-31.25 flex-wrap flex-row justify-between">
+
                             <Weekquestions
-                                icon={require('../../../assets/home/reading.png')}
-                                typeQuestions={'Week Questions'}
-                                numQuestion={20}
+                                onPress={
+                                    () => {
+                                        if (calcTotalInCorrect() > 0) {
+                                            navigation.navigate(configs?.screenName?.review, {
+                                                status: "weak",
+
+                                            })
+                                        } else {
+                                            Toast.show({
+                                                type: 'info',
+                                                text1: 'No data !!',
+
+                                            });
+                                        }
+                                    }
+                                }
+                                icon={require('../../../assets/statitics/incorrect.png')}
+                                typeQuestions={t('statistics.item.weakQuetion')}
+                                numQuestion={calcTotalInCorrect()}
                             />
                             <Weekquestions
-                                icon={require('../../../assets/home/reading.png')}
-                                typeQuestions={'Familiar Question'}
-                                numQuestion={20}
+                                onPress={
+                                    () => {
+                                        if (calcTotalCorrect() > 0) {
+                                            navigation.navigate(configs?.screenName?.review, {
+                                                status: "familiar",
+
+                                            })
+                                        } else {
+                                            Toast.show({
+                                                type: 'info',
+                                                text1: 'No data !!',
+
+                                            });
+                                        }
+                                    }
+                                }
+                                icon={require('../../../assets/statitics/correct.png')}
+                                typeQuestions={t('statistics.item.familiarQuestion')}
+                                numQuestion={calcTotalCorrect()}
                             />
                             <Weekquestions
-                                icon={require('../../../assets/home/reading.png')}
-                                typeQuestions={'Bookmarked Question'}
-                                numQuestion={20}
+                                onPress={
+                                    () => navigation.navigate(configs?.screenName?.review, {
+                                        status: "bookmark",
+
+                                    })
+                                }
+                                icon={require('../../../assets/statitics/bookmark.png')}
+                                typeQuestions={t('statistics.item.bookmarkQuestion')}
+                                numQuestion={calcTotalBookmark()}
                             />
                         </View>
                     </View>

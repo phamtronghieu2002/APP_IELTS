@@ -33,5 +33,15 @@
   },
   "overview":{
     "paractice": "Practice Now"
+  },
+  "statistics":{
+    "tabLeft": "Progress",
+    "tabRight": "Activity",
+    "item":{
+      "weakQuetion": "Weak Question",
+      "familiarQuestion": "Familiar Question",
+      "bookmarkQuestion": "Bookmark Question"
+    }
+     
   }
 }

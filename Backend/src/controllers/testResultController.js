@@ -16,12 +16,22 @@ export const handleAddTestResult = async (req, res, next) => {
     }
 }
 
+export const handleGetAllTestResult = async (req, res, next) => {
+    try {
+        const user_id = req.user_id;
+        const result = await testServices?.getAllTestResult(user_id);
+        return res.status(StatusCodes.CREATED).json(result);
+    } catch (error) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));
+    }
+}
 
 export const handleAddQuestion = async (req, res, next) => {
     try {
         const { test_id, type } = req.query;
         const data = req.body?.anwser;
-        const result = await testServices?.addQuestion(test_id, type, data);
+        const user_id = req.user_id;
+        const result = await testServices?.addQuestion(user_id,test_id, type, data);
         return res.status(StatusCodes.CREATED).json(result);
 
     } catch (error) {
@@ -71,3 +81,15 @@ export const handleDeleteTestResult = async (req, res, next) => {
     }
    }
 
+export const handleBookmarkTestResult = async (req, res, next) => {
+    try {
+        const {test_id,note_bookmark,status} = req.body; 
+        const user_id = req.user_id;
+
+        const result = await testServices?.bookmarkTestResult(user_id,test_id,note_bookmark,status);
+        return res.status(StatusCodes.CREATED).json(result);
+    } catch (error) {
+        next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error
+            .stack));
+    }
+}
