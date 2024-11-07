@@ -33,7 +33,17 @@
     "save": "Save",
     "lightMode": "Chế độ sáng"
   },
-  "paractice": "Học ngay"
+  "paractice": "Học ngay",
+  "statistics":{
+    "tabLeft": "Tiến độ",
+    "tabRight": "Hoạt động",
+    "item":{
+      "weakQuetion": "Câu Sai",
+      "familiarQuestion": "Câu Đúng",
+      "bookmarkQuestion": "Câu Đánh Dấu"
+    }
+     
+  }
 
 
 }

@@ -5,14 +5,19 @@ import Slider from "@react-native-community/slider";
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
 
-export default function AudioPlayerUI() {
+export default function AudioPlayerUI({
+  audio_url
+}) {
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1.0);
   const [volume, setVolume] = useState(1.0);
-     
+       
+
+
+  
 
   
   async function loadSound() {
@@ -21,6 +26,8 @@ export default function AudioPlayerUI() {
       { uri: audio_path },
       { shouldPlay: false, rate: speed, volume }
     );
+
+    
     setSound(sound);
     setIsPlaying(true);
 
@@ -94,7 +101,7 @@ export default function AudioPlayerUI() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🎶 Trình phát âm thanh 🎶</Text>
+   
 
       <View className="">
         <Slider
@@ -108,7 +115,7 @@ export default function AudioPlayerUI() {
           thumbStyle={styles.thumb} // Tùy chỉnh kích thước nút
           trackStyle={styles.track} // Tùy chỉnh chiều cao của thanh
           trackThickness={500}
-          thumbSize={120}
+          thumbSize={150}
           onSlidingComplete={async (value) => {
             if (sound) {
               await sound.setPositionAsync(value);
@@ -131,14 +138,7 @@ export default function AudioPlayerUI() {
               style={styles.icon}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={replay}>
-            <FontAwesome
-              name="repeat"
-              size={24}
-              color="#6C63FF"
-              style={styles.icon}
-            />
-          </TouchableOpacity>
+
           <TouchableOpacity onPress={togglePlayPause}>
             <FontAwesome
               name={isPlaying ? "pause-circle" : "play-circle"}
@@ -193,18 +193,18 @@ export default function AudioPlayerUI() {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-    borderRadius: 15,
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 10,
-    elevation: 10,
-    width: "90%",
-    marginHorizontal: "5%",
+    // alignItems: "center",
+    // justifyContent: "center",
+    // padding: 20,
+    // borderRadius: 15,
+    // backgroundColor: "#FFFFFF",
+    // shadowColor: "#000",
+    // shadowOpacity: 0.1,
+    // shadowOffset: { width: 0, height: 5 },
+    // shadowRadius: 10,
+    // elevation: 10,
+    // width: "90%",
+    // marginHorizontal: "5%",
   },
   title: {
     fontSize: 18,
@@ -285,6 +285,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   track: {
-    height: 5, // Chiều cao thanh mỏng hơn
+    height: 20, // Chiều cao thanh mỏng hơn
   },
 });

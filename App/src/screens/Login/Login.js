@@ -13,6 +13,7 @@ import {
     GoogleSigninButton,
     statusCodes,
 } from '@react-native-google-signin/google-signin';
+import { setOpenModal } from '../../fetures/settingSlice';
 const webClientId = "1013873615823-cl9jhtcai95mcuhenqp2j5kvg8nvpekr.apps.googleusercontent.com";
 const androidClientId = "1013873615823-0r8ku736ooi3fiuaghi2bsrtfjfabv78.apps.googleusercontent.com";
 
@@ -33,9 +34,10 @@ const Login = ({ navigation, route }) => {
 
     const isIntro = route?.params?.isIntro;
     const isGuest = route?.params?.isGuest;
+    const isCommentScreen = route?.params?.isCommentScreen;
 
- 
-    
+
+
     const dispatch = useDispatch();
     const signIn = async () => {
         try {
@@ -45,7 +47,7 @@ const Login = ({ navigation, route }) => {
 
             if (response) {
                 const userStorage = await getData('user');
-     
+
                 const userInfo = response?.data?.user;
                 const data = {
                     email: userInfo?.email,
@@ -53,13 +55,17 @@ const Login = ({ navigation, route }) => {
                     avatarPicture: userInfo?.photo,
                     user_id: userStorage?._id,
                 }
-      
+
                 const fb = await register(data);
 
-  
+
                 storeData('user', fb);
                 dispatch(loginUser(fb));
-
+                dispatch(setOpenModal(false))
+                if(isCommentScreen){
+                    navigation?.goBack();
+                    return;
+                }
                 navigation?.navigate(configs?.screenName?.initStack, { screen: "Home" });
             } else {
 
@@ -125,6 +131,9 @@ const Login = ({ navigation, route }) => {
 
                     isIntro ? <></> :
                         <HeaderScreen
+                            onPress={() => {
+                                dispatch(setOpenModal(false))
+                            }}
                             textMode='light'
                             className={'text-white'}
                             navigation={navigation}

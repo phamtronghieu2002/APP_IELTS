@@ -17,7 +17,7 @@ import MainBackground from '../components/MainBackground/MainBackground';
 const MainLayout = ({ children }) => {
     return (
         <SafeAreaView>
-            <ScrollView className="relative z-30">
+            <ScrollView className="relative z-30 ">
                 <View className="p-5 pt-3">
                     {children}
                 </View>

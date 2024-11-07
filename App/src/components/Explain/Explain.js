@@ -43,7 +43,7 @@ const Explain = ({ is_correct, explain, anwser, type }) => {
       {type !== "writing" && (
         <View>
           <View className="flex flex-row items-center">
-            <View className="w-10 h-10 flex justify-center  flex-row items-center">
+            <View className="w-10 flex justify-center  flex-row items-center">
               <Image
                 style={{ width: 30, height: 30 }}
                 source={{

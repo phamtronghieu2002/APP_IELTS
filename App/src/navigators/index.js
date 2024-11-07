@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer'; // Import Drawer Navigator
 import { screensStack, screensDrawer } from './config';
 import { Dimensions } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
 import { navigationRef } from './NavigationService';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,7 +19,8 @@ import configs from '../configs';
 import { TouchableOpacity } from 'react-native';
 import { store } from '../app/store';
 import { setGradient, setShowHeaderDraw } from '../fetures/interfaceSlice';
-import  useLang from '..//hooks/useLang'
+import useLang from '..//hooks/useLang'
+import { setOpenModal } from '../fetures/settingSlice';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Khởi tạo Drawer Navigator
@@ -44,6 +45,7 @@ export const InitStack = ({ navigation, route }) => {
 // Tab Navigator 
 export const MyTabs = () => {
   const { t } = useLang();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -60,7 +62,7 @@ export const MyTabs = () => {
         options={{
           headerShown: false,
 
-          tabBarLabel:  t('menuBottom.home'), // Nhãn cho tab
+          tabBarLabel: t('menuBottom.home'), // Nhãn cho tab
 
           tabBarIcon: ({ color, size }) => (
             <Icon name="home-outline" size={size} color={color} />
@@ -83,6 +85,7 @@ export const MyTabs = () => {
         }}
       />
       <Tab.Screen
+        initialParams={{ randomKey: Math.random() }}
         name={'StatisticTab'}
         component={Statistic}
         options={{
@@ -92,14 +95,22 @@ export const MyTabs = () => {
             <Icon name="stats-chart-outline" color={color} size={size} />
           ),
           tabBarButton: (props) => {
+            const navigation = useNavigation();
             return (
               <TouchableOpacity
                 {...props}
                 onPress={() => {
-                  store.dispatch(setGradient(true))
-                  store.dispatch(setShowHeaderDraw(true))
+                  const userStore = store.getState().user;
+              
+                  if (userStore?.user?.email) {
+                    store.dispatch(setGradient(true))
+                    store.dispatch(setShowHeaderDraw(true))
+                    navigation.setParams({ randomKey: Math.random() });
+                    props.onPress();
+                  }else{
 
-                  props.onPress();
+                    store.dispatch(setOpenModal(true))
+                  }
                 }}
               />
             );
@@ -111,7 +122,7 @@ export const MyTabs = () => {
         component={Setting}
         options={{
           headerShown: false,
-          tabBarLabel:  t('menuBottom.setting'), // Nhãn cho tab
+          tabBarLabel: t('menuBottom.setting'), // Nhãn cho tab
           tabBarIcon: ({ color, size }) => (
             <Icon name="settings-outline" color={color} size={size} />
           ),
@@ -141,7 +152,7 @@ const MyDrawer = () => {
   return (
     <Drawer.Navigator
 
-      
+
       drawerContent={(props) => <DrawCustom {...props} />}
       screenOptions={({ navigation, route }) => ({
         header: () => (
@@ -151,7 +162,7 @@ const MyDrawer = () => {
           width: Dimensions.get('window').width / 1.25,
         },
       })}
-      
+
       initialRouteName={configs?.screenName?.home}>
       <Drawer.Screen name={configs?.screenName?.home} component={MyTabs} />
       {

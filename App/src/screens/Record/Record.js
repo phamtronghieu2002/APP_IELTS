@@ -27,7 +27,6 @@ import {
         return;
       }
   
-      console.log("transcript", transcript);
       
       // Start speech recognition
       ExpoSpeechRecognitionModule.start({

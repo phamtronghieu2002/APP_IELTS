@@ -1,12 +1,16 @@
 import { FC, useEffect, useRef, useState } from "react"
-import { Button } from "antd"
+import { Button, Input } from "antd"
 import TinyMCEEditor from "../../../conponents/Markdown/Markdown"
 import {
   addPrivacyTerm,
   getPrivacyTerm,
 } from "../../../services/privacyService"
 import { api } from "../../../_helper"
+import { Tabs } from "antd"
+import type { TabsProps } from "antd"
+import { IconC } from "../../../conponents/IconC"
 
+//policy components
 interface PolicyProps {}
 
 const Policy: FC<PolicyProps> = () => {
@@ -19,11 +23,10 @@ const Policy: FC<PolicyProps> = () => {
     try {
       const res = await getPrivacyTerm()
 
-      
       const policy = res?.data?.find((item: any) => item?.type === "privacy")
-      console.log('====================================');
-      console.log("policy", policy);
-      console.log('====================================');
+      console.log("====================================")
+      console.log("policy", policy)
+      console.log("====================================")
       const term = res?.data?.find((item: any) => item?.type === "term")
       setData({
         policy: policy?.contents,
@@ -33,12 +36,11 @@ const Policy: FC<PolicyProps> = () => {
       api?.message?.error("Lỗi hệ thống")
     }
   }
-  
+
   useEffect(() => {
     fetchData()
   }, [])
 
-   
   const handleSetPolicy = (value: string) => {
     setData({
       ...data,
@@ -110,4 +112,60 @@ const Policy: FC<PolicyProps> = () => {
   )
 }
 
-export default Policy
+// notifcation components
+
+// feedback components
+
+interface FeedbackProps {}
+const Feedback: FC<FeedbackProps> = () => {
+  const [value, setValue] = useState<string>("")
+  return (
+    <div>
+      <h1 className="mb-3">Cài đặt email nhận phản hồi từ khách hàng !!!</h1>
+      <Input
+        className="w-[30%] mr-3"
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Nhập email"
+      />
+      <Button type="primary">Lưu</Button>
+    </div>
+  )
+}
+
+// main
+interface AppSettingProps {}
+const onChange = (key: string) => {
+  console.log(key)
+}
+
+const items: TabsProps["items"] = [
+  {
+    key: "1",
+    label: "Chính sách và điều khoản",
+    children: <Policy />,
+    icon: <IconC name="MdOutlinePolicy" />,
+  },
+  {
+    key: "2",
+    label: "Thông Báo",
+    children: <IconC name="MdCircleNotifications" />,
+    icon: <IconC name="MdCircleNotifications" />,
+  },
+  {
+    key: "3",
+    label: "Phản hồi",
+    children: <Feedback />,
+    icon: <IconC name="FaReplyAll" />,
+  },
+]
+const AppSetting: FC<AppSettingProps> = () => {
+  return (
+    <div>
+      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+    </div>
+  )
+}
+
+export default AppSetting

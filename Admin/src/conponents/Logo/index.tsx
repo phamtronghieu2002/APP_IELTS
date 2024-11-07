@@ -13,15 +13,15 @@ export const Logo: React.FC<IProps> = ({ style = {} }) => {
 
   return (
     <div className="h-full items-center flex">
-      {logo ? (
-        <img
-          crossOrigin="anonymous"
-          style={style}
-          className="h-full"
-          alt="logo"
-          src={logoURL}
-        />
-      ) : null}
+      <img
+        width={50}
+        height={50}
+        crossOrigin="anonymous"
+        style={style}
+        className="h-full"
+        alt="logo"
+        src={logoURL}
+      />
     </div>
   )
 }

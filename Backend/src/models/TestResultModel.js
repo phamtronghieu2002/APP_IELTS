@@ -25,6 +25,16 @@ const TestResultSchema = new mongoose.Schema(
             require: false,
             default: 0,
         },
+        bookmark: {
+            type: Boolean,
+            require: false,
+            default: false,
+        },
+        note_bookmark: {
+            type: String,
+            require: false,
+            default: '',
+        },  
         percent_test_correct:{
             type: Number,
             require: false,

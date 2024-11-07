@@ -805,3 +805,8 @@ button,
 .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
   background-color: var(--transparent);
 }
+
+.ant-tabs-tab-btn{
+  display: flex;
+  align-items: center;
+}

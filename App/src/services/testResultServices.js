@@ -29,5 +29,17 @@ export const getTestResult = async (test_id) => {
 
 export const deleteQuestionInTestResult = async (test_id, question_id) => {
      return axios.delete(`/testResult?test_id=${test_id}&question_id=${question_id}`) ? true : false;
+}
+
+export const getAllTestResult = async () => {
+     return axios.get('/testResult/all');
+
+}
+export const addBookmark = async (test_id,note_bookmark,status=true) => {
+     return axios.post('/testResult/bookmark', {
+          test_id,
+          note_bookmark,
+          status
+     });
 
 }
