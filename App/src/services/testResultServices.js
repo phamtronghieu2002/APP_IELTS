@@ -26,3 +26,8 @@ export const getTestResult = async (test_id) => {
      return axios.get('/testResult?test_id='+test_id);
 
 }
+
+export const deleteQuestionInTestResult = async (test_id, question_id) => {
+     return axios.delete(`/testResult?test_id=${test_id}&question_id=${question_id}`) ? true : false;
+
+}

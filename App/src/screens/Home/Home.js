@@ -154,7 +154,7 @@ const Home = ({ navigation, route }) => {
 
 
         </View>
-        <Recorder />
+        {/* <VoiceRecord /> */}
 
         {
           categories?.practices?.map((item, index) =>
@@ -213,7 +213,6 @@ const Home = ({ navigation, route }) => {
             elevation: 5,
           }}
         >
-          <VoiceRecord />
         </View>
         <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
           {

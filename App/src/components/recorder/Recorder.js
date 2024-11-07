@@ -20,7 +20,7 @@ export default class Recorder extends Component {
       sampleRate: 16000,
       channels: 1,
       bitsPerSample: 16,
-      wavFile: 'test.wav'
+      wavFile: `${new Date().getTime().toString()}.wav`
     };
 
     AudioRecord.init(options);
@@ -87,6 +87,40 @@ export default class Recorder extends Component {
   onError = error => {
     console.log('error', error);
   };
+  uploadAudio = async () => {
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const { audioFile } = this.state;
+    console.log('audioFile', `file:/${audioFile}`);
+    if (!audioFile) {
+      console.log("No audio file to upload");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("audio", {
+      uri: `file://${audioFile}`,  // Prefix with `file://` for local files
+      name: `${new Date().getTime().toString()}.wav`,
+      type: "audio/wav",
+    });
+  
+    try {
+      await delay(5000);
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/v1/gpt/upload/dinarycloud`, {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        this.props.setVoice(data.url);
+        console.log("Upload successful:", data);
+      } else {
+        console.log("Upload failed:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
 
   render() {
     const { recording, audioFile, paused } = this.state;
@@ -100,6 +134,7 @@ export default class Recorder extends Component {
           ) : (
             <Button onPress={this.pause} title="Pause" disabled={!audioFile} />
           )}
+          <Button onPress={this.uploadAudio} title="Save" />
         </View>
         {!!audioFile && (
           <Video
