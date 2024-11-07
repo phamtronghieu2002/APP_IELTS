@@ -34,6 +34,7 @@
     "mongoose": "^8.6.3",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.10.2",
+    "nodemailer": "^6.9.16",
     "openai": "^4.68.4"
   },
   "devDependencies": {

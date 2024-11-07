@@ -101,9 +101,7 @@ export const MyTabs = () => {
                 {...props}
                 onPress={() => {
                   const userStore = store.getState().user;
-                  console.log('====================================');
-                  console.log("userStore", userStore);
-                  console.log('====================================');
+              
                   if (userStore?.user?.email) {
                     store.dispatch(setGradient(true))
                     store.dispatch(setShowHeaderDraw(true))

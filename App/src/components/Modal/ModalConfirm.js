@@ -51,6 +51,7 @@ export function ModalConfirm({
                                         isGuest: true,
                                         isIntro: false
                                     })
+                                    dispatch(setOpenModal(false))
                                 }}
                                 classNamesText={"font-bold"}
                                 width={150}

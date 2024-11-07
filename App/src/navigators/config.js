@@ -34,6 +34,7 @@ import { logoutUser } from "../fetures/userSlice";
 import Review from "../screens/Statistic/components/Review";
 import { setOpenModal } from "../fetures/settingSlice";
 import Comment from "../screens/Comment/Comment";
+import { handleSendEmail } from "../utils";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -205,6 +206,9 @@ export const screensDrawer = (t) => [
                 <IconM name="feedback" size={20} color={color} />
             ),
         },
+        cb: () => {
+            handleSendEmail()
+        }
 
     },
     {

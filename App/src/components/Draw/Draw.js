@@ -14,6 +14,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import useLang from '../../hooks/useLang';
 import { useDispatch, useSelector } from 'react-redux';
 import { getData } from '../../utils/asyncStore';
+import configs from '../../configs';
+
 const DrawCustom = (props) => {
     const user = useSelector((state) => state.user)
     const { t } = useLang();
@@ -78,7 +80,12 @@ const DrawCustom = (props) => {
                             paddingLeft: 15,
                             backgroundColor: route.name === props.state.routeNames[props.state.index] ? '#e0e0e0' : '#fff',
                         }}
-                        onPress={async() => {
+                        onPress={async () => {
+                            if (route?.name == configs.screenName.feedback) {
+                      
+                                screen?.cb?.()
+                                return
+                            }
                             const exitsEmail = user?.user?.email ? true : false
                             if (exitsEmail) {
                                 screen?.cb?.()

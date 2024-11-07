@@ -33,18 +33,15 @@ export const LayoutSideBar: React.FC = memo(() => {
       >
         <div className="h-full flex flex-col gap-2  __menu_head">
           <div className="h-14 flex">
-            {!collapsed ? (
-              <Logo />
-            ) : (
-              <div className="flex h-14 w-[70px] justify-center items-center">
-                <Logo
-                  style={{
-                    width: "100%",
-                    height: "unset",
-                  }}
-                />
-              </div>
-            )}
+            <div className="flex h-14 w-[70px] justify-center items-center">
+              <Logo
+                style={{
+                  width: "100%",
+                  height:"50px",
+           
+                }}
+              />
+            </div>
           </div>
           <div className="flex-1 overflow-auto">
             <MenuHead />

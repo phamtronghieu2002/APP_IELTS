@@ -34,6 +34,7 @@ const Login = ({ navigation, route }) => {
 
     const isIntro = route?.params?.isIntro;
     const isGuest = route?.params?.isGuest;
+    const isCommentScreen = route?.params?.isCommentScreen;
 
 
 
@@ -61,6 +62,10 @@ const Login = ({ navigation, route }) => {
                 storeData('user', fb);
                 dispatch(loginUser(fb));
                 dispatch(setOpenModal(false))
+                if(isCommentScreen){
+                    navigation?.goBack();
+                    return;
+                }
                 navigation?.navigate(configs?.screenName?.initStack, { screen: "Home" });
             } else {
 

@@ -24,6 +24,8 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { Sheet } from 'react-modal-sheet';
 import BottomSheetExample from '../Modal/ModalBookmark';
 import configs from '../../configs';
+import { ModalConfirm } from '../Modal/ModalConfirm';
+import { setOpenModal } from '../../fetures/settingSlice';
 const ActionBar = ({
     total_correct,
     total_question,
@@ -38,6 +40,7 @@ const ActionBar = ({
     const colorText = total_correct == total_question ? "text-green-500" : "text-red-500";
 
     const testStore = useSelector((state) => state.test);
+    const userStore = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
 
@@ -54,6 +57,27 @@ const ActionBar = ({
         setModalVisible(!isModalVisible);
     };
 
+
+    const handleClickCommentButton = () => {
+
+
+        if (userStore?.user?.email) {
+
+            navigation.navigate(configs.screenName.comment, {
+                test_id: testStore?.testResults?.test_id
+            });
+        } else {
+            navigation.navigate(configs?.screenName?.login, {
+                isGuest: true,
+                isIntro: false,
+                isCommentScreen: true
+            })
+
+        }
+
+
+
+    }
 
     return (
         <>
@@ -102,11 +126,7 @@ const ActionBar = ({
 
 
 
-                    <Pressable className="" onPress={() => {
-                        navigation.navigate(configs.screenName.comment,{
-                            test_id:testStore?.testResults?.test_id
-                        });
-                     }}>
+                    <Pressable className="" onPress={handleClickCommentButton}>
                         <IconMe name="message" size={33} color="blue" />
                     </Pressable>
 
@@ -125,6 +145,7 @@ const ActionBar = ({
                     cb={toggleModal}
                 />
             }
+            {/* <ModalConfirm /> */}
         </>
     );
 };
