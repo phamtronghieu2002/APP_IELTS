@@ -44,7 +44,7 @@ if (getRNMinorVersion() >= 75) {
   }
 }
 
-rootProject.name = 'App'
+rootProject.name = 'Ielts Daily'
 
 dependencyResolutionManagement {
   versionCatalogs {

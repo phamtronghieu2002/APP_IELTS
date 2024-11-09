@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -22,15 +22,15 @@ const AnswerInputWriting = ({ test_id, data }) => {
   const [countWord, setCountWord] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [expandedItems, setExpandedItems] = useState(
-    Array(responseList.length).fill(false)
-  );
+  const [expandedItems, setExpandedItems] = useState([]);
+  const [reload, setReload] = useState(false); // New reload state
 
-  const [count, setCount] = React.useState(0);
+  const [count, setCount] = useState(0);
   const [isCounting, setIsCounting] = useState(false);
+
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  React.useEffect(() => {
+  useEffect(() => {
     let interval;
     if (isCounting) {
       interval = setInterval(() => {
@@ -39,6 +39,10 @@ const AnswerInputWriting = ({ test_id, data }) => {
     }
     return () => clearInterval(interval);
   }, [isCounting]);
+
+  useEffect(() => {
+    fetchGetRating();
+  }, [reload]); // Trigger fetch on reload change
 
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -51,10 +55,11 @@ const AnswerInputWriting = ({ test_id, data }) => {
       secs.toString().padStart(2, "0"),
     ].join(":");
   };
+
   const toggleExpand = (index) => {
     setExpandedItems((prev) => {
       const newExpandedItems = [...prev];
-      newExpandedItems[index] = !newExpandedItems[index]; // Toggle the current index
+      newExpandedItems[index] = !newExpandedItems[index];
       return newExpandedItems;
     });
   };
@@ -101,77 +106,56 @@ const AnswerInputWriting = ({ test_id, data }) => {
     try {
       await addAnwserToTestResult(test_id, _testTypes?.new, {
         anwser: newResponse,
-      })
-        .then((fb) => {
-          const data = fb.data;
-          console.log("data", data);
-        })
-        .catch((err) => {
-          console.log("error >>>>", err);
-        });
+      });
     } catch (error) {
       console.log("error >>>>", error);
     }
   };
 
-
   const fetchGetRating = async () => {
-    getTestResult(test_id)
-      .then((fb) => {
-        const data = fb.data;
-        console.log("data", data);
-        const newResponses = data.anwsers.map((item) => ({
-          question_id: item.question_id,
-          time: item.time,
-          countWord: item.countWord,
-          userAnswer: item.userAnswer,
-          rating: item.rating,
-        }));
-        setResponseList(newResponses); // Set the entire list at once
-        setExpandedItems(Array(newResponses.length).fill(false)); // Reset expanded items
-      })
-      .catch((err) => {
-        console.log("error >>>>", err);
-      });
+    try {
+      const fb = await getTestResult(test_id);
+      const data = fb.data;
+      const newResponses = data.anwsers.map((item) => ({
+        question_id: item.question_id,
+        time: item.time,
+        countWord: item.countWord,
+        userAnswer: item.userAnswer,
+        rating: item.rating,
+      }));
+      setResponseList(newResponses);
+      setExpandedItems(Array(newResponses.length).fill(false));
+    } catch (err) {
+      console.log("error >>>>", err);
+    }
   };
 
   const handleDelete = async (test_id, question_id) => {
     setIsDeleting(true);
     try {
       await delay(5000);
-      const fb = await deleteQuestionInTestResult(test_id, question_id);
-      const data = fb.data;
-      console.log("Status", data);
-      fetchGetRating();
+      await deleteQuestionInTestResult(test_id, question_id);
+      setReload((prev) => !prev); // Toggle reload state to trigger fetch
     } catch (error) {
       console.log("error >>>>", error);
     } finally {
       setIsDeleting(false);
     }
   };
-  React.useEffect(() => {
-    fetchGetRating();
-  }, []);
 
   return (
     <View>
       <View className="flex border-2 border-gray-200 mb-3 rounded-xl">
         <View className="pl-1 pt-1 mb-3 bg-white">
-          <View>
-            <Text className="mt-1 font-bold">Your response</Text>
-            <Text className="mt-1 text-gray-500 text-xs">
-              Your words: {countWord}
-            </Text>
-          </View>
-          <View>
-            <Text>{formatTime(count)}</Text>
-          </View>
+          <Text className="mt-1 font-bold">Your response</Text>
+          <Text className="mt-1 text-gray-500 text-xs">Your words: {countWord}</Text>
+          <Text>{formatTime(count)}</Text>
         </View>
         <TextInput
-          multiline={true}
+          multiline
           numberOfLines={4}
           className="text-lg pl-4 pt-1 bg-gray-50 max-w-full mr-2 ml-2 mb-2 border border-gray-300 shadow-lg rounded-lg"
-          placeholder="Type your answer....."
+          placeholder="Type your answer..."
           onChangeText={(text) => {
             const words = text.trim().split(/\s+/);
             setCountWord(words.filter(Boolean).length);
@@ -182,7 +166,6 @@ const AnswerInputWriting = ({ test_id, data }) => {
         />
       </View>
 
-      {/* Hiển thị Loading */}
       {isLoading && (
         <View className="flex items-center">
           <ActivityIndicator size="large" color="#0000ff" />
@@ -195,67 +178,28 @@ const AnswerInputWriting = ({ test_id, data }) => {
           <Text>Deleting Response...</Text>
         </View>
       )}
+
       {responseList.map((item, index) => (
         <View key={index} className="mt-3 p-2 border-t border-gray-300">
           <View className="flex flex-row justify-between items-center mt-1">
-            <Text className="font-bold text-xl text-green-500">
-              Response {index + 1}
-            </Text>
-            <DeleteButton
-              handleDelete={() => handleDelete(test_id, item.question_id)}
-            />
+            <Text className="font-bold text-xl text-green-500">Response {index + 1}</Text>
+            <DeleteButton handleDelete={() => handleDelete(test_id, item.question_id)} />
           </View>
-          <Text className="font-bold italic mt-1">
-            Time: {formatTime(item.time)}
-          </Text>
-          <Text className="font-bold italic mt-1">
-            User Answer: {item.userAnswer}
-          </Text>
-          <Text className="font-bold italic mt-1">
-            Word Count: {item.countWord}
-          </Text>
+          <Text className="font-bold italic mt-1">Time: {formatTime(item.time)}</Text>
+          <Text className="font-bold italic mt-1">User Answer: {item.userAnswer}</Text>
+          <Text className="font-bold italic mt-1">Word Count: {item.countWord}</Text>
           <Text className="font-bold italic text-red-800 mt-1 mb-2">
             Point: {item.rating.ielts_writing_score_rating}
           </Text>
           <View>
             {expandedItems[index] ? (
               <View>
-                <View>
-                  <Text className="font-bold text-lg text-red-500">
-                    Rating your response :
-                  </Text>
-                  <Text className="font-bold italic">1. Grammar Errors</Text>
-                  <Text>{item.rating.grammar_errors}</Text>
-                </View>
-                <View>
-                  <Text className="font-bold italic">2. Vocabulary Errors</Text>
-                  <Text>{item.rating.vocabulary_errors}</Text>
-                </View>
-                <View>
-                  <Text className="font-bold italic">
-                    3. Sentence Structure Errors
-                  </Text>
-                  <Text>{item.rating.sentence_structure_errors}</Text>
-                </View>
-                <View>
-                  <Text className="font-bold italic">4. Coherence Errors</Text>
-                  <Text>{item.rating.coherence_errors}</Text>
-                </View>
-                <View>
-                  <Text className="font-bold italic">5. Cohesion Errors</Text>
-                  <Text>{item.rating.cohesion_errors}</Text>
-                </View>
-                <View>
-                  <Text className="font-bold italic">
-                    6. Detailed Solutions To Improve Writing
-                  </Text>
-                  <Text>
-                    {item.rating.detailed_solutions_to_improve_writing}
-                  </Text>
-                </View>
+                <Text className="font-bold text-lg text-red-500">Rating your response:</Text>
+                <Text className="font-bold italic">1. Grammar Errors</Text>
+                <Text>{item.rating.grammar_errors}</Text>
+                {/* Add other error sections here */}
               </View>
             ) : (
-              // Show a truncated version or just a summary here
               <Text>{item.rating.grammar_errors.substring(0, 0)}...</Text>
             )}
           </View>
@@ -267,11 +211,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
         </View>
       ))}
 
-      <MainButton
-        title={"Rate my answer"}
-        roundedfull
-        onPress={handleRatingAnswer}
-      />
+      <MainButton title="Rate my answer" roundedfull onPress={handleRatingAnswer} />
     </View>
   );
 };
