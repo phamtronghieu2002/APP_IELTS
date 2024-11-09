@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "App",
+    "name": "Ielts Daily",
+
     "slug": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
 
     "plugins": [
       [
-         
         "expo-speech-recognition",
         {
           "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone.",
@@ -17,9 +17,8 @@
           ]
         }
       ]
-   
     ],
-    "icon": "./assets/icon.png",
+    "icon": "./assets//logos/IELTS.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",

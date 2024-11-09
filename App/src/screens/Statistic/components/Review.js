@@ -27,7 +27,12 @@ const Review = ({ navigation, route }) => {
     const [part, setPart] = React.useState(0);
 
 
-
+    console.log("part >>>>>>", part);
+    console.log('====================================');
+    console.log("data.length-1=", data.length-1);
+    console.log('====================================');
+    
+    
 
 
     const handleData = async () => {
@@ -35,6 +40,8 @@ const Review = ({ navigation, route }) => {
 
         const res = await getAllTestResult();
         const feedback = res?.data
+        console.log("feedback", feedback);
+        
         setData(feedback);
 
         let fb = {};
@@ -42,7 +49,8 @@ const Review = ({ navigation, route }) => {
             fb = feedback?.map(item => {
                 return item?.anwsers?.filter(item => item.is_correct === false)
             })
-
+             
+                
 
 
         } else if (status === 'familiar') {
@@ -83,6 +91,11 @@ const Review = ({ navigation, route }) => {
                 testResults: [],
             }
         }
+        return {
+            test_id: data[part]?.test_id?._id,
+            name_test: data[part]?.test_id?.name_test,
+            testResults: testResults[part],
+        }
 
     }
 
@@ -96,6 +109,7 @@ const Review = ({ navigation, route }) => {
 
                 <ReadingTest
                     part={part}
+                    isFinish={part === data.length - 1}
                     onNextPart={() => {
                         if (part < data.length - 1) {
                             setPart(part + 1)

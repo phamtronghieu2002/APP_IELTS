@@ -11,6 +11,7 @@ import { context } from "../Draw/provider/DrawProvider"
 import { _questionType } from "../../utils/_constant"
 import { IconC } from "../IconC"
 import { deleteQuestionById } from "../../services/questionServices"
+import { deleteTestResult } from "../../services/testResultServices"
 
 interface ModalquestionProps {
   button: React.ReactNode
@@ -19,6 +20,7 @@ interface ModalquestionProps {
   data?: any
   modalProps?: any
   lesson_id: string
+  test_id: string
   width?: number
   height?: number
   refresh?: any
@@ -48,9 +50,9 @@ const ModalForm: FC<{
   type: "add" | "update" | "delete"
   data?: any
   lesson_id: string
+  test_id: string
   refresh?: any
-}> = ({ action, type, data, lesson_id,refresh }) => {
-
+}> = ({ action, type, data, lesson_id, refresh, test_id }) => {
   const { drawStore, dispath } = useContext<any>(context)
   const [typeQuestion, setTypeQuestion] = React.useState<any>(null)
 
@@ -64,23 +66,18 @@ const ModalForm: FC<{
       type: "SET_QUESTION_TYPE",
       payload: question_type,
     })
-  } 
+  }
 
-  const handleDeleteQuetions = async()=>{
-      try {
-        const question_id = drawStore?.question?._id
-        const sub_question_id = drawStore?.sub_question_select?.question_id
-        await deleteQuestionById(
-          question_id,
-          sub_question_id,
-          lesson_id
-        )
-        refresh?.()
-        action?.closeModal()
-        api?.message?.success("Xóa câu hỏi thành công")
-      } catch (error) {
-        
-      }
+  const handleDeleteQuetions = async () => {
+    try {
+      const question_id = drawStore?.question?._id
+      const sub_question_id = drawStore?.sub_question_select?.question_id
+      await deleteQuestionById(question_id, sub_question_id, lesson_id)
+      await deleteTestResult(test_id, sub_question_id)
+      refresh?.()
+      action?.closeModal()
+      api?.message?.success("Xóa câu hỏi thành công")
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -166,6 +163,7 @@ const ModalQuestion: FC<ModalquestionProps> = ({
   modalProps,
   lesson_id,
   refresh,
+  test_id,
   width = 800,
   height = 600,
 }) => {
@@ -180,7 +178,8 @@ const ModalQuestion: FC<ModalquestionProps> = ({
       title={title}
       children={(action) => (
         <ModalForm
-        refresh={refresh}
+          test_id={test_id}
+          refresh={refresh}
           data={data}
           action={action}
           type={type}

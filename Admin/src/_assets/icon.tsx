@@ -86,7 +86,11 @@ import { MdOutlinePolicy } from "react-icons/md"
 import { IoIosNotifications } from "react-icons/io"
 import { MdCircleNotifications } from "react-icons/md"
 import { FaReplyAll } from "react-icons/fa6"
+import { FaRegQuestionCircle } from "react-icons/fa";
+import { CiSquarePlus } from "react-icons/ci";
 const IconLib = {
+  CiSquarePlus,
+  FaRegQuestionCircle,
   FaReplyAll,
   MdCircleNotifications,
   MdOutlinePolicy,

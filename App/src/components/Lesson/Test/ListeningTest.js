@@ -20,6 +20,8 @@ import configs from "../../../configs";
 import { use } from "i18next";
 import ActionBar from "../../ActionBar/ActionBar";
 import AudioPlayerUI from "../../AudioPlayer/AudioPlayerUI";
+import { Skeleton } from "moti/skeleton";
+import SkeletonPlaceholder from "../../Skeleton/Skeleton";
 const ReadingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
@@ -37,9 +39,12 @@ const ReadingTest = ({ navigation, route }) => {
 
   const testResults = route?.params?.testResults;
   const [is_doing, setIsDoing] = React.useState(false);
+
+  const [loading, setLoading] = React.useState(false);
   // 
   const fetchTestById = async () => {
     try {
+      setLoading(true);
       const response = await getTestById(test_id);
       const data = response.data;
       setTest(data);
@@ -48,6 +53,7 @@ const ReadingTest = ({ navigation, route }) => {
         (item) => item.question_type === "choice"
       );
       setChoiceQuestions(choices);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -148,63 +154,63 @@ const ReadingTest = ({ navigation, route }) => {
         onPress={refresh}
         label={route?.params?.nameTest}
         navigation={navigation} />
-
-      <View className="flex flex-row justify-center items-center pl-5 pr-5">
-        <Text className="font-bold mr-3 text-red-600">
-          {countProgress + "/" + questions.total_question}
-        </Text>
-        <Progress.Bar
-          style={{
-            backgroundColor: "white",
-            borderColor: "white",
-          }}
-          progress={countProgress / questions.total_question || 0}
-          color="red"
-          width={300}
-          height={10}
-          borderRadius={15}
-        />
-      </View>
-      <ScrollView>
-        <View className="container p-7 pb-10">
-          <View
+      {!loading && <>
+        <View className="flex flex-row justify-center items-center pl-5 pr-5">
+          <Text className="font-bold mr-3 text-red-600">
+            {countProgress + "/" + questions.total_question}
+          </Text>
+          <Progress.Bar
             style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
+              backgroundColor: "white",
+              borderColor: "white",
             }}
-            className="rounded-md bg-white p-5 mb-3"
-          >
-            <AudioPlayerUI
-              audio_url={questions?.audio_url}
-            />
-          </View>
-          <View
-            style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            }}
-            className="rounded-md bg-white p-5 pb-1"
-          >
-            {partQuestion == 0 && (
-              <Text className="mb-10">
-                Lựa chọn các đáp án sau sao cho phù hợp
-              </Text>
-            )}
+            progress={countProgress / questions.total_question || 0}
+            color="red"
+            width={300}
+            height={10}
+            borderRadius={15}
+          />
+        </View>
+        <ScrollView>
+          <View className="container p-7 pb-10">
+            <View
+              style={{
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
+              className="rounded-md bg-white p-5 mb-3"
+            >
+              <AudioPlayerUI
+                audio_url={questions?.audio_url}
+              />
+            </View>
+            <View
+              style={{
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
+              className="rounded-md bg-white p-5 pb-1"
+            >
+              {partQuestion == 0 && (
+                <Text className="mb-10">
+                  Lựa chọn các đáp án sau sao cho phù hợp
+                </Text>
+              )}
 
-            <View className="mb-5 border-b-2 border-gray-200 pb-3">
-              {/* {question_type == "fill_in_blank" && (
+              <View className="mb-5 border-b-2 border-gray-200 pb-3">
+                {/* {question_type == "fill_in_blank" && (
                   <Text className="">{questions?.questions?.[currentQuestion].description}</Text>
                 )}
                 <RenderHtml
@@ -213,97 +219,105 @@ const ReadingTest = ({ navigation, route }) => {
                     html: questions?.questions?.[currentQuestion].question_text,
                   }}
                 /> */}
-              {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
-                return partQuestion == 0 ? <View key={index}>
-                  <RadioButtonForm
-                    item={item}
-                    test_id={test_id}
-                    test={test}
-                    onProgressUpdate={handleProgressUpdate}
-                    onHandleSetAnswers={handleSetAnswers}
-                    handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
-                  />
-                </View> : <></>
-              })}
+                {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
+                  return partQuestion == 0 ? <View key={index}>
+                    <RadioButtonForm
+                      item={item}
+                      test_id={test_id}
+                      test={test}
+                      onProgressUpdate={handleProgressUpdate}
+                      onHandleSetAnswers={handleSetAnswers}
+                      handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
+                    />
+                  </View> : <></>
+                })}
 
-              {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
-                if (partQuestion == 1) {
+                {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
+                  if (partQuestion == 1) {
 
 
-                  return index == currentQuestion_fill_in_blank ? (
-                    <View>
-                      <Text className="mb-10">
-                        {item.description}
-                      </Text>
-                      <RenderHtml
-                        contentWidth={width}
-                        source={{
-                          html: item.question_text || ""
-                        }}
-                      />
-                      <AnswerInputArea
-                        parrent_question={item}
-                        key={currentQuestion_fill_in_blank} // Adding a unique key for each question
-                        currentquestion={currentQuestion_fill_in_blank}
-                        data={item?.options}
-                        test_id={test_id}
-                        test={test}
-                        total_question_choice={choiceQuestions.length}
-                        onProgressUpdate={handleProgressUpdate}
-                        onHandleSetAnswers={handleSetAnswers}
-                        handelShowNextQuestion={handelShowNextQuestion}
-                      />
-                    </View>
-                  ) : <></>
+                    return index == currentQuestion_fill_in_blank ? (
+                      <View>
+                        <Text className="mb-10">
+                          {item.description}
+                        </Text>
+                        <RenderHtml
+                          contentWidth={width}
+                          source={{
+                            html: item.question_text || ""
+                          }}
+                        />
+                        <AnswerInputArea
+                          parrent_question={item}
+                          key={currentQuestion_fill_in_blank} // Adding a unique key for each question
+                          currentquestion={currentQuestion_fill_in_blank}
+                          data={item?.options}
+                          test_id={test_id}
+                          test={test}
+                          total_question_choice={choiceQuestions.length}
+                          onProgressUpdate={handleProgressUpdate}
+                          onHandleSetAnswers={handleSetAnswers}
+                          handelShowNextQuestion={handelShowNextQuestion}
+                        />
+                      </View>
+                    ) : <></>
 
-                }
-                return <></>
-              })}
+                  }
+                  return <></>
+                })}
 
+
+              </View>
 
             </View>
-
           </View>
-        </View>
-        {showNextQuestion && <ActionBar
-          total_question={answers?.length}
-          total_correct={
-            answers?.filter((item) => item.is_correct)?.length
-          }
-          onPressNext={() => {
-
-            setAnswers([]);
-
-            if (countProgress == questions.total_question) {
-              navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
-
+          {showNextQuestion && <ActionBar
+            total_question={answers?.length}
+            total_correct={
+              answers?.filter((item) => item.is_correct)?.length
             }
-            // 
-            if (
-              currentQuestion <
-              questions?.questions?.length - choiceQuestions.length
-            ) {
+            onPressNext={() => {
+
+              setAnswers([]);
+
+              if (countProgress == questions.total_question) {
+                navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
+
+              }
+              // 
+              if (
+                currentQuestion <
+                questions?.questions?.length - choiceQuestions.length
+              ) {
 
 
 
-              setPartQuestion(1);
-              setCurrentQuestion(currentQuestion + 1);
-            }
-            if (
-              currentQuestion <
-              questions?.questions?.length - choiceQuestions.length &&
-              partQuestion == 1
-            ) {
+                setPartQuestion(1);
+                setCurrentQuestion(currentQuestion + 1);
+              }
+              if (
+                currentQuestion <
+                questions?.questions?.length - choiceQuestions.length &&
+                partQuestion == 1
+              ) {
 
-              setCurrentQuestion_fill_in_blank(
-                currentQuestion_fill_in_blank + 1
-              );
-            }
-            setShowNextQuestion(false);
-          }}
-        />}
+                setCurrentQuestion_fill_in_blank(
+                  currentQuestion_fill_in_blank + 1
+                );
+              }
+              setShowNextQuestion(false);
+            }}
+          />}
 
-      </ScrollView>
+        </ScrollView>
+
+      </>}
+
+      {
+
+        loading && <SkeletonPlaceholder />
+      }
+
 
     </SafeAreaView>
   );

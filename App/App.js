@@ -18,7 +18,7 @@ import { LogBox } from 'react-native';
 import LearningTimeProvider from './src/providers/LearningTimeProvider';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
-
+import 'react-native-reanimated';
 export default function App() {
 
 

@@ -119,6 +119,35 @@ const Policy: FC<PolicyProps> = () => {
 interface FeedbackProps {}
 const Feedback: FC<FeedbackProps> = () => {
   const [value, setValue] = useState<string>("")
+
+  const fetchData = async () => {
+    try {
+      const res = await getPrivacyTerm()
+
+      const fb = res?.data?.find((item: any) => item?.type === "email")
+
+      setValue(fb?.contents)
+    } catch (error) {
+      api?.message?.error("Lỗi hệ thống")
+    }
+  }
+
+  const handleSave = async () => {
+    try {
+      await addPrivacyTerm({
+        contents: value,
+        type: "email",
+      })
+
+      api?.message?.success("Lưu thành công")
+    } catch (error) {
+      api?.message?.error("Lưu thất bại")
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
   return (
     <div>
       <h1 className="mb-3">Cài đặt email nhận phản hồi từ khách hàng !!!</h1>
@@ -129,7 +158,9 @@ const Feedback: FC<FeedbackProps> = () => {
         onChange={(e) => setValue(e.target.value)}
         placeholder="Nhập email"
       />
-      <Button type="primary">Lưu</Button>
+      <Button onClick={handleSave} type="primary">
+        Lưu
+      </Button>
     </div>
   )
 }

@@ -5,12 +5,16 @@ import { getLearningTime } from '../../../services/learningTimeService';
 
 const TimeChart = ({ freshkey }) => {
   const [chartData, setChartData] = useState([]);
-
+  console.log('====================================');
+  console.log("freshkey", freshkey);
+  console.log('====================================');
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getLearningTime();
-
+        console.log('====================================');
+        console.log("chay vao day");
+        console.log('====================================');
         const formattedData = response.map((item) => {
           const date = new Date(item.date);
           const month = String(date.getMonth() + 1).padStart(2, '0'); // Thêm '0' nếu là tháng 1 chữ số
