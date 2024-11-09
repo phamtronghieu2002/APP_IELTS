@@ -15,10 +15,11 @@ export default function AuthHoc({ children, navigation }) {
     const [loading, setLoading] = useState(true);
     const checkData = async () => {
         const data = await getData('user');
-        console.log("data>>:",data);
-        
+    
         if (data) {
             console.log("acessToken>>:",data?.accessToken);
+            console.log('====================================');
+    
             dispatch(loginUser(data))
             storeData("lang",'vi')
             navigation.navigate(configs?.screenName.initStack, { home: 123 });

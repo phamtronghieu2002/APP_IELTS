@@ -52,6 +52,7 @@ const Lesson = ({ navigation, route }) => {
         try {
             const cate_id = category?._id;
             const user =await getData("user");
+            
             const res = await getLessonByCategory(cate_id,user?._id);
             setLessons(res?.data);
 
@@ -68,7 +69,6 @@ const Lesson = ({ navigation, route }) => {
         return unsubscribe;
       }, [navigation]);
 
-   console.log("key >>",key);
    
     React.useEffect(() => {
   

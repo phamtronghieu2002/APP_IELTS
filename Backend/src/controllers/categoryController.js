@@ -15,7 +15,8 @@ const handleAddCategory = async (req, res, next) => {
 const handleGetCategoriesByGroup = async (req, res, next) => {
     try {
         const group = req.query.group || "";
-        const result = await categoryServices?.getCategories(group);
+        const user_id = req.user_id;
+        const result = await categoryServices?.getCategories(group,user_id);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));

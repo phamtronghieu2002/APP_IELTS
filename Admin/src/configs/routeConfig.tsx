@@ -14,7 +14,7 @@ export const routeConfig = {
 
   manager_grammar: "/mananger/grammar",
   manager_user: "/mananger/user",
-  manager_policy: "/mananger/policy",
+  manager_policy: "/mananger/app",
   manager_term: "/mananger/term",
   
 

@@ -1,5 +1,10 @@
-import React from "react";
-import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import React, { useEffect, useMemo } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import * as Progress from "react-native-progress";
 import HeaderScreen from "../../Header/HeaderScreen";
 import { getTestById } from "../../../services/testService";
@@ -10,22 +15,36 @@ import AnswerInputArea from "../../AnswerInput/AnswerInput";
 import { _testTypes } from "../../../utils/constant";
 import MainButton from "../../Button/MainButton";
 import RadioButtonForm from "../../RadioButton/RadioButtonForm";
-import { useFocusEffect } from "@react-navigation/native";
-import { useSelector, useDispatch} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import configs from "../../../configs";
-const ListeningTest = ({ navigation, route }) => {
+import { use } from "i18next";
+import ActionBar from "../../ActionBar/ActionBar";
+import AudioPlayerUI from "../../AudioPlayer/AudioPlayerUI";
+import { Skeleton } from "moti/skeleton";
+import SkeletonPlaceholder from "../../Skeleton/Skeleton";
+const ReadingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
-
   const [questions, setQuestions] = React.useState({});
-  const test_id = route?.params?.test_id;
-
-  const [answers, setAnswers] = React.useState([]);
 
   const [choiceQuestions, setChoiceQuestions] = React.useState([]);
+  const [countChoiceAnswer, setCountChoiceAnswer] = React.useState(0);
+
+  const test_id = route?.params?.test_id;
+  const refresh = route?.params?.cb;
+  // hieu viet them
+  const name_test = route?.params?.nameTest;
+  const type = route?.params?.type;
+
+  const testResults = route?.params?.testResults;
+  const [is_doing, setIsDoing] = React.useState(false);
+
+  const [loading, setLoading] = React.useState(false);
+  // 
   const fetchTestById = async () => {
     try {
+      setLoading(true);
       const response = await getTestById(test_id);
       const data = response.data;
       setTest(data);
@@ -34,197 +53,274 @@ const ListeningTest = ({ navigation, route }) => {
         (item) => item.question_type === "choice"
       );
       setChoiceQuestions(choices);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Sử dụng useFocusEffect để gọi hàm fetch khi màn hình được focus
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchTestById();
-    }, [test_id]) // Thêm test_id vào dependencies nếu cần
-  );
+  React.useEffect(() => {
+    fetchTestById();
+  }, []);
 
-  const name_test = route?.params?.nameTest;
-  const type = route?.params?.type;
-  const testResults = route?.params?.testResults;
-  const testStore = useSelector((state) => state.test);
-  const dispatch = useDispatch();
+  useEffect(() => {
+
+
+    const count_total_question = (questions) => {
+      let total = 0;
+      questions?.questions?.map((item) => {
+        if (item.question_type == "choice") {
+          total += 1;
+        } else {
+          total += item.options.length;
+        }
+      })
+      return total;
+    }
+    const sub_questions = questions?.questions;
+    if (sub_questions?.length > 0) {
+      if (testResults?.length > 0 && !is_doing) {
+        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id || a.parrent_question_id === item.question_id));
+
+        if (question_filter?.[0]?.question_type == "fill_in_blank") {
+          setPartQuestion(1);
+        }
+
+
+        questions.questions = question_filter;
+        questions.total_question = count_total_question(questions);
+        setChoiceQuestions(questions?.questions?.filter(item => item.question_type == "choice"));
+
+
+        setQuestions({ ...questions });
+        setIsDoing(true);
+      }
+
+
+    }
+  }, [questions]);
+
+
+
+
 
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [partQuestion, setPartQuestion] = React.useState(0);
   const [countProgress, setCountProgress] = React.useState(0);
+  const [showNextQuestion, setShowNextQuestion] = React.useState(false);
+  const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] = React.useState(0);
+  const [isShowExplain, setIsShowExplain] = React.useState(true);
+
+  // hiếu viết tiếp nè ae
+  const [answers, setAnswers] = React.useState([]);
+
+
+  const handleSetAnswers = (answer) => {
+    if (answer?.length) {
+      setAnswers(answer);
+      return;
+    }
+    setAnswers([...answers, answer])
+  };
+
+
+  const testStore = useSelector((state) => state.test);
+  const dispatch = useDispatch();
+
+
 
   const handleProgressUpdate = () => {
     setCountProgress((prevCount) => prevCount + 1);
   };
-  const [showNextQuestion, setShowNextQuestion] = React.useState(false);
   const handelShowNextQuestion = () => {
     setShowNextQuestion(true);
   };
-  const fill_in_blank_question = [];
-  const [isShowExplain, setIsShowExplain] = React.useState(true);
-  const [currentQuestion_fill_in_blank, setCurrentQuestion_fill_in_blank] =
-    React.useState(0);
-  return (
-    <SafeAreaView>
-      <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
-      <View className="flex flex-row justify-center items-center pl-5 pr-5">
-        <Text className="font-bold">
-          {countProgress + "/" + questions.total_question}
-        </Text>
-        <Progress.Bar
-          progress={countProgress / questions.total_question || 0}
-          className="max-w-full ml-2"
-          width={150}
-          color="#FF0505"
-        />
-      </View>
-      <ScrollView className="p-7">
-        <View
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          className="rounded-md bg-white p-5 mb-3"
-        >
-          <ExpandableText text={questions?.audio_url} type={"audio"} />
-        </View>
-        <View
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          className="rounded-md bg-white p-5 pb-32"
-        >
-          {partQuestion == 0 && (
-            <Text className="mb-10">
-              Lựa chọn các đáp án sau sao cho phù hợp
-            </Text>
-          )}
+  const handelShowChoiceNextQuestion = () => {
+    if (partQuestion == 0 && countChoiceAnswer + 1 == choiceQuestions.length) {
+      handelShowNextQuestion();
+    }
+    else {
+      setCountChoiceAnswer(countChoiceAnswer + 1);
+    }
+  };
 
-          <View className="mb-5 border-b-2 border-gray-200 pb-3">
-            {questions?.questions?.map((item, index) => {
-              if (item.question_type === "choice" && partQuestion === 0) {
-                return (
-                  <View key={index}>
+
+
+  return (
+    <SafeAreaView
+
+    >
+      <HeaderScreen
+        onPress={refresh}
+        label={route?.params?.nameTest}
+        navigation={navigation} />
+      {!loading && <>
+        <View className="flex flex-row justify-center items-center pl-5 pr-5">
+          <Text className="font-bold mr-3 text-red-600">
+            {countProgress + "/" + questions.total_question}
+          </Text>
+          <Progress.Bar
+            style={{
+              backgroundColor: "white",
+              borderColor: "white",
+            }}
+            progress={countProgress / questions.total_question || 0}
+            color="red"
+            width={300}
+            height={10}
+            borderRadius={15}
+          />
+        </View>
+        <ScrollView>
+          <View className="container p-7 pb-10">
+            <View
+              style={{
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
+              className="rounded-md bg-white p-5 mb-3"
+            >
+              <AudioPlayerUI
+                audio_url={questions?.audio_url}
+              />
+            </View>
+            <View
+              style={{
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
+              className="rounded-md bg-white p-5 pb-1"
+            >
+              {partQuestion == 0 && (
+                <Text className="mb-10">
+                  Lựa chọn các đáp án sau sao cho phù hợp
+                </Text>
+              )}
+
+              <View className="mb-5 border-b-2 border-gray-200 pb-3">
+                {/* {question_type == "fill_in_blank" && (
+                  <Text className="">{questions?.questions?.[currentQuestion].description}</Text>
+                )}
+                <RenderHtml
+                  contentWidth={width}
+                  source={{
+                    html: questions?.questions?.[currentQuestion].question_text,
+                  }}
+                /> */}
+                {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
+                  return partQuestion == 0 ? <View key={index}>
                     <RadioButtonForm
                       item={item}
                       test_id={test_id}
                       test={test}
                       onProgressUpdate={handleProgressUpdate}
-                      onShowNextQuestion={handelShowNextQuestion}
+                      onHandleSetAnswers={handleSetAnswers}
+                      handelShowChoiceNextQuestion={handelShowChoiceNextQuestion}
                     />
-                  </View>
-                );
-              } else if (item.question_type === "fill_in_blank") {
-                fill_in_blank_question.push(item); // Use push instead of append
+                  </View> : <></>
+                })}
 
-                return <View></View>; // Ensure you return something
-              }
-              return <View></View>; // Return null for cases where no condition matches
-            })}
-            {fill_in_blank_question.length > 0 && partQuestion == 1 && (
-              <View>
-                <Text className="mb-10">
-                  {
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .description
+                {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
+                  if (partQuestion == 1) {
+
+
+                    return index == currentQuestion_fill_in_blank ? (
+                      <View>
+                        <Text className="mb-10">
+                          {item.description}
+                        </Text>
+                        <RenderHtml
+                          contentWidth={width}
+                          source={{
+                            html: item.question_text || ""
+                          }}
+                        />
+                        <AnswerInputArea
+                          parrent_question={item}
+                          key={currentQuestion_fill_in_blank} // Adding a unique key for each question
+                          currentquestion={currentQuestion_fill_in_blank}
+                          data={item?.options}
+                          test_id={test_id}
+                          test={test}
+                          total_question_choice={choiceQuestions.length}
+                          onProgressUpdate={handleProgressUpdate}
+                          onHandleSetAnswers={handleSetAnswers}
+                          handelShowNextQuestion={handelShowNextQuestion}
+                        />
+                      </View>
+                    ) : <></>
+
                   }
-                </Text>
-                <RenderHtml
-                  contentWidth={width}
-                  source={{
-                    html: fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .question_text,
-                  }}
-                />
-                <AnswerInputArea
-                  key={currentQuestion_fill_in_blank} // Adding a unique key for each question
-                  currentquestion={currentQuestion_fill_in_blank}
-                  data={
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .options
-                  }
-                  test_id={test_id}
-                  is_doing={test?.is_doing}
-                  is_correct={
-                    answers.find(
-                      (a) =>
-                        a.question_id ===
-                        fill_in_blank_question[currentQuestion_fill_in_blank]
-                          .question_id
-                    )?.options.is_correct
-                  }
-                  explain={
-                    fill_in_blank_question[currentQuestion_fill_in_blank]
-                      .explain
-                  }
-                  anwser={
-                    fill_in_blank_question[
-                      currentQuestion_fill_in_blank
-                    ].options.find((a) => a.is_correct)?.text
-                  }
-                  isShow={isShowExplain}
-                  onProgressUpdate={handleProgressUpdate}
-                  onShowNextQuestion={handelShowNextQuestion}
-                />
+                  return <></>
+                })}
+
+
               </View>
-            )}
+
+            </View>
           </View>
+          {showNextQuestion && <ActionBar
+            total_question={answers?.length}
+            total_correct={
+              answers?.filter((item) => item.is_correct)?.length
+            }
+            onPressNext={() => {
 
-          {showNextQuestion && (
-            <MainButton
-              title={"Next question"}
-              roundedfull
-              onPress={() => {
-                if (countProgress == questions.total_question) {
-                  navigation?.navigate(configs?.screenName?.overview, {
-                    test_id,
-                    name_test,
-                    type,
-                    testResults: [testStore?.testResults],
-                  });
-                }
-                if (
-                  currentQuestion <
-                  questions?.questions?.length - choiceQuestions.length
-                ) {
-                  console.log("choice_question1", choiceQuestions.length);
+              setAnswers([]);
 
-                  setPartQuestion(1);
-                  setCurrentQuestion(currentQuestion + 1);
-                }
-                if (
-                  currentQuestion <
-                    questions?.questions?.length - choiceQuestions.length &&
-                  partQuestion == 1
-                ) {
-                  console.log("choice_question2", choiceQuestions.length);
-                  setCurrentQuestion_fill_in_blank(
-                    currentQuestion_fill_in_blank + 1
-                  );
-                }
-                setShowNextQuestion(false);
-              }}
-            />
-          )}
-        </View>
-      </ScrollView>
+              if (countProgress == questions.total_question) {
+                navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
+
+              }
+              // 
+              if (
+                currentQuestion <
+                questions?.questions?.length - choiceQuestions.length
+              ) {
+
+
+
+                setPartQuestion(1);
+                setCurrentQuestion(currentQuestion + 1);
+              }
+              if (
+                currentQuestion <
+                questions?.questions?.length - choiceQuestions.length &&
+                partQuestion == 1
+              ) {
+
+                setCurrentQuestion_fill_in_blank(
+                  currentQuestion_fill_in_blank + 1
+                );
+              }
+              setShowNextQuestion(false);
+            }}
+          />}
+
+        </ScrollView>
+
+      </>}
+
+      {
+
+        loading && <SkeletonPlaceholder />
+      }
+
+
     </SafeAreaView>
   );
 };
-export default ListeningTest;
+
+export default ReadingTest;

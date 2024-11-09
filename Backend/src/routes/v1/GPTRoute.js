@@ -7,6 +7,15 @@ const apiKey = env.GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 const Router = express.Router();
 
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+    cloud_name: env.DINARY_CLOUD_NAME,
+    api_key: env.DINARY_CLOUD_API_KEY,
+    api_secret: env.DINARY_CLOUD_API_SECRET,
+});
+
+
 Router.post('/writing', async (req, res, next) => {
 
     const model = genAI.getGenerativeModel({
@@ -50,56 +59,66 @@ Router.post('/writing', async (req, res, next) => {
     }
 });
 
-Router.post('/speaking', async (req, res, next) => {
-    const { topic, text } = req.body; // Nhận đề bài và bài viết từ client
+import uploadFile from "~/middlewares/upload";
+
+Router.post("/speaking", async (req, res) => {
+
+
+    const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash-latest",
+        generationConfig: { response_mime_type: "application/json" },
+      });
+    
+    const  topic  = "The Impact of Artificial Intelligence on Modern Workplaces"; 
+    const url = req.body.url;
+
+    const jsonSchema = {
+        title: "Write a review of the following recording based on the criteria I specified just once.",
+        description:
+          `Chủ đề: "${topic}  "Đoạn ghi âm: "${url}`,
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            tone: { description: "tone on the voice recording detailed", type: "string" },
+            Grammar: { description: "Grammar on the voice recording detailed", type: "string" },
+            pronunciation: { description: "pronunciation on the voice recording detailed", type: "string" },
+            tempo: { description: "tempo on the voice recording detailed", type: "string" },
+          },
+          additionalProperties: false,
+        },
+      };
 
     try {
-        // Tạo nội dung yêu cầu cho Google AI
-        const requestBody = {
-            contents: [
-                {
-                    parts: [
-                        {
-                            text: `Đề bài: "${topic}"\n\nBài speaking: "${text}"\n\nYêu cầu gồm các phần chính sau:
-                            1. Chỉ ra các lỗi ngữ pháp, từ vựng và cấu trúc câu.
-                            2. Cung cấp giải pháp chi tiết để cải thiện bài speaking.
-                            3. Chấm điểm bài speaking theo thang điểm IELTS.
-                            4. Trả kết quả dạng HTML,CSS thật đẹp,chuyên nghiệp  gồm 4 mục lớn mỗi mục cần phần làm 1 cách chi tiết
-                            -Phần ngữ pháp
-                            -Phần từ vựng
-                            -Phần cấu trúc câu
-                            -Phần chấm điểm IELTS
-                            -Phần phát âm
-                            -Các phần khác nếu cần thiết
-                            Để hiển thị trên  reactnative webview
-                            `
-                        }
-                    ]
-                }
-            ]
-        };
-
-        // Gọi Google AI API
-        const response = await axios.post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + env.GOOGLE_API_KEY,
-            requestBody,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-
-        // Trả về kết quả phân tích cho client
-        return res.status(200).json({
-            data: response.data.candidates[0].content.parts[0].text,
-            message: 'Success',
-            errCode: 0
-        });
+        const prompt = `Follow JSON schema.<JSONSchema>${JSON.stringify(
+            jsonSchema
+          )}</JSONSchema>`;
+          const result = await model.generateContent(prompt);
+          const text = await result.response.text();
+          const parsedData = JSON.parse(text);
+        return res.status(200).json(parsedData);
     } catch (error) {
         // Xử lý lỗi và trả về cho client
         next(new ApiError(500, error.message, error.stack));
     }
+});
+
+Router.post("/upload/dinarycloud", uploadFile?.single("audio"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+}
+  try {
+        
+    // const result = await cloudinary.uploader.upload('./src/files/recording.mp3', 
+    // { resource_type: "video" }
+    // )
+    const result = await cloudinary.uploader.upload(req.file.path, 
+      { resource_type: "video" }
+      )
+    return res.status(200).json(result);
+} catch (error) {
+    console.log(error);
+}
 });
 
 export default Router;

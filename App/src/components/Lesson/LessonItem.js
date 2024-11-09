@@ -66,16 +66,21 @@ const LessonItem = ({
         try {
 
 
-
+            console.log('====================================');
+            console.log("test: ", test);
+            console.log('====================================');
             const is_doing = test?.testResults?.[0]?.anwsers?.length > 0 ? true : false;
             if (is_doing) {
                 navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, name_test: test?.name_test, type: category?.type, testResults: test?.testResults })
 
 
             } else {
-                await addTestResult({
+             const res =   await addTestResult({
                     test_id: test?._id,
                 })
+                console.log('====================================');
+                console.log("res: ", res);
+                console.log('====================================');
                 navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id, type: category?.type, cb: refresh })
             }
 
@@ -136,7 +141,7 @@ const LessonItem = ({
                             width={100}
                         />
                         <Text className={colorPercent}>
-                            {percent_correct??0?.toFixed(0)}%
+                            {percent_correct?.toFixed(0)}%
                         </Text>
                     </View>
                 </View>
@@ -152,6 +157,7 @@ const LessonItem = ({
                         {/* Place your dropdown content here */}
                         {
                             tests?.map((item, index) => {
+                         
                                 return (
                                     <PraticeItem
                                         key={index}

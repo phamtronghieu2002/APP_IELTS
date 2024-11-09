@@ -16,6 +16,7 @@ import { TeamTreeSelect } from "../../picker/TeamPicker"
 import ModalVoc from "../../Modal/ModalVoc"
 import ModalQuestionVoc from "../../Modal/ModalQuestionVoc"
 import { _log } from "../../../utils/_log"
+import ModalAddQuestion from "../../Modal/ModalAddQuestion"
 
 interface SidebarProps {
   lesson_id: string
@@ -193,6 +194,7 @@ const Sidebar: FC<SidebarProps> = ({
               <div className="actions flex gap-3 flex-wrap">
                 {type_category != "Speaking" && type_category != "Writing" ? (
                   <ModalQuestion
+                    test_id={testSelected._id}
                     lesson_id={lesson_id}
                     button={
                       <Tooltip title="Thêm câu hỏi">
@@ -209,6 +211,7 @@ const Sidebar: FC<SidebarProps> = ({
                 )}
                 {drawStore?.sub_question_select && (
                   <ModalQuestion
+                    test_id={testSelected._id}
                     refresh={() => {
                       fetchQuestions(testSelected._id, true)
                     }}
@@ -230,17 +233,18 @@ const Sidebar: FC<SidebarProps> = ({
                     type="delete"
                   />
                 )}
-                <ModalQuestion
+                <ModalAddQuestion
+                  test_id={testSelected._id}
                   lesson_id={lesson_id}
                   button={
-                    <Tooltip title="Sắp xếp câu hỏi">
+                    <Tooltip title="Tạo bằng văn bản">
                       <Button type="primary" size="middle">
                         <IconC name={`FaSortAlphaUp`} size={15} />
-                        Sắp xếp câu hỏi
+                        Tạo bằng văn bản
                       </Button>
                     </Tooltip>
                   }
-                  title="Sắp xếp câu hỏi"
+                  title="Tạo câu hỏi bằng văn bản"
                   type="add"
                 />
               </div>

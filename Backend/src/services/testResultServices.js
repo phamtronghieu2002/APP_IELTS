@@ -4,9 +4,8 @@ import TestModel from '../models/TestsModel.js';
 
 export const addTestResult = async (data) => {
     try {
-        console.log("data >>>>>>>>>>>>>>>>>>>>>>>>>>>", data);
 
-        const testResult = await TestResultModel.findOne({ test_id: data.test_id });
+        const testResult = await TestResultModel.findOne({ test_id: data.test_id ,user_id:data?.user_id});
         if (testResult) {
             return {
                 data: {},
@@ -26,7 +25,7 @@ export const addTestResult = async (data) => {
     }
 }
 
-export const addQuestion = async (test_id, type, data) => {
+export const addQuestion = async (user_id,test_id, type, data) => {
     const { question_id, is_correct } = data;
     let result = {};
 
@@ -34,7 +33,7 @@ export const addQuestion = async (test_id, type, data) => {
         case "new":
             // Kiểm tra xem câu trả lời đã tồn tại hay chưa
             result = await TestResultModel.findOneAndUpdate(
-                { test_id, "anwsers.question_id": question_id },
+                { test_id,user_id, "anwsers.question_id": question_id },
                 {
                     // Nếu tồn tại, cập nhật lại trường `is_correct`
                     $set: { "anwsers.$.is_correct": is_correct }
@@ -47,7 +46,7 @@ export const addQuestion = async (test_id, type, data) => {
             // Nếu không tìm thấy câu trả lời với `question_id`, thêm mới câu trả lời vào mảng
             if (!result) {
                 result = await TestResultModel.findOneAndUpdate(
-                    { test_id },
+                    { test_id ,user_id},
                     {
                         $push: { anwsers: data }
                     },
@@ -72,7 +71,7 @@ export const addQuestion = async (test_id, type, data) => {
             break;
         case "renew":
             //    xóa hết câu hỏi cũ và thêm câu hỏi mới
-            result = await TestResultModel.findOneAndUpdate({ test_id },
+            result = await TestResultModel.findOneAndUpdate({ test_id, user_id },
                 {
                     $set: {
                         anwsers: []
@@ -93,10 +92,11 @@ export const addQuestion = async (test_id, type, data) => {
     const total_incorrect = dataO.anwsers.filter(item => item.is_correct === false).length;
 
 
+
     const test = await TestModel.findById(test_id)?.populate('questions').exec();
     const total_questions_of_test = test?.toObject().questions?.[0]?.total_question;
-    await TestResultModel.findOneAndUpdate(
-        { test_id },
+    const fb = await TestResultModel.findOneAndUpdate(
+        { test_id ,user_id},
         {
             $set: {
                 total_correct,
@@ -122,9 +122,98 @@ export const addQuestion = async (test_id, type, data) => {
     // })
 
     return {
-        data: result,
+        data: fb,
         message: "question added successfully",
         errCode: 0,
     }
 
 };
+
+
+export const getTestResult = async (test_id, user_id) => {
+    try {
+        const testResult = await TestResultModel.findOne({ test_id, user_id });
+        if (!testResult) {
+            return {
+                data: {},
+                message: "Test result not found",
+                errCode: 0,
+            }
+        }
+        return {
+            data: testResult,
+            message: "Test result fetched successfully",
+            errCode: 0,
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+
+export const deleteTestResult = async (test_id, question_id) => {
+    try {
+        const result = await TestResultModel.findOneAndUpdate(
+            { test_id },
+            {
+                $pull: { anwsers: { question_id } }
+            },
+            {
+                new: true
+            }
+        );
+        return {
+            data: result,
+            message: "Test result deleted successfully",
+            errCode: 0,
+        }
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+
+}
+
+export const getAllTestResult = async (user_id) => {
+    try {
+        // populate('test_id') để lấy thông tin của và đổi tên test_id thành test
+        const result = await TestResultModel.find({ user_id }).populate('test_id').exec();
+
+
+
+        return {
+            data: result,
+            message: "Test result fetched successfully",
+            errCode: 0,
+        }
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+
+export const bookmarkTestResult = async (user_id,test_id, note_bookmark,status) => {
+
+    try {
+        const result = await TestResultModel.findOneAndUpdate(
+            { test_id ,user_id},
+            {
+                $set: { bookmark: status, note_bookmark}
+            },
+            {
+                new: true
+            }
+        );
+        return {
+            data: result,
+            message: "Test result bookmarked successfully",
+            errCode: 0,
+        }
+    }
+    catch (error) {
+        throw new Error(error);
+    }
+
+
+
+}

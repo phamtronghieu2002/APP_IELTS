@@ -29,10 +29,6 @@ const Setting = () => {
 
   const [switchLightMode, setSwitchLightMode] = useState(false);
   const { i18n, t } = useContext(i18nContext);
-  // const { toggleTheme } = useContext(ThemeContext);
-
-  // Thay đổi class NativeWind dựa vào colorScheme
-
 
 
   const [lang, setLang] = useState(null);

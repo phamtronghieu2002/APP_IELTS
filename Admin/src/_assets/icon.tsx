@@ -75,14 +75,25 @@ import { FaListCheck } from "react-icons/fa6"
 import { FaHome } from "react-icons/fa"
 
 import { MdOutlineTextRotationNone } from "react-icons/md"
-import { MdOutlinePhoneIphone } from "react-icons/md";
-import { FiSmartphone } from "react-icons/fi";
-import { CiCirclePlus } from "react-icons/ci";
-import { FaRegFaceSmileBeam } from "react-icons/fa6";
-import { MdOutlineTextIncrease } from "react-icons/md";
-import { AiOutlineSound } from "react-icons/ai";
-import { BsQuestionSquareFill } from "react-icons/bs";
+import { MdOutlinePhoneIphone } from "react-icons/md"
+import { FiSmartphone } from "react-icons/fi"
+import { CiCirclePlus } from "react-icons/ci"
+import { FaRegFaceSmileBeam } from "react-icons/fa6"
+import { MdOutlineTextIncrease } from "react-icons/md"
+import { AiOutlineSound } from "react-icons/ai"
+import { BsQuestionSquareFill } from "react-icons/bs"
+import { MdOutlinePolicy } from "react-icons/md"
+import { IoIosNotifications } from "react-icons/io"
+import { MdCircleNotifications } from "react-icons/md"
+import { FaReplyAll } from "react-icons/fa6"
+import { FaRegQuestionCircle } from "react-icons/fa";
+import { CiSquarePlus } from "react-icons/ci";
 const IconLib = {
+  CiSquarePlus,
+  FaRegQuestionCircle,
+  FaReplyAll,
+  MdCircleNotifications,
+  MdOutlinePolicy,
   BsQuestionSquareFill,
   AiOutlineSound,
   MdOutlineTextIncrease,

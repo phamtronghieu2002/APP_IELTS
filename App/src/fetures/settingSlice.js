@@ -7,6 +7,7 @@ const initialState = {
     theme: "light",
     notifycation:"20:30",
     lang: 'en',
+    openModal: false,
 }
 
 const getInitialState = async() => {
@@ -29,12 +30,15 @@ export const interfaceSetting = createSlice({
         },
         setLang(state, action) {
             state.lang = action.payload
+        },
+        setOpenModal(state, action) {
+            state.openModal = action.payload
         }
     
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setTheme,setNotifycation ,setLang} = interfaceSetting.actions
+export const { setTheme,setNotifycation ,setLang,setOpenModal} = interfaceSetting.actions
 
 export default interfaceSetting.reducer

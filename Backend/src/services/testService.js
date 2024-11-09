@@ -34,8 +34,7 @@ const updateTest = async (id, data) => {
 const addQuestionTest = async (data) => {
     // find by id and update one field
     const { id, question } = data;
-    console.log("question >>", question);
-    console.log("id >>", id);
+
 
 
     return {
