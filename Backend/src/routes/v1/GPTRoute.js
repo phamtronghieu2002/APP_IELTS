@@ -103,7 +103,7 @@ Router.post("/speaking", async (req, res) => {
     }
 });
 
-Router.post("/upload", uploadFile?.single("audio"), async (req, res) => {
+Router.post("/upload/dinarycloud", uploadFile?.single("audio"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
 }

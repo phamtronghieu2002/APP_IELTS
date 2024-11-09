@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, ActivityIndicator  } from 'react-native';
 import { Buffer } from 'buffer';
 import Permissions from 'react-native-permissions';
 import Video from 'react-native-video';
 import AudioRecord from 'react-native-audio-record';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Recorder extends Component {
   state = {
     audioFile: '',
     recording: false,
     paused: true,
-    loaded: false
+    loaded: false,
+    countdown: 60,
+    isCounting: false,
+    save: false,
+    isSaving: false,
   };
 
   async componentDidMount() {
@@ -28,25 +33,23 @@ export default class Recorder extends Component {
     AudioRecord.on('data', data => {
       const chunk = Buffer.from(data, 'base64');
       console.log('chunk size', chunk.byteLength);
-      // do something with audio chunk
     });
   }
 
   checkPermission = async () => {
     const p = await Permissions.check('microphone');
-    console.log('permission check', p);
     if (p === 'authorized') return;
     return this.requestPermission();
   };
 
   requestPermission = async () => {
-    const p = await Permissions.request('microphone');
-    console.log('permission request', p);
+    await Permissions.request('microphone');
   };
 
   start = () => {
     console.log('start record');
-    this.setState({ audioFile: '', recording: true });
+    this.props.setVoice('');
+    this.setState({ audioFile: '', recording: true, isCounting: true, countdown: 60 });
     AudioRecord.start();
   };
 
@@ -54,13 +57,28 @@ export default class Recorder extends Component {
     if (!this.state.recording) return;
     console.log('stop record');
     let audioFile = await AudioRecord.stop();
-    console.log('audioFile', audioFile);
-    this.setState({ recording: false });
-    // wait till file is saved, else react-native-video will load incomplete file
-    setTimeout(() => {
-      this.setState({ audioFile });
-    }, 1000);
+    this.setState({ recording: false, isCounting: false, countdown: 60, audioFile, save: false });
   };
+
+  handleCountdown = () => {
+    if (this.state.isCounting && this.state.countdown > 0) {
+      this.setState((prevState) => ({ countdown: prevState.countdown - 1 }));
+    } else if (this.state.countdown === 0) {
+      this.stop();
+    }
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isCounting && !prevState.isCounting) {
+      this.countdownInterval = setInterval(this.handleCountdown, 1000);
+    } else if (!this.state.isCounting && prevState.isCounting) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.countdownInterval);
+  }
 
   play = () => {
     if (!this.state.loaded) this.player.seek(0);
@@ -87,68 +105,106 @@ export default class Recorder extends Component {
   onError = error => {
     console.log('error', error);
   };
+
   uploadAudio = async () => {
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    this.setState({ isSaving: true });
+    await delay(10000);
     const { audioFile } = this.state;
-    console.log('audioFile', `file:/${audioFile}`);
-    if (!audioFile) {
-      console.log("No audio file to upload");
-      return;
-    }
-  
+    if (!audioFile) return;
+
     const formData = new FormData();
     formData.append("audio", {
-      uri: `file://${audioFile}`,  // Prefix with `file://` for local files
+      uri: `file://${audioFile}`,
       name: `${new Date().getTime().toString()}.wav`,
       type: "audio/wav",
     });
-  
+
     try {
-      await delay(5000);
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/v1/gpt/upload/dinarycloud`, {
         method: "POST",
         body: formData,
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         this.props.setVoice(data.url);
+        this.setState({ save: true, audioFile: '' });
         console.log("Upload successful:", data);
       } else {
         console.log("Upload failed:", await response.text());
       }
     } catch (error) {
       console.error("Error uploading file:", error);
+    }finally {
+      this.setState({ isSaving: false });
     }
   };
 
   render() {
-    const { recording, audioFile, paused } = this.state;
+    const { recording, audioFile, paused, countdown, save, isSaving } = this.state;
+
+    const formatTime = (seconds) => {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+
+      return [
+        hrs.toString().padStart(2, "0"),
+        mins.toString().padStart(2, "0"),
+        secs.toString().padStart(2, "0"),
+      ].join(":");
+    };
+
     return (
       <View style={styles.container}>
-        <View style={styles.row}>
-          <Button onPress={this.start} title="Record" disabled={recording} />
-          <Button onPress={this.stop} title="Stop" disabled={!recording} />
-          {paused ? (
-            <Button onPress={this.play} title="Play" disabled={!audioFile} />
+      <View style={styles.row}>
+        <TouchableOpacity
+          onPress={this.start}
+          style={[styles.button, recording && styles.disabled]}
+          disabled={recording}
+        >
+          <Icon name="mic" size={24} color={recording ? 'gray' : 'white'} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          onPress={this.stop}
+          style={[styles.button, !recording && styles.disabled]}
+          disabled={!recording}
+        >
+          <Icon name="stop" size={24} color={!recording ? 'gray' : 'white'} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          onPress={this.uploadAudio}
+          style={[styles.button, (!audioFile || save) && styles.disabled]}
+          disabled={!audioFile || save || isSaving}
+        >
+          {isSaving ? (
+            <ActivityIndicator size="small" color="white" />
           ) : (
-            <Button onPress={this.pause} title="Pause" disabled={!audioFile} />
+            <Icon name="save" size={24} color={!audioFile || save ? 'gray' : 'white'} />
           )}
-          <Button onPress={this.uploadAudio} title="Save" />
-        </View>
-        {!!audioFile && (
-          <Video
-            ref={ref => (this.player = ref)}
-            source={{ uri: audioFile }}
-            paused={paused}
-            ignoreSilentSwitch={'ignore'}
-            onLoad={this.onLoad}
-            onProgress={this.onProgress}
-            onEnd={this.onEnd}
-            onError={this.onError}
-          />
-        )}
+        </TouchableOpacity>
       </View>
+
+      {!!recording && (
+        <Text style={styles.countdownText}>{formatTime(countdown)}</Text>
+      )}
+
+      {!!audioFile && (
+        <Video
+          ref={(ref) => (this.player = ref)}
+          source={{ uri: audioFile }}
+          paused={paused}
+          ignoreSilentSwitch="ignore"
+          onLoad={this.onLoad}
+          onProgress={this.onProgress}
+          onEnd={this.onEnd}
+          onError={this.onError}
+        />
+      )}
+    </View>
     );
   }
 }
@@ -156,10 +212,29 @@ export default class Recorder extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
-  }
+    justifyContent: 'space-around',
+    width: '80%',
+  },
+  button: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+  },
+  disabled: {
+    backgroundColor: '#ccc',
+  },
+  countdownText: {
+    fontSize: 16,
+    color: 'red',
+    marginTop: 10,
+  },
 });

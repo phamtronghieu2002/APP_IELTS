@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import MainButton from "../Button/MainButton";
 import {
   addAnwserToTestResult,
   deleteQuestionInTestResult,
@@ -69,6 +68,7 @@ const RecoderResponse = ({ test_id, voice}) => {
         const newResponse = {
           question_id: new Date().getTime().toString(),
           rating: rating,
+          url: voice,
         };
         setResponseList((prevList) => [...prevList, newResponse]);
         handleChooseAnswer(newResponse);
@@ -104,6 +104,7 @@ const RecoderResponse = ({ test_id, voice}) => {
         const newResponses = data.anwsers.map((item) => ({
           question_id: item.question_id,
           rating: item.rating,
+          url: item.url,
         }));
         setResponseList(newResponses); // Set the entire list at once
         setExpandedItems(Array(newResponses.length).fill(false)); // Reset expanded items
@@ -129,15 +130,20 @@ const RecoderResponse = ({ test_id, voice}) => {
   };
   React.useEffect(() => {
     fetchGetRating();
-  }, []);
+    console.log("voice>>>>>>>>>>>>>>>>>>>>>>>>>", test_id);
+  }, [test_id]);
 
   return (
     <View>
-        <Text>
-            <Pressable  onPress={handleRatingVoice}>
-                <Text>Rating Voice</Text>
-            </Pressable>
-        </Text>
+        {voice && (
+          <Pressable
+          onPress={handleRatingVoice}
+          className="bg-red-300 rounded-full py-2 px-4 flex-row items-center justify-center active:bg-red-400"
+          disabled={isLoading}
+        >
+            <Text className="text-white font-bold">Rating Voice</Text>
+        </Pressable>
+        )}
       {/* Hiển thị Loading */}
       {isLoading && (
         <View className="flex items-center">
@@ -164,8 +170,11 @@ const RecoderResponse = ({ test_id, voice}) => {
           <View>
             {expandedItems[index] ? (
               <View>
-                <AudioPlayer url={voice} />
+                <AudioPlayer url={item.url} />
                 <View>
+                <Text className="font-bold text-2lg text-red-500">
+                    Warning: This is the rating of the AI system, not the real rating of the teacher !
+                  </Text>
                   <Text className="font-bold text-lg text-red-500">
                     Rating your response :
                   </Text>

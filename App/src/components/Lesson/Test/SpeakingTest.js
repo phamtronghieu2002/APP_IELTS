@@ -136,9 +136,7 @@ const SpeakingTest = ({ navigation, route }) => {
              <View className="mb-5 border-b-2 border-gray-200 pb-3">
              <Recorder setVoice={setVoice} />
              <View>
-              {voice && (
                 <RecoderResponse voice={voice} test_id={test_id} />
-              )}
               </View>
            </View>
           )}
