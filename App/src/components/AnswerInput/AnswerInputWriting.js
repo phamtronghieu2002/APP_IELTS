@@ -128,7 +128,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
   };
   useEffect(() => {
     fetchGetRating();
-  }, []); // Trigger fetch on reload change
+  }, [reload]); // Trigger fetch on reload change
 
   const handleDelete = async (test_id, question_id) => {
     setIsDeleting(true);
