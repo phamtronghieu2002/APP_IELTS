@@ -101,7 +101,7 @@ const Comment = ({ navigation, route }) => {
                     </View>
                 </ScrollView>
                 <View
-                    className="p-3 "
+                    className="p-1"
                     style={{ backgroundColor: 'white' }}>
                     {
                         replyInformation && (
@@ -121,6 +121,7 @@ const Comment = ({ navigation, route }) => {
                     <View className="border border-gray-300 p-3 pl-5 pr-5 flex flex-row justify-between items-center">
 
                         <TextInput
+                            className=" w-[90%] p-4"
                             ref={inputRef}
                             value={comments}
                             onChangeText={(text) => setComments(text)}

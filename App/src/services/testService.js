@@ -6,6 +6,7 @@ export const getTestById = async (test_id) => {
       return axios.get(`/test/${test_id}`);
 }
 
-export const updateIsDoing = async (test_id,data) => {
-      return axios.put(`/test/${test_id}`,data);
+export const updateIsDoing = async (test_id, data) => {
+
+      return axios.put(`/test/${test_id}`, data);
 }

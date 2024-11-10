@@ -184,7 +184,7 @@ const ModalForm: FC<{
       await deleteVoc(data?._id)
       refresh?.()
 
-      api?.message?.success("xóa  bài test  thành công !!")
+      api?.message?.success("xóa  từ vựng  thành công !!")
       action?.closeModal()
     } catch (error) {
       _log("erro")

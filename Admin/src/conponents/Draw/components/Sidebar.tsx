@@ -40,18 +40,29 @@ const Sidebar: FC<SidebarProps> = ({
   const [loadingTest, setLoadingTest] = useState<boolean>(false)
 
   const fetchQuestions = async (test_id: string, isFirst: boolean) => {
-    setLoadingQuestion(true)
-    const res = await getTestById(test_id)
-    const questions = res.data?.questions?.[0]?.questions || []
-    setLoadingQuestion(false)
-    setQuestions(questions)
-    dispath({
-      type: "SET_QUESTION",
-      payload: res.data?.questions?.[0],
-    })
+    try {
+      setLoadingQuestion(true)
+      const res = await getTestById(test_id || "")
+      const questions = res.data?.questions?.[0]?.questions || []
+      setLoadingQuestion(false)
+      setQuestions(questions)
+      dispath({
+        type: "SET_QUESTION",
+        payload: res.data?.questions?.[0],
+      })
 
-    if (isFirst) {
-      dispath({ type: "SET_QUESTION_SELECT", payload: questions?.[0] })
+      dispath({
+        type: "SET_QUESTION_SELECT",
+        payload: questions?.[0],
+      })
+
+      if (isFirst) {
+        dispath({ type: "SET_QUESTION_SELECT", payload: questions?.[0] })
+      }
+    } catch (error) {
+      console.log("====================================")
+      console.log("error >>>", error)
+      console.log("====================================")
     }
   }
 
@@ -89,7 +100,7 @@ const Sidebar: FC<SidebarProps> = ({
 
   useEffect(() => {
     if (testSelected) {
-      fetchQuestions(testSelected._id, drawStore?.freshKey == 0)
+      fetchQuestions(testSelected?._id, drawStore?.freshKey == 0)
     }
   }, [testSelected, drawStore?.freshKey])
 
@@ -161,7 +172,7 @@ const Sidebar: FC<SidebarProps> = ({
                   type_category={type_category}
                   refresh={() => {
                     fetchTest()
-                    setTestSelected(null)
+                    setTestSelected({})
                   }}
                   lesson_id={lesson_id}
                   modalProps={{
@@ -192,7 +203,9 @@ const Sidebar: FC<SidebarProps> = ({
           <div className="body mt-3">
             {testSelected && (
               <div className="actions flex gap-3 flex-wrap">
-                {type_category != "Speaking" && type_category != "Writing" ? (
+                {type_category != "Speaking" &&
+                type_category != "Writing" &&
+                type_category != "Vocabulary" ? (
                   <ModalQuestion
                     test_id={testSelected._id}
                     lesson_id={lesson_id}
@@ -233,20 +246,24 @@ const Sidebar: FC<SidebarProps> = ({
                     type="delete"
                   />
                 )}
-                <ModalAddQuestion
-                  test_id={testSelected._id}
-                  lesson_id={lesson_id}
-                  button={
-                    <Tooltip title="Tạo bằng văn bản">
-                      <Button type="primary" size="middle">
-                        <IconC name={`FaSortAlphaUp`} size={15} />
-                        Tạo bằng văn bản
-                      </Button>
-                    </Tooltip>
-                  }
-                  title="Tạo câu hỏi bằng văn bản"
-                  type="add"
-                />
+                {type_category != "Vocabulary" &&
+                  type_category != "Speaking" &&
+                  type_category != "Writing" && (
+                    <ModalAddQuestion
+                      test_id={testSelected._id}
+                      lesson_id={lesson_id}
+                      button={
+                        <Tooltip title="Tạo bằng văn bản">
+                          <Button type="primary" size="middle">
+                            <IconC name={`FaSortAlphaUp`} size={15} />
+                            Tạo bằng văn bản
+                          </Button>
+                        </Tooltip>
+                      }
+                      title="Tạo câu hỏi bằng văn bản"
+                      type="add"
+                    />
+                  )}
               </div>
             )}
             <div className="questions flex gap-3 flex-wrap mt-10 ">

@@ -139,7 +139,9 @@ export default function AudioPlayerUI({
             />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={togglePlayPause}>
+          <TouchableOpacity
+          className="flex items-center justify-center bg-red-500 "
+          onPress={togglePlayPause}>
             <FontAwesome
               name={isPlaying ? "pause-circle" : "play-circle"}
               size={48}
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   playIcon: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   speedContainer: {
     flexDirection: "row",

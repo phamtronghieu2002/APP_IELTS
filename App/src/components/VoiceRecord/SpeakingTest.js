@@ -60,14 +60,14 @@ const WritingTest = ({ navigation, route }) => {
 
   const startRecording = async() =>{
     try {
-      console.log("Requesting permissions..");
+
       await Audio.requestPermissionsAsync();
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
         shouldDuckAndroid: true,
       });
-      console.log("Starting recording..");
+ 
       const recording = new Audio.Recording({
         audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_QUALITY_HIGH,
         extension: ".mp3",
@@ -77,7 +77,7 @@ const WritingTest = ({ navigation, route }) => {
       );
       await recording.startAsync();
       setRecording(recording);
-      console.log("Recording started");
+
     } catch (err) {
       console.error("Failed to start recording", err);
     }
