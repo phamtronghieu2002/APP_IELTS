@@ -40,9 +40,6 @@ const AnswerInputWriting = ({ test_id, data }) => {
     return () => clearInterval(interval);
   }, [isCounting]);
 
-  useEffect(() => {
-    fetchGetRating();
-  }, [reload]); // Trigger fetch on reload change
 
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -129,16 +126,21 @@ const AnswerInputWriting = ({ test_id, data }) => {
       console.log("error >>>>", err);
     }
   };
+  useEffect(() => {
+    fetchGetRating();
+  }, []); // Trigger fetch on reload change
 
   const handleDelete = async (test_id, question_id) => {
     setIsDeleting(true);
+    fetchGetRating();
     try {
       await delay(5000);
       await deleteQuestionInTestResult(test_id, question_id);
-      setReload((prev) => !prev); // Toggle reload state to trigger fetch
     } catch (error) {
       console.log("error >>>>", error);
     } finally {
+      
+    fetchGetRating();
       setIsDeleting(false);
     }
   };
@@ -197,10 +199,19 @@ const AnswerInputWriting = ({ test_id, data }) => {
                 <Text className="font-bold text-lg text-red-500">Rating your response:</Text>
                 <Text className="font-bold italic">1. Grammar Errors</Text>
                 <Text>{item.rating.grammar_errors}</Text>
-                {/* Add other error sections here */}
+                <Text className="font-bold italic">2. Vocabulary Errors</Text>
+                <Text>{item.rating.vocabulary_errors}</Text>
+                <Text className="font-bold italic">3. Sentence Structure Errors</Text>
+                <Text>{item.rating.sentence_structure_errors}</Text>
+                <Text className="font-bold italic">4. Coherence Errors</Text>
+                <Text>{item.rating.coherence_errors}</Text>
+                <Text className="font-bold italic">5. Cohesion Errors</Text>
+                <Text>{item.rating.cohesion_errors}</Text>
+                <Text className="font-bold italic">6. Solutions To Improve Writing</Text>
+                <Text>{item.rating.detailed_solutions_to_improve_writing}</Text>
               </View>
             ) : (
-              <Text>{item.rating.grammar_errors.substring(0, 0)}...</Text>
+              <Text>...</Text>
             )}
           </View>
           <TouchableOpacity onPress={() => toggleExpand(index)}>

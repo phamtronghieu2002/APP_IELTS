@@ -40,6 +40,7 @@ const ExpandableWriting = ({ text, initialHeight = 200}) => {
                             }
                         }}>
                             <RenderHtml
+                                tagsStyles={{p: { fontFamily: 'Montserrat-Regular', lineHeight: 23, color: '#ffffff', fontSize: 16, marginBottom: 16 },}}
                                 contentWidth={width}
                                 source={{ html: text }}
                             />
@@ -48,7 +49,7 @@ const ExpandableWriting = ({ text, initialHeight = 200}) => {
                 </Animated.View>
                 {!collapsed && (
                     <TouchableOpacity onPress={toggleExpand} className="flex items-center">
-                        <Text style={{ color: 'blue', marginTop: 10 }}>
+                        <Text style={{ color: '#ff7878', marginTop: 10, marginBottom:10 }}>
                             {expanded ? 'Show More' : 'Show Less'}
                         </Text>
                     </TouchableOpacity>

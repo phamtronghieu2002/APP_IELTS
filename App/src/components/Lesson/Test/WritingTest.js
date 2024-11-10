@@ -43,7 +43,6 @@ const WritingTest = ({ navigation, route }) => {
     { label: "Your Response", value: 0 },
     { label: "Model Answer", value: 1 },
   ];
-
   return (
     <SafeAreaView>
       <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
@@ -61,7 +60,7 @@ const WritingTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 mb-3"
         >
-          <View className="flex flex-row bg-green-100 items-center justify-center">
+          {/* <View className="flex flex-row bg-green-100 items-center justify-center">
             <Text className="font-bold bg-red-100">Question: </Text>
             <View className="flex-1 max-w-full max-h-40 overflow-hidden">
               <RenderHtml
@@ -89,7 +88,36 @@ const WritingTest = ({ navigation, route }) => {
           }}
           >
           <ExpandableWriting text={questions?.questions?.[0].question_text} />
-          </View>
+          </View> */}
+          <View className="rounded-lg">
+      <Text className="text-base font-semibold mb-2">Part 1</Text>
+      <View className="flex-1 max-w-full max-h-40 overflow-hidden">
+              <RenderHtml
+                contentWidth={width}
+                source={{ html: questions?.question_text }}
+                // Thêm style cho RenderHtml
+                style={{
+                  maxHeight: "100%",
+                  maxWidth: "100%", // Giới hạn chiều rộng
+                  overflow: "hidden", // Ẩn nội dung vượt quá
+                }}
+              />
+            </View>
+      <View className="h-px bg-gray-600 my-3" />
+      <View style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+           className="bg-gray-800 rounded-lg pl-3 pr-3">
+      <ExpandableWriting text={questions?.questions?.[0].question_text} />
+      </View>
+    </View>
         </View>
         <View
           style={{
@@ -132,6 +160,7 @@ const WritingTest = ({ navigation, route }) => {
           {selectedValue === 0 && (
              <View className="mb-5 border-b-2 border-gray-200 pb-3">
              <AnswerInputWriting
+             fetchTestById={fetchTestById}
                test_id={test_id}
                data={questions?.questions?.[0]}
              />
