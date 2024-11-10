@@ -14,12 +14,12 @@ export default function AudioPlayerUI({
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1.0);
   const [volume, setVolume] = useState(1.0);
-       
 
 
-  
 
-  
+
+
+
   async function loadSound() {
     const audio_path = `${process.env.EXPO_PUBLIC_API_URL}/files/${audio_url}`;
     const { sound } = await Audio.Sound.createAsync(
@@ -27,7 +27,7 @@ export default function AudioPlayerUI({
       { shouldPlay: false, rate: speed, volume }
     );
 
-    
+
     setSound(sound);
     setIsPlaying(true);
 
@@ -101,7 +101,7 @@ export default function AudioPlayerUI({
 
   return (
     <View style={styles.container}>
-   
+
 
       <View className="">
         <Slider
@@ -139,7 +139,9 @@ export default function AudioPlayerUI({
             />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={togglePlayPause}>
+          <TouchableOpacity
+            className="flex items-center justify-center"
+            onPress={togglePlayPause}>
             <FontAwesome
               name={isPlaying ? "pause-circle" : "play-circle"}
               size={48}
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   playIcon: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   speedContainer: {
     flexDirection: "row",

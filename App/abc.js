@@ -94,7 +94,7 @@ export default function App() {
     )
   }
 
-  console.log(value);
+
   
   async function scheduleDailyPushNotification() {
     const now = new Date();

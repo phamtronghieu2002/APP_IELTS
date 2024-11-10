@@ -13,9 +13,6 @@ export function ModalConfirm({
 
     const storeSetting = useSelector((state) => state.setting.openModal);
     const dispatch = useDispatch();
-    console.log('====================================');
-    console.log("storeSetting", storeSetting);
-    console.log('====================================');
 
 
 

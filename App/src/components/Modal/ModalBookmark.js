@@ -21,7 +21,7 @@ const BottomSheetExample = ({
     }, []);
 
     // variables
-    const snapPoints = ['13%']; // Ví dụ: snap tại 50% chiều cao màn hình
+    const snapPoints = ['15%']; // Ví dụ: snap tại 50% chiều cao màn hình
 
     // renders
 

@@ -10,12 +10,12 @@ const LearningTimeProvider = ({ children, userId }) => {
 
     useEffect(() => {
         const handleAppStateChange = (nextAppState) => {
-            console.log('AppState changed:', nextAppState); // Debug log
+
             if (nextAppState === 'active') {
-                console.log('App became active');
+
                 setStartTime(Date.now()); // Bắt đầu đếm thời gian khi vào app
             } else if (nextAppState === 'background' || nextAppState === 'inactive') {
-                console.log('App went to background');
+     
                 if (startTime) {
                     const sessionTime = Math.floor((Date.now() - startTime) / 60000); // Tính phút
                     handleSaveTime(sessionTime);

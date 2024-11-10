@@ -36,7 +36,7 @@ export default class Recorder extends Component {
 
     AudioRecord.on('data', data => {
       const chunk = Buffer.from(data, 'base64');
-      console.log('chunk size', chunk.byteLength);
+
     });
   }
 
@@ -68,7 +68,7 @@ export default class Recorder extends Component {
   stop = async () => {
     try {
       if (!this.state.recording) return;
-      console.log('stop record');
+
       let audioFile = await AudioRecord.stop();
       this.setState({ recording: false, isCounting: false, countdown: 60, audioFile, save: false });
     } catch (error) {
@@ -114,7 +114,7 @@ export default class Recorder extends Component {
   };
 
   onEnd = () => {
-    console.log('finished playback');
+
     this.setState({ paused: true, loaded: false });
   };
 
@@ -146,7 +146,7 @@ export default class Recorder extends Component {
         const data = await response.json();
         this.props.setVoice(data.url);
         this.setState({ save: true, audioFile: '' });
-        console.log("Upload successful:", data);
+
       } else {
         console.log("Upload failed:", await response.text());
       }

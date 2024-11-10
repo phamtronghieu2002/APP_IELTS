@@ -27,12 +27,8 @@ const Review = ({ navigation, route }) => {
     const [part, setPart] = React.useState(0);
 
 
-    console.log("part >>>>>>", part);
-    console.log('====================================');
-    console.log("data.length-1=", data.length-1);
-    console.log('====================================');
-    
-    
+
+
 
 
     const handleData = async () => {
@@ -40,17 +36,17 @@ const Review = ({ navigation, route }) => {
 
         const res = await getAllTestResult();
         const feedback = res?.data
-        console.log("feedback", feedback);
-        
-        setData(feedback);
+
+
+
 
         let fb = {};
         if (status === 'weak') {
             fb = feedback?.map(item => {
-                return item?.anwsers?.filter(item => item.is_correct === false)
+                return item?.anwsers?.filter(item => item?.is_correct === false)
             })
-             
-                
+
+
 
 
         } else if (status === 'familiar') {
@@ -63,16 +59,20 @@ const Review = ({ navigation, route }) => {
                 return item?.bookmark === true
             })
             setData(bookmark_filter)
+            return
         }
-        setTestResults(fb?.filter((item, index) => {
-            if (item.length > 0) {
-
-                return true
-            }
-            feedback?.splice(index, 1)
-            setData((pev) => [...pev])
-            return false
-        }));
+        const filteredResults = fb.filter(item => item?.length > 0);
+        console.log("feedback >>>", feedback);
+        
+        console.log("fb>>>>>>", fb);
+        
+        console.log("filteredResults", filteredResults);
+        
+        
+        // Filter `feedback` based on `filteredResults` and update `data`
+        const updatedFeedback = feedback.filter((item, index) => fb[index]?.length > 0);
+        setTestResults(filteredResults);
+        setData(updatedFeedback);
     }
 
 
@@ -103,25 +103,27 @@ const Review = ({ navigation, route }) => {
         <MainLayout>
             <HeaderScreen
                 navigation={navigation}
-                label={`Làm lại Test: ${data[part]?.test_id?.name_test}`}
+                label={`Làm lại Test: ${data[part]?.test_id?.name_test || ''}`}
             />
             <View className="content">
-
-                <ReadingTest
-                    part={part}
-                    isFinish={part === data.length - 1}
-                    onNextPart={() => {
-                        if (part < data.length - 1) {
-                            setPart(part + 1)
+                {
+                    dataStasitic()?.test_id && <ReadingTest
+                        part={part}
+                        isFinish={part === data.length - 1}
+                        onNextPart={() => {
+                            if (part < data.length - 1) {
+                                setPart(part + 1)
+                            }
                         }
-                    }
-                    }
-                    headershow={false}
-                    dataStasitic={
-                        dataStasitic()
-                    }
+                        }
+                        headershow={false}
+                        dataStasitic={
+                            dataStasitic()
+                        }
 
-                />
+                    />
+                }
+
             </View>
         </MainLayout>
     );

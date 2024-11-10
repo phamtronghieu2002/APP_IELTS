@@ -105,7 +105,7 @@ const Statistic = ({ navigation, route }) => {
         testResult?.map((item) => {
             total += item?.total_correct;
         });
-        console.log("total", total);
+     
 
         return total;
     };

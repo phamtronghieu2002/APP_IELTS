@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ const RecoderResponse = ({ test_id, voice}) => {
     Array(responseList.length).fill(false)
   );
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  const [reload, setReload] = useState(false); // New reload state
 
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -52,7 +53,7 @@ const RecoderResponse = ({ test_id, voice}) => {
         url: voice,
       });
       
-      console.log("Rating", response);
+ 
       return response;
     } catch (error) {
       console.error(error);
@@ -85,7 +86,7 @@ const RecoderResponse = ({ test_id, voice}) => {
       })
         .then((fb) => {
           const data = fb.data;
-          console.log("data", data);
+     
         })
         .catch((err) => {
           console.log("error >>>>", err);
@@ -100,7 +101,7 @@ const RecoderResponse = ({ test_id, voice}) => {
     getTestResult(test_id)
       .then((fb) => {
         const data = fb.data;
-        console.log("data", data);
+ 
         const newResponses = data.anwsers.map((item) => ({
           question_id: item.question_id,
           rating: item.rating,
@@ -114,24 +115,26 @@ const RecoderResponse = ({ test_id, voice}) => {
       });
   };
 
+  useEffect(() => {
+    fetchGetRating();
+  }, [reload]); // Trigger fetch on reload change
+  
   const handleDelete = async (test_id, question_id) => {
     setIsDeleting(true);
+    fetchGetRating();
     try {
       await delay(5000);
       const fb = await deleteQuestionInTestResult(test_id, question_id);
       const data = fb.data;
       console.log("Status", data);
-      fetchGetRating();
     } catch (error) {
       console.log("error >>>>", error);
     } finally {
+      fetchGetRating();
+      setReload((prev) => !prev); // Toggle reload state to trigger fetch
       setIsDeleting(false);
     }
   };
-  React.useEffect(() => {
-    fetchGetRating();
-    console.log("voice>>>>>>>>>>>>>>>>>>>>>>>>>", test_id);
-  }, [test_id]);
 
   return (
     <View>
