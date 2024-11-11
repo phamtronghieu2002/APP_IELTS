@@ -80,12 +80,12 @@ const ModalForm: FC<{
       const q = await createQuestion(formData)
       dispath({
         type: "SET_QUESTION",
-        payload: test_id,
+        payload: q?.data,
       })
 
       dispath({
         type: "SET_TEST_ID",
-        payload: q?.data,
+        payload: test_id,
       })
 
       await addQuestionToTest(test_id, q?.data?._id)

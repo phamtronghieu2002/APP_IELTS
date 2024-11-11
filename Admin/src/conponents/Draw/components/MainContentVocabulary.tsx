@@ -25,7 +25,9 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
   const [keyword, setKeyword] = useState<string>("")
   const [vocs, setVocs] = useState<any>([])
   const test_id = drawStore?.test_id
-
+  console.log('====================================');
+  console.log('test_id >>>>>>>>>>>>>>>>', test_id);
+  console.log('====================================');
   const fetchVocByTestId = async (keyword?: string) => {
     try {
       setLoading(true)
@@ -207,7 +209,7 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
               refresh={fetchVocByTestId}
               test_id={test_id}
               type="add"
-              title="Thêm bài học"
+              title="Thêm từ vựng"
               button={
                 <Button icon={<PlusOutlined />} type="primary">
                   Thêm
