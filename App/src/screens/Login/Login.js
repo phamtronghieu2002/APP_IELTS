@@ -37,6 +37,7 @@ const Login = ({ navigation, route }) => {
     const isCommentScreen = route?.params?.isCommentScreen;
 
 
+    const [error, setError] = React.useState(null);
 
     const dispatch = useDispatch();
     const signIn = async () => {
@@ -62,7 +63,7 @@ const Login = ({ navigation, route }) => {
                 storeData('user', fb);
                 dispatch(loginUser(fb));
                 dispatch(setOpenModal(false))
-                if(isCommentScreen){
+                if (isCommentScreen) {
                     navigation?.goBack();
                     return;
                 }
@@ -72,7 +73,7 @@ const Login = ({ navigation, route }) => {
             }
         } catch (error) {
             console.log("error >>", error);
-
+            setError(error);
             if (isErrorWithCode(error)) {
                 switch (error.code) {
                     case statusCodes.IN_PROGRESS:
@@ -116,7 +117,9 @@ const Login = ({ navigation, route }) => {
             console.log('====================================');
             console.log('error >>', error);
             console.log('====================================');
+            setError(error);
             Toast.show({
+
                 type: 'error',
                 text1: error,
             });
@@ -141,6 +144,7 @@ const Login = ({ navigation, route }) => {
                         />
 
                 }
+              
                 <View className='flex-1 items-center justify-center'>
                     <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
                         <View className="mb-52">

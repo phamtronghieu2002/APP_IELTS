@@ -62,6 +62,9 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
       const choices = data.questions[0].questions.filter(
         (item) => item.question_type === "choice"
       );
+      if(!choices.length){
+        setPartQuestion(1);
+      }
       setChoiceQuestions(choices);
 
     } catch (error) {

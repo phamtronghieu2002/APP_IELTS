@@ -17,7 +17,7 @@ const SpeakingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
-  
+
   const [voice, setVoice] = React.useState();
 
   const [questions, setQuestions] = React.useState({});
@@ -51,7 +51,7 @@ const SpeakingTest = ({ navigation, route }) => {
     <SafeAreaView>
       <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
       <ScrollView className="p-7">
-        <View
+      <View
           style={{
             shadowColor: "#000",
             shadowOffset: {
@@ -64,12 +64,13 @@ const SpeakingTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 mb-3"
         >
-          <View className="flex flex-row bg-green-100 items-center justify-center">
-            <Text className="font-bold bg-red-100">Question: </Text>
+
+          <View className="rounded-lg">
+            <Text className="text-base font-semibold mb-2  pt-5">Part</Text>
             <View className="flex-1 max-w-full max-h-40 overflow-hidden">
               <RenderHtml
                 contentWidth={width}
-                source={{ html: questions?.question_text }}
+                source={{ html: questions?.description }}
                 // Thêm style cho RenderHtml
                 style={{
                   maxHeight: "100%",
@@ -78,20 +79,20 @@ const SpeakingTest = ({ navigation, route }) => {
                 }}
               />
             </View>
-          </View>
-          <View className="bg-gray-100 rounded-mg"
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          >
-          <ExpandableWriting text={questions?.questions?.[0].question_text} />
+            <View className="h-px bg-gray-600 my-3" />
+            <View style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+              className="rounded-lg pl-3 pr-3">
+              <ExpandableWriting text={questions?.question_text} />
+            </View>
           </View>
         </View>
         <View
@@ -133,16 +134,16 @@ const SpeakingTest = ({ navigation, route }) => {
             />
           </View>
           {selectedValue === 0 && (
-             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-             <Recorder setVoice={setVoice} />
-             <View>
+            <View className="mb-5 border-b-2 border-gray-200 pb-3">
+              <Recorder setVoice={setVoice} />
+              <View>
                 <RecoderResponse voice={voice} test_id={test_id} />
               </View>
-           </View>
+            </View>
           )}
           {selectedValue === 1 && (
             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model"/>
+              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model" />
             </View>
           )}
         </View>

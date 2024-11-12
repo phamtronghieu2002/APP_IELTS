@@ -10,7 +10,7 @@ import * as Progress from 'react-native-progress';
 import IconE from 'react-native-vector-icons/Entypo';
 import PraticeItem from './PracticeItem';
 import configs from '../../configs';
-import { addTestResult } from '../../services/testResultServices';
+import { addTestResult, createTestResult } from '../../services/testResultServices';
 
 const LessonItem = ({
     tests,
@@ -29,7 +29,8 @@ const LessonItem = ({
     const contentRef = useRef(null);
     const [contentHeight, setContentHeight] = useState(0);
 
-    const colorPercent = percent_correct > 0 ? ' text-red-500' : 'text-gray-500';
+    const colorPercent = percent_correct ?? 0 > 0 ? ((percent_correct ?? 0?.toFixed(0) == 100) ? "border-green-500 text-green-500" : 'border-red-400 text-red-500') : 'bg-light-200';
+
     const heightInterpolate = animation.interpolate({
         inputRange: [0, 1],
         outputRange: [0, contentHeight], // Adjust dropdown height here
@@ -71,10 +72,10 @@ const LessonItem = ({
 
 
             } else {
-             const res =   await addTestResult({
+                const res = await createTestResult({
                     test_id: test?._id,
                 })
-             
+
                 navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id, type: category?.type, cb: refresh })
             }
 
@@ -128,7 +129,9 @@ const LessonItem = ({
                         </Text>
                         <Progress.Bar
                             backgroundColor='#f0f0f0'
-                            color='red'
+                            color={
+                                percent_correct ?? 0?.toFixed(0) == 100 ? '#4caf50' : '#f44336'
+                            }
                             borderColor='#f0f0f0'
                             // chỉ  lấy 2 chử số thập phân
                             progress={(percent_correct / 100)}
@@ -149,9 +152,11 @@ const LessonItem = ({
                         onLayout={(event) => { find_dimesions(event.nativeEvent.layout) }}
                         className="dropdown-content  mt-2 rounded-lg">
                         {/* Place your dropdown content here */}
+
                         {
-                            tests?.map((item, index) => {
-                         
+
+                            (tests?.[0]?._id? tests : []).map((item, index) => {
+
                                 return (
                                     <PraticeItem
                                         key={index}

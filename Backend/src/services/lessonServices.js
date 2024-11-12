@@ -52,7 +52,7 @@ const getLessonsByCateId = async (cate_id, keyword, user_id) => {
     if (keyword) {
         const keywordRegex = new RegExp(keyword, 'i');
         searchCondition = {
-            cate_id: new mongoose.Types.ObjectId(cate_id),
+            cate_id,
             $or: [
                 { name_lesson: keywordRegex },
             ],

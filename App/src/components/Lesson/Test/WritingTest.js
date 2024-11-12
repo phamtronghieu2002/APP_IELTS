@@ -60,38 +60,10 @@ const WritingTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 mb-3"
         >
-          {/* <View className="flex flex-row bg-green-100 items-center justify-center">
-            <Text className="font-bold bg-red-100">Question: </Text>
-            <View className="flex-1 max-w-full max-h-40 overflow-hidden">
-              <RenderHtml
-                contentWidth={width}
-                source={{ html: questions?.question_text }}
-                // Thêm style cho RenderHtml
-                style={{
-                  maxHeight: "100%",
-                  maxWidth: "100%", // Giới hạn chiều rộng
-                  overflow: "hidden", // Ẩn nội dung vượt quá
-                }}
-              />
-            </View>
-          </View>
-          <View className="bg-gray-100 rounded-mg"
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          >
-          <ExpandableWriting text={questions?.questions?.[0].question_text} />
-          </View> */}
+
           <View className="rounded-lg">
-      <Text className="text-base font-semibold mb-2  pt-5">123</Text>
-      <View className="flex-1 max-w-full max-h-40 overflow-hidden">
+            <Text className="text-base font-semibold mb-2  pt-5">123</Text>
+            <View className="flex-1 max-w-full max-h-40 overflow-hidden">
               <RenderHtml
                 contentWidth={width}
                 source={{ html: questions?.description }}
@@ -103,21 +75,21 @@ const WritingTest = ({ navigation, route }) => {
                 }}
               />
             </View>
-      <View className="h-px bg-gray-600 my-3" />
-      <View style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-           className="rounded-lg pl-3 pr-3">
-      <ExpandableWriting text={questions?.question_text} />
-      </View>
-    </View>
+            <View className="h-px bg-gray-600 my-3" />
+            <View style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+              className="rounded-lg pl-3 pr-3">
+              <ExpandableWriting text={questions?.question_text} />
+            </View>
+          </View>
         </View>
         <View
           style={{
@@ -158,17 +130,17 @@ const WritingTest = ({ navigation, route }) => {
             />
           </View>
           {selectedValue === 0 && (
-             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-             <AnswerInputWriting
-             fetchTestById={fetchTestById}
-               test_id={test_id}
-               data={questions?.questions?.[0]}
-             />
-           </View>
+            <View className="mb-5 border-b-2 border-gray-200 pb-3">
+              <AnswerInputWriting
+                fetchTestById={fetchTestById}
+                test_id={test_id}
+                data={questions?.questions?.[0]}
+              />
+            </View>
           )}
           {selectedValue === 1 && (
             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model"/>
+              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model" />
             </View>
           )}
         </View>
