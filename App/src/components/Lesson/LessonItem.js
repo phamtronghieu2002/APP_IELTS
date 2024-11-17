@@ -94,12 +94,10 @@ const LessonItem = ({
             className=" bg-white p-4 rounded-lg mb-3"
             onPress={toggleDropdown}
         >
-            <View className="top flex flex-row justify-between items-center">
-                <View className="left flex flex-row gap-3">
+            <View className=" flex flex-row justify-between items-center">
+                <View className="left flex flex-row items-center gap-5 ">
                     {icon}
-                    <Text
-
-                        className="text-lg font-bold flex-wrap">
+                    <Text className="text-lg font-bold  w-[80%]">
                         {name_lesson}
                     </Text>
                 </View>
@@ -137,7 +135,7 @@ const LessonItem = ({
                             progress={(percent_correct / 100)}
                             width={100}
                         />
-                        <Text className={colorPercent}>
+                        <Text className={`${colorPercent}`}>
                             {percent_correct?.toFixed(0)}%
                         </Text>
                     </View>
@@ -155,7 +153,7 @@ const LessonItem = ({
 
                         {
 
-                            (tests?.[0]?._id? tests : []).map((item, index) => {
+                            (tests?.[0]?._id ? tests : []).map((item, index) => {
 
                                 return (
                                     <PraticeItem

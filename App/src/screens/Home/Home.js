@@ -25,6 +25,7 @@ import VoiceRecord from '../../components/VoiceRecord/VoiceRecord';
 import Recorder from '../../components/recorder/Recorder';
 import BottomSheetExample from '../../components/Modal/ModalBookmark';
 import { ModalConfirm } from '../../components/Modal/ModalConfirm';
+import FloatButton from '../../components/FloatButton/FloatButton';
 const Home = ({ navigation, route }) => {
 
 
@@ -102,16 +103,19 @@ const Home = ({ navigation, route }) => {
       <Loading />
     ) : (
       <MainLayout>
+
+     
         <Text className="text-red-600 text-xl font-bold">
           IELTS Practice Test
         </Text>
-        <ModalConfirm 
-        navigation={navigation}
+        <ModalConfirm
+          navigation={navigation}
         />
         {/* / */}
         <View
           className="wrapper_items mt-4 flex flex-row justify-between flex-wrap  dark:bg-white">
           {
+
             categories?.skills?.map((item, index) =>
               <Pressable
                 key={index}
@@ -202,7 +206,7 @@ const Home = ({ navigation, route }) => {
         <Text className="text-red-600 text-xl font-bold mt-3">
           IELTS Prep
         </Text>
-        
+
         <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
           {
             categories?.prepare?.map((item, index) =>
@@ -237,7 +241,10 @@ const Home = ({ navigation, route }) => {
               </Pressable>)
           }
         </View>
-
+ 
+        <FloatButton
+        navigation={navigation}
+        />
       </MainLayout>
     )
   );

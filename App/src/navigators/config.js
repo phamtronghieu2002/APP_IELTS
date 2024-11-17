@@ -35,6 +35,7 @@ import Review from "../screens/Statistic/components/Review";
 import { setOpenModal } from "../fetures/settingSlice";
 import Comment from "../screens/Comment/Comment";
 import { handleSendEmail } from "../utils";
+import Dictionary from "../screens/Dictionary/Dictionary";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -146,6 +147,11 @@ export const screensStack = [
         options: { title: "Welcome MyTab", headerShown: false },
     },
 
+    {
+        name: configs.screenName.dictionary,
+        component: Dictionary,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
 
     {
         name: configs.screenName.profile,

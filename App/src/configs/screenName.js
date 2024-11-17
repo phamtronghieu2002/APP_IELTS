@@ -32,7 +32,8 @@ const screenName = {
     writing: 'Writing',
     speaking: 'Speaking',
     review: 'Review',
-    comment:"Comment"
+    comment: "Comment",
+    dictionary: "Dictionary",
 }
 export default screenName;
 

@@ -219,11 +219,21 @@ const ModalForm: FC<{
               <label htmlFor="">Nhập đề bài</label>
             )}
             {type_category === "Listening" ? (
-              <UploadAudio
-                setUrl={(url: string) => {
-                  handleSetFormData("audio_url", url)
-                }}
-              />
+             <>   <UploadAudio
+             setUrl={(url: string) => {
+               handleSetFormData("audio_url", url)
+             }}
+           />
+                 <label htmlFor="">Transcript</label>
+            {/* text area antd */}
+            <TextArea
+              value={formData?.question_text}
+              onChange={(e) => {
+                handleSetFormData("question_text", e.target.value)
+              }}
+              rows={4}
+            />
+           </>
             ) : (
               type_category != "Vocabulary" && (
                 <TinyMCEEditor

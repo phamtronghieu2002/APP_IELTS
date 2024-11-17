@@ -51,7 +51,7 @@ const SpeakingTest = ({ navigation, route }) => {
     <SafeAreaView>
       <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
       <ScrollView className="p-7">
-      <View
+        <View
           style={{
             shadowColor: "#000",
             shadowOffset: {

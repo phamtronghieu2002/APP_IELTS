@@ -1,6 +1,8 @@
 
+import CategoriesModel from '~/models/CategoriesModel.js';
 import lessonModel from '../models/LessonModel.js';
 import testModel from '../models/TestsModel.js';
+import TestResultModel from '~/models/TestResultModel.js';
 const addlesson = async (lesson) => {
     const newlesson = new lessonModel(lesson);
     return {
@@ -124,7 +126,6 @@ const getLessonsByCateId = async (cate_id, keyword, user_id) => {
                 preserveNullAndEmptyArrays: true
             }
         },
-
         // Group lại các tests sau khi lookup
         {
             $group: {
@@ -137,7 +138,9 @@ const getLessonsByCateId = async (cate_id, keyword, user_id) => {
                 updatedAt: { $first: '$updatedAt' },
                 percent_correct: { $first: '$percent_correct' },
             }
-        }
+        },
+        { $sort: { createdAt: -1 } }, // -1 là giảm dần, 1 là tăng dần
+
     ]);
 
 
@@ -149,14 +152,14 @@ const getLessonsByCateId = async (cate_id, keyword, user_id) => {
             const tests = lesson.tests;
             tests.forEach(test => {
                 const total_corect = test.testResults?.[0]?._id ? test.testResults?.[0]?.total_correct : 0;
- 
+
                 total_correct_question_test += total_corect;
             });
 
             lesson.percent_correct = (total_correct_question_test / total_question_lesson) * 100;
             lesson.total_correct = total_correct_question_test;
-      
-                
+
+
         }
         );
 
@@ -206,6 +209,16 @@ const addTest = async (id, data) => {
 
 const deleteLesson = async (id) => {
     const result = await lessonModel.findByIdAndDelete(id);
+
+
+    const total_question = result.total_question;
+    const cate_id = result.cate_id;
+    const tests_id = result.tests;
+    //  tìm cate_id và giảm total_question
+    await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: -total_question } }, { new: true });
+    // tests_id là mảng các test_id
+    // tìm test_id và xóa test_results
+    await TestResultModel.deleteMany({ test_id: { $in: tests_id } });
     return {
         data: result,
         message: "Lesson deleted successfully",

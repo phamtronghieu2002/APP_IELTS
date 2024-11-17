@@ -1,13 +1,25 @@
 import { FC } from "react"
+import { IntegratedStatistics } from "../Statistical/parts/IntegratedStatistics"
+import { useAppSelector } from "../../app/hooks"
+import ActivedMonthChart from "../Statistical/parts/ActivedMonthChart"
 
 interface IntroductionProps {}
 
 const Introduction: FC<IntroductionProps> = () => {
+  const userInfo = useAppSelector((state) => state?.user?.access?.userInfo)
+  const userId = userInfo?.id || 123
+
   return (
-    <div className="h-full flex justify-center items-center">
-      <h1 className="text-[20px]">
-        Chào mừng đến với trang quản lý app học tiếng anh Ielts
-      </h1>
+    <div className="flex flex-col gap-4">
+      <IntegratedStatistics userId={userId} />
+      <div className="flex gap-4">
+        <div className="flex-1">
+          <ActivedMonthChart />
+        </div>
+        <div className="flex-1">
+          {/* {userId ? <ActivedMonthChart userId={userId} /> : null} */}
+        </div>
+      </div>
     </div>
   )
 }

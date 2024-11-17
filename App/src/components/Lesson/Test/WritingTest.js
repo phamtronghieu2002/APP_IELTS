@@ -11,6 +11,7 @@ import { _testTypes } from "../../../utils/constant";
 import { useFocusEffect } from "@react-navigation/native";
 import SwitchSelector from "react-native-switch-selector";
 import ExpandableWriting from "../../ExpandableWriting/ExpandableWriting";
+import FloatButton from "../../FloatButton/FloatButton";
 
 const WritingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
@@ -45,6 +46,7 @@ const WritingTest = ({ navigation, route }) => {
   ];
   return (
     <SafeAreaView>
+      <FloatButton />
       <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
       <ScrollView className="p-7">
         <View

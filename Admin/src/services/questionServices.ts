@@ -14,10 +14,10 @@ export const updateQuestionById = async (question_id: any, data: any) => {
 
 export const deleteQuestionById = async (
   question_id: string,
-  sub_q_id: string,
+  sub_question: object,
   lesson_id: string,
 ) => {
-  return axios.delete(
-    `/question/?q_id=${question_id}&sub_q_id=${sub_q_id}&lesson_id=${lesson_id}`,
-  )
+  return axios.delete(`/question/?q_id=${question_id}&lesson_id=${lesson_id}`, {
+    data: sub_question,
+  })
 }
