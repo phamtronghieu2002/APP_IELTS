@@ -37,6 +37,8 @@ const screenName = {
     overview_vocabulary:"overview_vocabulary",
     vocabulary_play:"vocabulary_play",
     Grammar:"Grammar",
+    comment: "Comment",
+    dictionary: "Dictionary",
 }
 export default screenName;
 

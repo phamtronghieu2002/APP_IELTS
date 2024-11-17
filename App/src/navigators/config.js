@@ -39,6 +39,7 @@ import VocabularyLeaning from "../components/Vocabulary/VocabularyLeaning";
 import OverviewVocabulary from "../screens/Overview/OverviewVocabulary";
 import VocabularyPlay from "../components/Vocabulary/VocabularyPlay";
 import Grammar from "../components/Grammar/Grammar";
+import Dictionary from "../screens/Dictionary/Dictionary";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -150,6 +151,11 @@ export const screensStack = [
         options: { title: "Welcome MyTab", headerShown: false },
     },
 
+    {
+        name: configs.screenName.dictionary,
+        component: Dictionary,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
 
     {
         name: configs.screenName.profile,

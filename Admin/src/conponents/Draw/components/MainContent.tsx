@@ -42,8 +42,6 @@ const MainContent: FC<MainContentProps> = ({
   )
   const [explain, setExplain] = useState<string>("")
 
- 
-
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
@@ -164,18 +162,20 @@ const MainContent: FC<MainContentProps> = ({
                 />
               </div>
             </div>
-            <div className="mt-3">
-              <p className="font-medium">Soạn câu hỏi</p>
-              <label htmlFor="" className="mb-2 inline-block">
-                Nội dung câu hỏi
-              </label>
-              <TinyMCEEditor
-                initialValue={question_select?.question_text || ""}
-                onChange={setQuestionText}
-                height={200}
-                placeholder="Nhập nội dung câu hỏi"
-              />
-            </div>
+            {type_category != "Speaking" && type_category != "Writing" && (
+              <div className="mt-3">
+                <p className="font-medium">Soạn câu hỏi</p>
+                <label htmlFor="" className="mb-2 inline-block">
+                  Nội dung câu hỏi
+                </label>
+                <TinyMCEEditor
+                  initialValue={question_select?.question_text || ""}
+                  onChange={setQuestionText}
+                  height={200}
+                  placeholder="Nhập nội dung câu hỏi"
+                />
+              </div>
+            )}
             <div className="mt-3">
               <p className="font-medium mb-3">Câu trả lời</p>
               {type_category == "Speaking" || type_category == "Writing" ? (

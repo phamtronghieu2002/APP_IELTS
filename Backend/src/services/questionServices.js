@@ -58,6 +58,8 @@ const addQuestion = async (data) => {
                     populate: { path: 'questions' }
                 })
                 .exec();
+
+
             const cate_id = lesson.cate_id;
             // tăng total_question của cate_id
 
@@ -122,16 +124,21 @@ const updateQuestionById = async (question_id, data) => {
     }
 };
 
-const deleteQuestion = async (question_id, sub_id, lesson_id) => {
+const deleteQuestion = async (question_id, sub_q, lesson_id) => {
     try {
-        // Tìm document dựa vào test_id và questionId, sau đó xóa câu hỏi
+
+        const sub_id = sub_q?.question_id;
+        const countDelete = sub_q?.question_type == "fill_in_blank" ? sub_q?.options?.length : 1;
+        console.log('====================================');
+        console.log("countDelete >>>>>>>>>>>", countDelete);
+        console.log('====================================');
         const result = await questionModel.updateOne(
             { _id: question_id },
             {
                 $pull: {
                     questions: { question_id: sub_id }
                 },
-                $inc: { total_question: -1 }
+                $inc: { total_question: countDelete }
             },
             { new: true }
         );
@@ -144,14 +151,17 @@ const deleteQuestion = async (question_id, sub_id, lesson_id) => {
             .exec();
 
         const cate_id = lesson.cate_id;
-        
+
         let total_question = 0;
         lesson.tests.forEach(test => {
+            console.log('====================================');
+            console.log("tests >>>>>>>>>>>", test);
+            console.log('====================================');
             total_question += test.questions[0]?.total_question || 0;
         });
 
 
-        await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: -1 } }, { new: true });
+        await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: countDelete } }, { new: true });
 
 
 

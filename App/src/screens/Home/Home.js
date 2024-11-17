@@ -22,6 +22,7 @@ import { NativeWindStyleSheet } from 'nativewind';
 import Loading from '../../components/Loading/Loading';
 import { ModalConfirm } from '../../components/Modal/ModalConfirm';
 import AudioPlayer2 from '../../components/recorder/AudioPlayer2';
+import FloatButton from '../../components/FloatButton/FloatButton';
 const Home = ({ navigation, route }) => {
 
 
@@ -99,16 +100,19 @@ const Home = ({ navigation, route }) => {
       <Loading />
     ) : (
       <MainLayout>
+
+     
         <Text className="text-red-600 text-xl font-bold">
           IELTS Practice Test
         </Text>
-        <ModalConfirm 
-        navigation={navigation}
+        <ModalConfirm
+          navigation={navigation}
         />
         {/* / */}
         <View
           className="wrapper_items mt-4 flex flex-row justify-between flex-wrap  dark:bg-white">
           {
+
             categories?.skills?.map((item, index) =>
               <Pressable
                 key={index}
@@ -202,7 +206,8 @@ const Home = ({ navigation, route }) => {
         <Text className="text-red-600 text-xl font-bold mt-3">
           IELTS Prep
         </Text>
-        <AudioPlayer2 audioUri="https://res.cloudinary.com/dvywo60td/video/upload/v1731143491/cpc54mijizs2qqntpd2d.wav" />
+        {/* <AudioPlayer2 audioUri="https://res.cloudinary.com/dvywo60td/video/upload/v1731143491/cpc54mijizs2qqntpd2d.wav" /> */}
+
         <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
           {
             categories?.prepare?.map((item, index) =>
@@ -237,7 +242,10 @@ const Home = ({ navigation, route }) => {
               </Pressable>)
           }
         </View>
-
+ 
+        <FloatButton
+        navigation={navigation}
+        />
       </MainLayout>
     )
   );

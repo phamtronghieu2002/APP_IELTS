@@ -72,7 +72,8 @@ const ModalForm: FC<{
     try {
       const question_id = drawStore?.question?._id
       const sub_question_id = drawStore?.sub_question_select?.question_id
-      await deleteQuestionById(question_id, sub_question_id, lesson_id)
+      const sub_question = drawStore?.sub_question_select
+      await deleteQuestionById(question_id, sub_question, lesson_id)
       await deleteTestResult(test_id, sub_question_id)
       refresh?.()
       action?.closeModal()

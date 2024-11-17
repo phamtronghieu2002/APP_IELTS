@@ -17,7 +17,7 @@ const SpeakingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
-  
+
   const [voice, setVoice] = React.useState();
 
   const [questions, setQuestions] = React.useState({});
@@ -73,7 +73,7 @@ const SpeakingTest = ({ navigation, route }) => {
       <View style={styles.questionContainer}>
       <RenderHtml
                 contentWidth={width}
-                source={{ html: questions?.question_text }}
+                source={{ html: questions?.description }}
                 // Thêm style cho RenderHtml
                 style={{
                   maxHeight: "100%",
@@ -123,16 +123,16 @@ const SpeakingTest = ({ navigation, route }) => {
             />
           </View>
           {selectedValue === 0 && (
-             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-             <Recorder setVoice={setVoice} />
-             <View>
+            <View className="mb-5 border-b-2 border-gray-200 pb-3">
+              <Recorder setVoice={setVoice} />
+              <View>
                 <RecoderResponse voice={voice} test_id={test_id} />
               </View>
-           </View>
+            </View>
           )}
           {selectedValue === 1 && (
             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model"/>
+              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model" />
             </View>
           )}
         </View>

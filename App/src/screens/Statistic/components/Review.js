@@ -62,12 +62,7 @@ const Review = ({ navigation, route }) => {
             return
         }
         const filteredResults = fb.filter(item => item?.length > 0);
-        console.log("feedback >>>", feedback);
-        
-        console.log("fb>>>>>>", fb);
-        
-        console.log("filteredResults", filteredResults);
-        
+
         
         // Filter `feedback` based on `filteredResults` and update `data`
         const updatedFeedback = feedback.filter((item, index) => fb[index]?.length > 0);

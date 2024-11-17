@@ -24,6 +24,7 @@ import AudioPlayerUI from "../../AudioPlayer/AudioPlayerUI";
 import BottomSheetExample from "../../Modal/ModalBookmark";
 import Placeholder from "../../Skeleton/Skeleton";
 import Skeleton from "../../Skeleton/Skeleton";
+import FloatButton from "../../FloatButton/FloatButton";
 
 const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNextPart, part, isFinish }) => {
 
@@ -62,6 +63,9 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
       const choices = data.questions[0].questions.filter(
         (item) => item.question_type === "choice"
       );
+      if(!choices.length){
+        setPartQuestion(1);
+      }
       setChoiceQuestions(choices);
 
     } catch (error) {
@@ -174,7 +178,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
     <SafeAreaView
       className="flex-1"
     >
-
+        <FloatButton />
 
       {
         headershow &&

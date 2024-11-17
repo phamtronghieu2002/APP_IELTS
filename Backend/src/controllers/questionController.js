@@ -32,10 +32,13 @@ const handleupdateQuestionById = async (req, res, next) => {
 
 const handleDeleteQuestionById = async (req, res, next) => {
     try {
-        const sub_question_id = req.query?.sub_q_id;
+
+        const sub_question = req.body;
+        console.log("sub_question >>>>>>", sub_question);
+        
         const question_id = req.query?.q_id;
-        const lesson_id  = req.query?.lesson_id;
-        const result = await questionServices?.deleteQuestion(question_id,sub_question_id,lesson_id);
+        const lesson_id = req.query?.lesson_id;
+        const result = await questionServices?.deleteQuestion(question_id, sub_question, lesson_id);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));

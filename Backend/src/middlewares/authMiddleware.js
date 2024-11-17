@@ -1,7 +1,7 @@
 
 
-import env from "~/config/env";
-import jwt from "jsonwebtoken";
+const env = require("~/config/env");
+const jwt = require("jsonwebtoken");
 const { StatusCodes } = require("http-status-codes");
 export const veryfyUser = async (req, res, next) => {
     const accessToken = req.headers["authorization"]?.split(" ")[1];    
