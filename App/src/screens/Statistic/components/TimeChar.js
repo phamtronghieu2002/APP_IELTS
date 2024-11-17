@@ -5,16 +5,12 @@ import { getLearningTime } from '../../../services/learningTimeService';
 
 const TimeChart = ({ freshkey }) => {
   const [chartData, setChartData] = useState([]);
-  console.log('====================================');
-  console.log("freshkey", freshkey);
-  console.log('====================================');
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getLearningTime();
-        console.log('====================================');
-        console.log("chay vao day");
-        console.log('====================================');
+  
         const formattedData = response.map((item) => {
           const date = new Date(item.date);
           const month = String(date.getMonth() + 1).padStart(2, '0'); // Thêm '0' nếu là tháng 1 chữ số
@@ -34,9 +30,7 @@ const TimeChart = ({ freshkey }) => {
 
     fetchData();
   }, [freshkey]);
-  console.log('====================================');
-  console.log('chartData', chartData);
-  console.log('====================================');
+
   return (
     <View style={{ padding: 16, backgroundColor: '#f4f6f9', borderRadius: 12, marginHorizontal: 20, marginTop: 20 }}>
       <View className="p-1">

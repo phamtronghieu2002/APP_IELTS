@@ -64,24 +64,18 @@ const LessonItem = ({
 
     const handlePressTestItem = async (test) => {
         try {
-
-
-            console.log('====================================');
-            console.log("test: ", test);
-            console.log('====================================');
-            const is_doing = test?.testResults?.[0]?.anwsers?.length > 0 ? true : false;
-            if (is_doing && category?.type != 'Speaking' && category?.type != 'Writing') {
-                navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, name_test: test?.name_test, type: category?.type, testResults: test?.testResults })
-
-
+            if (category?.type == 'Vocabulary') {
+                navigation?.navigate(configs?.screenName?.overview_vocabulary, { test_id: test?._id, name_test: test?.name_test, type: category?.type, testResults: test?.testResults });
             } else {
-             const res =   await addTestResult({
-                    test_id: test?._id,
-                })
-                console.log('====================================');
-                console.log("res: ", res);
-                console.log('====================================');
-                navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id, type: category?.type, cb: refresh })
+                const is_doing = test?.testResults?.[0]?.anwsers?.length > 0 ? true : false;
+                if (is_doing && category?.type != 'Speaking' && category?.type != 'Writing') {
+                    navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, name_test: test?.name_test, type: category?.type, testResults: test?.testResults });
+                } else {
+                    const res = await addTestResult({
+                        test_id: test?._id,
+                    });
+                    navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id, type: category?.type, cb: refresh });
+                }
             }
 
 

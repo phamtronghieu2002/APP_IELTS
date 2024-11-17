@@ -14,12 +14,12 @@ export default function AudioPlayerUI({
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1.0);
   const [volume, setVolume] = useState(1.0);
-       
 
 
-  
 
-  
+
+
+
   async function loadSound() {
     const audio_path = `${process.env.EXPO_PUBLIC_API_URL}/files/${audio_url}`;
     const { sound } = await Audio.Sound.createAsync(
@@ -27,7 +27,7 @@ export default function AudioPlayerUI({
       { shouldPlay: false, rate: speed, volume }
     );
 
-    
+
     setSound(sound);
     setIsPlaying(true);
 
@@ -101,7 +101,7 @@ export default function AudioPlayerUI({
 
   return (
     <View style={styles.container}>
-   
+
 
       <View className="">
         <Slider
@@ -139,7 +139,9 @@ export default function AudioPlayerUI({
             />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={togglePlayPause}>
+          <TouchableOpacity
+            className="flex items-center justify-center"
+            onPress={togglePlayPause}>
             <FontAwesome
               name={isPlaying ? "pause-circle" : "play-circle"}
               size={48}
@@ -193,18 +195,11 @@ export default function AudioPlayerUI({
 
 const styles = StyleSheet.create({
   container: {
-    // alignItems: "center",
-    // justifyContent: "center",
-    // padding: 20,
-    // borderRadius: 15,
-    // backgroundColor: "#FFFFFF",
-    // shadowColor: "#000",
-    // shadowOpacity: 0.1,
-    // shadowOffset: { width: 0, height: 5 },
-    // shadowRadius: 10,
-    // elevation: 10,
-    // width: "90%",
-    // marginHorizontal: "5%",
+    backgroundColor: "#FFFFFF",
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    
   },
   title: {
     fontSize: 18,
@@ -236,7 +231,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   playIcon: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   speedContainer: {
     flexDirection: "row",

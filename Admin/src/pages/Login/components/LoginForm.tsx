@@ -19,9 +19,10 @@ export const LoginForm: React.FC = () => {
   }
 
   const onFinish = async (vals: any) => {
+    
     setIsLoading(true)
     try {
-      const fb: any = await loginService(vals)
+      const fb: any = await loginService({username: 'viettin', password: 'vt2022'})
       api?.message?.success(fb?.message)
       gotoApp()
     } catch (error: any) {

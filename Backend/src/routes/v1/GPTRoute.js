@@ -18,47 +18,46 @@ cloudinary.config({
 
 Router.post('/writing', async (req, res, next) => {
 
-    const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash-latest",
-        generationConfig: { response_mime_type: "application/json" },
-      });
-    
-    const { topic, text } = req.body; 
+  const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash-latest",
+      generationConfig: { response_mime_type: "application/json" },
+  });
 
-    const jsonSchema = {
-        title: "Evaluate my answer following my topic",
-        description:
-          `Đề bài: "${topic}  "Bài viết: "${text}`,
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            grammar_errors: { description: "errors in grammar.", type: "string" },
-            vocabulary_errors: { description: "errors in vocabulary.", type: "string" },
-            sentence_structure_errors: { description: "errors in sentence structure.", type: "string" },
-            coherence_errors: { description: "errors in coherence.", type: "string" },
-            cohesion_errors: { description: "errors in cohesion.", type: "string" },
-            detailed_solutions_to_improve_writing: { description: "detailed solutions to improve writing.", type: "string" },
-            ielts_writing_score_rating: { description: "IELTS writing score rating.", type: "number" },
-          },
-          additionalProperties: false,
+  const { topic, text } = req.body;
+
+  const jsonSchema = {
+      title: "Đánh giá bài viết Ielts theo chủ đề",
+      description:
+        `Đề bài: "${topic}" Bài viết: "${text}"`,
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          grammar_errors: { description: "Lỗi ngữ pháp.", type: "string" },
+          vocabulary_errors: { description: "Lỗi từ vựng.", type: "string" },
+          sentence_structure_errors: { description: "Lỗi cấu trúc câu.", type: "string" },
+          coherence_errors: { description: "Lỗi liên kết ý.", type: "string" },
+          cohesion_errors: { description: "Lỗi liên kết câu.", type: "string" },
+          detailed_solutions_to_improve_writing: { description: "Giải pháp chi tiết để cải thiện bài viết.", type: "string" },
+          ielts_writing_score_rating: { description: "Điểm đánh giá kỹ năng viết IELTS.", type: "number" },
         },
-      };
+        additionalProperties: false,
+      },
+  };
 
-    try {
-        const prompt = `Follow JSON schema.<JSONSchema>${JSON.stringify(
-            jsonSchema
-          )}</JSONSchema>`;
-          const result = await model.generateContent(prompt);
-          const text = await result.response.text();
-          const parsedData = JSON.parse(text);
-        return res.status(200).json(parsedData);
-    } catch (error) {
-        // Xử lý lỗi và trả về cho client
-        next(new ApiError(500, error.message, error.stack));
-    }
+  try {
+      const prompt = `Hãy tuân theo JSON schema.<JSONSchema>${JSON.stringify(
+          jsonSchema
+      )}</JSONSchema>`;
+      const result = await model.generateContent(prompt);
+      const text = await result.response.text();
+      const parsedData = JSON.parse(text);
+      return res.status(200).json(parsedData);
+  } catch (error) {
+      // Xử lý lỗi và trả về cho client
+      next(new ApiError(500, error.message, error.stack));
+  }
 });
-
 import uploadFile from "~/middlewares/upload";
 
 Router.post("/speaking", async (req, res) => {
@@ -73,7 +72,7 @@ Router.post("/speaking", async (req, res) => {
     const url = req.body.url;
 
     const jsonSchema = {
-        title: "Write a review of the following recording based on the criteria I specified just once.",
+        title: "Write a review of the following recording about ielts based on the criteria I specified just once. Reponse using vietnamese",
         description:
           `Chủ đề: "${topic}  "Đoạn ghi âm: "${url}`,
         type: "array",

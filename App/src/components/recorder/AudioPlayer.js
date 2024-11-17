@@ -1,112 +1,147 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import Slider from '@react-native-community/slider';
-import { Audio } from 'expo-av';
-import { Ionicons } from '@expo/vector-icons'; // For Play/Stop icon
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import Slider from "@react-native-community/slider";
+import { Audio } from "expo-av";
+import { Ionicons } from "@expo/vector-icons"; // For Play/Stop icon
 
 const AudioPlayer = ({ url }) => {
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [position, setPosition] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    loadSound();
+    loadAudio();
     return () => {
-      if (sound) {
-        sound.unloadAsync();
-      }
+      unloadAudio();
     };
-  }, [url]);
+  }, []);
 
-  const loadSound = async () => {
-    try {
-      setIsLoading(true);
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: url },
-        { shouldPlay: false },
-        onPlaybackStatusUpdate
-      );
-      setSound(sound);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Failed to load sound", error);
-      setIsLoading(false);
+  const loadAudio = async () => {
+    setIsLoading(true);
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: url },
+      { shouldPlay: false }
+    );
+    sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+    const status = await sound.getStatusAsync();
+    setDuration(status.durationMillis || 0);
+    setSound(sound);
+    setIsLoading(false);
+  };
+
+  const unloadAudio = async () => {
+    if (sound) {
+      await sound.unloadAsync();
+      setSound(null);
     }
   };
 
   const onPlaybackStatusUpdate = (status) => {
     if (status.isLoaded) {
-      setProgress(status.positionMillis / status.durationMillis);
+      setPosition(status.positionMillis);
+      setDuration(status.durationMillis);
       setIsPlaying(status.isPlaying);
     }
   };
 
   const togglePlayPause = async () => {
-    if (sound) {
-      if (isPlaying) {
-        await sound.pauseAsync();
-      } else {
-        await sound.playAsync();
-      }
+    if (!sound) return;
+    if (isPlaying) {
+      await sound.pauseAsync();
+    } else {
+      await sound.playAsync();
     }
   };
 
+  const handleSliderChange = async (value) => {
+    if (sound) {
+      await sound.setPositionAsync(value);
+    }
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60000);
+    const seconds = Math.floor((time % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   return (
-    <View
-      style={{
-        alignItems: 'center',
-        margin: 20,
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        padding: 20,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 10,
-        elevation: 5,
-        width: '90%',
-      }}
-    >
+    <View>
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={togglePlayPause}
-              style={{
-                width: 60,
-                height: 60,
-                borderRadius: 30,
-                backgroundColor: isPlaying ? 'red' : 'blue',
-                justifyContent: 'center',
-                alignItems: 'center',
-                elevation: 5,
-              }}
-            >
-              <Ionicons
-                name={isPlaying ? 'stop' : 'play'}
-                size={30}
-                color="#fff"
-              />
-            </TouchableOpacity>
-            <Slider
-              style={{ width: 200, height: 40 }}
-              minimumValue={0}
-              maximumValue={1}
-              value={progress}
-              onValueChange={(value) => {
-                if (sound) {
-                  sound.setPositionAsync(value * sound._durationMillis);
-                }
-              }}
+        <View style={styles.container}>
+          <TouchableOpacity onPress={togglePlayPause}>
+            <Ionicons
+              name={isPlaying ? "stop" : "play"}
+              size={30}
+              color="#FF6B6B"
             />
-          </View>
-        </>
+          </TouchableOpacity>
+          <Text style={styles.timeText}>{formatTime(position)}</Text>
+          <Slider
+            style={styles.slider}
+            minimumValue={0}
+            maximumValue={duration}
+            value={position}
+            onValueChange={handleSliderChange}
+            minimumTrackTintColor="#FF6B6B"
+            maximumTrackTintColor="#000000"
+            thumbTintColor="#FF6B6B"
+          />
+          <Text style={styles.timeText}>{formatTime(duration)}</Text>
+        </View>
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
+    marginBottom: 15,
+    marginTop: 15,
+    justifyContent: "center",
+  },
+  playPauseButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FF6B6B",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  playPauseText: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  timeText: {
+    fontSize: 14,
+    color: "#555",
+    marginHorizontal: 5,
+  },
+  slider: {
+    flex: 1,
+  },
+});
 
 export default AudioPlayer;

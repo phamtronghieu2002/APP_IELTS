@@ -90,11 +90,11 @@ const WritingTest = ({ navigation, route }) => {
           <ExpandableWriting text={questions?.questions?.[0].question_text} />
           </View> */}
           <View className="rounded-lg">
-      <Text className="text-base font-semibold mb-2">Part 1</Text>
+      <Text className="text-base font-semibold mb-2  pt-5">123</Text>
       <View className="flex-1 max-w-full max-h-40 overflow-hidden">
               <RenderHtml
                 contentWidth={width}
-                source={{ html: questions?.question_text }}
+                source={{ html: questions?.description }}
                 // Thêm style cho RenderHtml
                 style={{
                   maxHeight: "100%",
@@ -114,8 +114,8 @@ const WritingTest = ({ navigation, route }) => {
             shadowRadius: 3.84,
             elevation: 5,
           }}
-           className="bg-gray-800 rounded-lg pl-3 pr-3">
-      <ExpandableWriting text={questions?.questions?.[0].question_text} />
+           className="rounded-lg pl-3 pr-3">
+      <ExpandableWriting text={questions?.question_text} />
       </View>
     </View>
         </View>

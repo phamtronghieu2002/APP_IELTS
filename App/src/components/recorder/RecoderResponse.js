@@ -53,7 +53,7 @@ const RecoderResponse = ({ test_id, voice}) => {
         url: voice,
       });
       
-      console.log("Rating", response);
+ 
       return response;
     } catch (error) {
       console.error(error);
@@ -86,7 +86,7 @@ const RecoderResponse = ({ test_id, voice}) => {
       })
         .then((fb) => {
           const data = fb.data;
-          console.log("data", data);
+     
         })
         .catch((err) => {
           console.log("error >>>>", err);
@@ -101,7 +101,7 @@ const RecoderResponse = ({ test_id, voice}) => {
     getTestResult(test_id)
       .then((fb) => {
         const data = fb.data;
-        console.log("data", data);
+ 
         const newResponses = data.anwsers.map((item) => ({
           question_id: item.question_id,
           rating: item.rating,

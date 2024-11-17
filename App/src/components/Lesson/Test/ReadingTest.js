@@ -26,6 +26,7 @@ import Placeholder from "../../Skeleton/Skeleton";
 import Skeleton from "../../Skeleton/Skeleton";
 
 const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNextPart, part, isFinish }) => {
+
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
@@ -41,14 +42,13 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
   const type = route?.params?.type;
 
   const testResults = route?.params?.testResults || dataStasitic?.testResults;
+
   const [loading, setLoading] = React.useState(false);
 
   const [is_doing, setIsDoing] = React.useState(false);
   // 
 
-  console.log('====================================');
-  console.log("loading", loading);
-  console.log('====================================');
+
 
 
   const fetchTestById = async () => {
@@ -91,14 +91,15 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
     const sub_questions = questions?.questions;
     if (sub_questions?.length > 0) {
       if (testResults?.length > 0 && !is_doing) {
-        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id || a.parrent_question_id === item.question_id));
+        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id ||( a.parrent_question_id === item.question_id)));
 
         if (question_filter?.[0]?.question_type == "fill_in_blank") {
           setPartQuestion(1);
         } else {
           setPartQuestion(0);
         }
-
+    
+ 
 
         questions.questions = question_filter;
         questions.total_question = count_total_question(questions);
@@ -127,9 +128,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
   // hiếu viết tiếp nè ae
   const [answers, setAnswers] = React.useState([]);
 
-  console.log('====================================');
-  console.log("questions >> question >>>>>>>>", questions?.questions);
-  console.log('====================================');
+
 
   const handleSetAnswers = (answer) => {
     if (answer?.length) {
@@ -149,14 +148,15 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
     setCountProgress((prevCount) => prevCount + 1);
   };
   const handelShowNextQuestion = () => {
-    if (isFinish) {
+ 
+    if (isFinish && countProgress +1 == questions.total_question) {
       setShowNextQuestion(false);
       return
     }
     setShowNextQuestion(true);
   };
   const handelShowChoiceNextQuestion = () => {
-    if (isFinish) {
+    if (isFinish && countProgress + 1 == questions.total_question) {
       setShowNextQuestion(false);
       return
     }
@@ -278,8 +278,6 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
 
                   {questions?.questions?.filter(item => item.question_type == "fill_in_blank")?.map((item, index) => {
                     if (partQuestion == 1) {
-
-
                       return index == currentQuestion_fill_in_blank ? (
                         <View>
                           <Text className="mb-10">
@@ -337,6 +335,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
                     setCurrentQuestion(0);
                     onNextPart();
                     setCurrentQuestion_fill_in_blank(0);
+                    setShowNextQuestion(false);
                   }
 
                 }

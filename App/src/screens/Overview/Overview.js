@@ -19,7 +19,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 const Overview = ({ navigation, route }) => {
 
 
-   console.log("route >>", route.params);
    
 
     const name_test = route?.params?.name_test;
@@ -64,7 +63,7 @@ const Overview = ({ navigation, route }) => {
                         fill={Number(testResults?.[0]?.percent_test_correct?.toFixed(0))}
                         tintColor="red"
                         lineCap='round'
-                        onAnimationComplete={() => console.log('onAnimationComplete')}
+                        onAnimationComplete={() => {}}
                         backgroundColor="#3d5870"
 
                     >

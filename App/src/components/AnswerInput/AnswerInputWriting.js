@@ -126,6 +126,9 @@ const AnswerInputWriting = ({ test_id, data }) => {
       console.log("error >>>>", err);
     }
   };
+
+
+
   useEffect(() => {
     fetchGetRating();
   }, [reload]); // Trigger fetch on reload change
@@ -139,8 +142,8 @@ const AnswerInputWriting = ({ test_id, data }) => {
     } catch (error) {
       console.log("error >>>>", error);
     } finally {
-      
-    fetchGetRating();
+
+      fetchGetRating();
       setIsDeleting(false);
     }
   };
@@ -184,7 +187,13 @@ const AnswerInputWriting = ({ test_id, data }) => {
       {responseList.map((item, index) => (
         <View key={index} className="mt-3 p-2 border-t border-gray-300">
           <View className="flex flex-row justify-between items-center mt-1">
-            <Text className="font-bold text-xl text-green-500">Response {index + 1}</Text>
+            <View className="pr-2">
+              <Text className="font-bold text-xl text-green-500">Response {index + 1}</Text>
+              <Text className="font-bold text-4lg text-red-500">
+                Warning: This is the rating of the AI system, not the real rating of the teacher !
+              </Text>
+            </View>
+
             <DeleteButton handleDelete={() => handleDelete(test_id, item.question_id)} />
           </View>
           <Text className="font-bold italic mt-1">Time: {formatTime(item.time)}</Text>

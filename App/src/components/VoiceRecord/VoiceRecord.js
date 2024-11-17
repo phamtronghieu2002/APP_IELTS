@@ -57,10 +57,10 @@ export default function VoiceRecord() {
         playsInSilentModeIOS: true,
         shouldDuckAndroid: true,
       });
-      console.log("Starting recording..");
+
       await recording.prepareToRecordAsync( { android: { extension: '.mp3', outputFormat: 2, audioEncoder: 3, sampleRate: 44100, numberOfChannels: 2, bitRate: 128000 } } )
       await recording.startAsync();
-      console.log("Recording started");
+
     } catch (err) {
       console.error("Failed to start recording", err);
     }
@@ -69,7 +69,7 @@ export default function VoiceRecord() {
   // hàm này sử lí upload file ghi âm lên server
   const uploadAudio = async (audioUri) => {
     if (!audioUri) {
-      console.log("No audio file to upload");
+   
       return;
     }
     setIsLoading(true);
@@ -95,9 +95,9 @@ export default function VoiceRecord() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Upload successful:", data);
+
       } else {
-        console.log("Upload failed:", response);
+  
       }
     } catch (error) {
       console.error("Error uploading file:", error);

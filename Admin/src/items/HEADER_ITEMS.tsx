@@ -264,7 +264,7 @@ export const USER_HEADER = (): IHEADER[] => {
   return [
     {
       path: routeConfig?.monitor,
-      title: userInfo?.customer_name || "USER NONAME",
+      title:  "Admin",
       icons: (
         <div className="bg-white rounded-full">
           <FcBusinessman />
@@ -273,22 +273,22 @@ export const USER_HEADER = (): IHEADER[] => {
       type: "title",
       key: "1",
       children: [
-        {
-          path: routeConfig?.report_synthetic,
-          title: "Tài khoản",
-          icons: <PiUserCircleDuotone />,
-          key: "1-1",
-          type: "title",
-          disabled: true,
-        },
-        {
-          path: routeConfig?.report_synthetic,
-          title: "Đổi mật khẩu",
-          icons: <PiLockKeyDuotone />,
-          key: "1-2",
-          type: "title",
-          disabled: true,
-        },
+        // {
+        //   path: routeConfig?.report_synthetic,
+        //   title: "Tài khoản",
+        //   icons: <PiUserCircleDuotone />,
+        //   key: "1-1",
+        //   type: "title",
+        //   disabled: true,
+        // },
+        // {
+        //   path: routeConfig?.report_synthetic,
+        //   title: "Đổi mật khẩu",
+        //   icons: <PiLockKeyDuotone />,
+        //   key: "1-2",
+        //   type: "title",
+        //   disabled: true,
+        // },
         // {
         //   path: routeConfig?.report_synthetic,
         //   title: "Đỗi mật khẩu",
@@ -298,20 +298,20 @@ export const USER_HEADER = (): IHEADER[] => {
         // },
       ],
     },
-    {
-      path: routeConfig?.report_synthetic,
-      title: "Tin nhắn",
-      type: "title",
-      icons: <RiMessage3Fill />,
-      key: "2",
-    },
-    {
-      path: routeConfig?.report_synthetic,
-      title: "Cài đặt",
-      type: "title",
-      icons: <IoSettingsSharp />,
-      key: "3",
-    },
+    // {
+    //   path: routeConfig?.report_synthetic,
+    //   title: "Tin nhắn",
+    //   type: "title",
+    //   icons: <RiMessage3Fill />,
+    //   key: "2",
+    // },
+    // {
+    //   path: routeConfig?.report_synthetic,
+    //   title: "Cài đặt",
+    //   type: "title",
+    //   icons: <IoSettingsSharp />,
+    //   key: "3",
+    // },
     {
       path: routeConfig?.report_synthetic,
       title: "Đăng xuất",
