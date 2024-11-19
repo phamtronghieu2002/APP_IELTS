@@ -75,9 +75,7 @@ export const FormC = forwardRef<FormInstance<any>, IProps>(
     }
 
     const ITEMS = _array.chunkArray(fields, chunk)
-    console.log('====================================');
-    console.log("ITEMS", ITEMS);
-    console.log('====================================');
+
     return (
       <div className="planform __app_form">
         <Form

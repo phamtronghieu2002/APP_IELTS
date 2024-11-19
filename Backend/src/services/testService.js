@@ -13,13 +13,21 @@ const addtest = async (test) => {
     };
 };
 
-const deleteTest = async (id) => {
+const deleteTest = async (id, type_category) => {
     await TestResultModel.deleteMany({ test_id: id });
     const test = await testModel.findById(id).populate('questions').exec();
     const total_question = test.questions[0]?.total_question || 0;
-    const cate_id = test.cate_id;
-    await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: -total_question } }, { new: true });
-    await LessonModel.updateMany({ tests: id }, { $pull: { tests: id }, $inc: { total_question: -total_question } });
+
+
+ console.log("type_category", type_category);
+ 
+
+
+    await LessonModel.updateMany({ tests: id }, { $pull: { tests: id }, $inc: { total_question: - total_question } }, { new: true }).exec();
+
+    await CategoriesModel.findOneAndUpdate({
+        type: type_category
+    }, { $inc: { total_question: -total_question } }, { new: true });
     return {
         data: await testModel.findByIdAndDelete(id),
         message: "test deleted successfully",

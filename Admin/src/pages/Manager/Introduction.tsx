@@ -2,6 +2,7 @@ import { FC } from "react"
 import { IntegratedStatistics } from "../Statistical/parts/IntegratedStatistics"
 import { useAppSelector } from "../../app/hooks"
 import ActivedMonthChart from "../Statistical/parts/ActivedMonthChart"
+import LessonByCategoryChart from "../Statistical/parts/ActivedDayChart"
 
 interface IntroductionProps {}
 
@@ -17,7 +18,7 @@ const Introduction: FC<IntroductionProps> = () => {
           <ActivedMonthChart />
         </div>
         <div className="flex-1">
-          {/* {userId ? <ActivedMonthChart userId={userId} /> : null} */}
+          <LessonByCategoryChart/>
         </div>
       </div>
     </div>

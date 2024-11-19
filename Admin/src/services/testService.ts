@@ -22,8 +22,8 @@ export const updateTest = async (data: any) => {
   return axios.put(`/test/${data?.id}`, data)
 }
 
-export const deleteTest = async (id: string) => {
-  return axios.delete(`/test/${id}`)
+export const deleteTest = async (id: string,type_category:string) => {
+  return axios.delete(`/test/${id}`,{data:{type_category}})
 }
 export const addTestToLesson = async (lesson_id: string, test_id: string) => {
   return axios.post(`/lesson/addTest/${lesson_id}`, {

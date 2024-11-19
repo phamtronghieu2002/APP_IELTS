@@ -109,8 +109,6 @@ const Sidebar: FC<SidebarProps> = ({
     setTestSelected(test)
   }
 
-
-
   return (
     <div className="w-[30%]">
       <div className="bg-slate-50 p-5 border shadow-md sticky top-0">
@@ -231,8 +229,10 @@ const Sidebar: FC<SidebarProps> = ({
                       fetchQuestions(testSelected._id, true)
                     }}
                     lesson_id={lesson_id}
-                    width={800}
-                    height={300}
+                 
+                    modalProps={{
+                      height: 100,
+                    }}
                     button={
                       <Tooltip title="Xóa câu hỏi">
                         <Button

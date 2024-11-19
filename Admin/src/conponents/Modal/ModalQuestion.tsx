@@ -28,13 +28,14 @@ interface ModalquestionProps {
 
 export const question_type_models = [
   {
-    title: "Trắc nghiệm",
+    title: "Trắc nghiệm - nhiều đáp án",
     desc: "Cho phép tạo câu hỏi trắc nghiệm có nhiều câu trả lời và chỉ được chọn 1 đáp án đúng",
     type: _questionType?.choice,
     icon: "FaListCheck",
     template:
       "https://res.cloudinary.com/dzpj1y0ww/image/upload/v1728720056/ielts/4a374bae-fbbd-4389-a29f-f01c77d47189.png",
   },
+
   {
     title: "Tự luận",
     desc: "Cho phép tạo câu hỏi yêu cầu trả lời chi tiết bằng văn bản",
@@ -85,7 +86,7 @@ const ModalForm: FC<{
     setTypeQuestion(question_type_models[0])
   }, [])
   return (
-    <div className="wrapper flex min-h-[570px]">
+    <div className={`wrapper flex ${type != "delete" ? "min-h-[570px]" : ""}`}>
       {type === "delete" ? (
         <div className="flex items-center gap-7">
           <p>Bạn có chắc chắn muốn xóa câu hỏi này không?</p>
@@ -172,7 +173,6 @@ const ModalQuestion: FC<ModalquestionProps> = ({
     <ModalCView
       modalProps={{
         width: 800,
-        height: 600,
         ...modalProps,
       }}
       button={button}
