@@ -195,18 +195,11 @@ export default function AudioPlayerUI({
 
 const styles = StyleSheet.create({
   container: {
-    // alignItems: "center",
-    // justifyContent: "center",
-    // padding: 20,
-    // borderRadius: 15,
-    // backgroundColor: "#FFFFFF",
-    // shadowColor: "#000",
-    // shadowOpacity: 0.1,
-    // shadowOffset: { width: 0, height: 5 },
-    // shadowRadius: 10,
-    // elevation: 10,
-    // width: "90%",
-    // marginHorizontal: "5%",
+    backgroundColor: "#FFFFFF",
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    
   },
   title: {
     fontSize: 18,

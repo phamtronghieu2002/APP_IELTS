@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, SafeAreaView } from "react-native";
+import { View, Text, ScrollView, SafeAreaView, StyleSheet} from "react-native";
 import HeaderScreen from "../../Header/HeaderScreen";
 import { getTestById } from "../../../services/testService";
 import ExpandableText from "../../ExpandableText/ExpandableText";
@@ -17,7 +17,7 @@ const SpeakingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
-  
+
   const [voice, setVoice] = React.useState();
 
   const [questions, setQuestions] = React.useState({});
@@ -64,12 +64,16 @@ const SpeakingTest = ({ navigation, route }) => {
           }}
           className="rounded-md bg-white p-5 mb-3"
         >
-          <View className="flex flex-row bg-green-100 items-center justify-center">
-            <Text className="font-bold bg-red-100">Question: </Text>
-            <View className="flex-1 max-w-full max-h-40 overflow-hidden">
-              <RenderHtml
+          <View style={styles.container}>
+      <Text style={styles.partText}>Part 1</Text>
+      <Text style={styles.directions}>
+        Directions: You will have <Text style={styles.highlight}>15 seconds</Text> to prepare and{' '}
+        <Text style={styles.highlight}>60 seconds</Text> to respond to each question.
+      </Text>
+      <View style={styles.questionContainer}>
+      <RenderHtml
                 contentWidth={width}
-                source={{ html: questions?.question_text }}
+                source={{ html: questions?.description }}
                 // Thêm style cho RenderHtml
                 style={{
                   maxHeight: "100%",
@@ -77,22 +81,8 @@ const SpeakingTest = ({ navigation, route }) => {
                   overflow: "hidden", // Ẩn nội dung vượt quá
                 }}
               />
-            </View>
-          </View>
-          <View className="bg-gray-100 rounded-mg"
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-          >
-          <ExpandableWriting text={questions?.questions?.[0].question_text} />
-          </View>
+      </View>
+    </View>
         </View>
         <View
           style={{
@@ -133,16 +123,16 @@ const SpeakingTest = ({ navigation, route }) => {
             />
           </View>
           {selectedValue === 0 && (
-             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-             <Recorder setVoice={setVoice} />
-             <View>
+            <View className="mb-5 border-b-2 border-gray-200 pb-3">
+              <Recorder setVoice={setVoice} />
+              <View>
                 <RecoderResponse voice={voice} test_id={test_id} />
               </View>
-           </View>
+            </View>
           )}
           {selectedValue === 1 && (
             <View className="mb-5 border-b-2 border-gray-200 pb-3">
-              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model"/>
+              <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model" />
             </View>
           )}
         </View>
@@ -150,4 +140,39 @@ const SpeakingTest = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    elevation: 3, // Shadow effect for Android
+    shadowColor: '#000', // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  partText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  directions: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 16,
+  },
+  highlight: {
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  questionContainer: {
+    padding: 12,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+  },
+  questionText: {
+    fontSize: 14,
+    color: '#333',
+  },
+});
 export default SpeakingTest;

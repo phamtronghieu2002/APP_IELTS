@@ -63,7 +63,7 @@ if (build_mode === "dev") {
     console.log(`Hello Trong Hieu Dev, I am running at ${hostname}:${port}/`);
   });
 } else {
-  app.listen(process.env.PORT, () => {
+  app.listen(port, () => {
     console.log(`Hello Trong Hieu Prod, I am running at ${hostname}:${port}/`);
   });
 }

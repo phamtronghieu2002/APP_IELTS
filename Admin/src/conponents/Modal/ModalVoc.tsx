@@ -53,6 +53,11 @@ const ModalForm: FC<{
   const { drawStore, dispath } = useContext<any>(context)
   console.log("type", type != "add")
 
+
+  console.log('====================================');
+  console.log("test_id", test_id);
+  console.log('====================================');
+
   const formRef = useRef<FormInstance<any>>(null)
   const editorRef = useRef<any>(null) // Store the editor instance
   const [audioUrl, setAudioUrl] = useState<string | null>("")
@@ -62,7 +67,7 @@ const ModalForm: FC<{
     sound_voc: data?.sound_voc ?? "",
   })
 
-  console.log("formData", formData)
+
 
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewImage, setPreviewImage] = useState<string>("")
@@ -137,9 +142,6 @@ const ModalForm: FC<{
   )
 
   const handleSetFormData = (name: string, value: string) => {
-    console.log("====================================")
-    console.log(name, value)
-    console.log("set value")
 
     console.log("====================================")
     setFormData({
@@ -333,7 +335,7 @@ const ModalForm: FC<{
     <div>
       {type === "delete" ? (
         <div className="flex items-center gap-7">
-          <p>Bạn có chắc chắn muốn xóa bài test này không?</p>
+          <p>Bạn có chắc chắn muốn xóa từ vựng này không?</p>
 
           <div className="flex gap-2">
             <Button

@@ -20,31 +20,33 @@ Router.post('/', async (req, res, next) => {
     }
 })
 
-// get từ vựng theo test_id
+// get từ vựng theo test_id// get từ vựng theo test_id
 Router.get('/test/:test_id', async (req, res, next) => {
     const { test_id } = req.params;
     const { keyword } = req.query;
 
     try {
-        // Xây dựng điều kiện tìm kiếm từ khóa trong tất cả các trường văn bản
-        const searchCondition = {
-            test_id: test_id, // Điều kiện tìm theo test_id
-            $or: [
-                { name_voc: { $regex: keyword, $options: 'i' } },  // Tìm theo tên
-                { type_voc: { $regex: keyword, $options: 'i' } },  // Tìm theo loại từ
-                { pronun_voc: { $regex: keyword, $options: 'i' } },  // Tìm theo phát âm
-                { meaning_voc: { $regex: keyword, $options: 'i' } },  // Tìm theo nghĩa
-                { exm_voc: { $regex: keyword, $options: 'i' } },  // Tìm theo ví dụ
-                { explain_voc: { $regex: keyword, $options: 'i' } },  // Tìm theo giải thích
-                { img_voc: { $regex: keyword, $options: 'i' } },  // Tìm theo link ảnh
-                { sound_voc: { $regex: keyword, $options: 'i' } }  // Tìm theo link âm thanh
-            ]
-        };
+        // Initialize search condition with test_id
+        const searchCondition = { test_id: test_id };
 
-        // Thực hiện tìm kiếm trong MongoDB
+        // Add the regex search only if 'keyword' is provided and is a string
+        if (keyword && typeof keyword === 'string') {
+            searchCondition.$or = [
+                { name_voc: { $regex: keyword, $options: 'i' } },
+                { type_voc: { $regex: keyword, $options: 'i' } },
+                { pronun_voc: { $regex: keyword, $options: 'i' } },
+                { meaning_voc: { $regex: keyword, $options: 'i' } },
+                { exm_voc: { $regex: keyword, $options: 'i' } },
+                { explain_voc: { $regex: keyword, $options: 'i' } },
+                { img_voc: { $regex: keyword, $options: 'i' } },
+                { sound_voc: { $regex: keyword, $options: 'i' } }
+            ];
+        }
+
+        // Execute the search in MongoDB
         const results = await VocModel.find(searchCondition);
 
-        // Trả kết quả về client
+        // Return the results to the client
         res.json({
             data: results,
             message: 'Get Vocabulary successfully',
@@ -55,6 +57,7 @@ Router.get('/test/:test_id', async (req, res, next) => {
         res.status(500).send('Server error');
     }
 });
+
 
 // sửa
 Router.put('/:id', async (req, res, next) => {

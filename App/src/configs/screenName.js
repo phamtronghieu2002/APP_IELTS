@@ -32,7 +32,13 @@ const screenName = {
     writing: 'Writing',
     speaking: 'Speaking',
     review: 'Review',
-    comment:"Comment"
+    comment:"Comment",
+    vocabulary_leaning:"vocabulary_leaning",
+    overview_vocabulary:"overview_vocabulary",
+    vocabulary_play:"vocabulary_play",
+    Grammar:"Grammar",
+    comment: "Comment",
+    dictionary: "Dictionary",
 }
 export default screenName;
 

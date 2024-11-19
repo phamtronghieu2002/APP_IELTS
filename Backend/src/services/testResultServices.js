@@ -5,7 +5,7 @@ import TestModel from '../models/TestsModel.js';
 export const addTestResult = async (data) => {
     try {
 
-        const testResult = await TestResultModel.findOne({ test_id: data.test_id ,user_id:data?.user_id});
+        const testResult = await TestResultModel.findOne({ test_id: data.test_id, user_id: data?.user_id });
         if (testResult) {
             return {
                 data: {},
@@ -25,7 +25,7 @@ export const addTestResult = async (data) => {
     }
 }
 
-export const addQuestion = async (user_id,test_id, type, data) => {
+export const addQuestion = async (user_id, test_id, type, data) => {
     const { question_id, is_correct } = data;
     let result = {};
 
@@ -33,7 +33,7 @@ export const addQuestion = async (user_id,test_id, type, data) => {
         case "new":
             // Kiểm tra xem câu trả lời đã tồn tại hay chưa
             result = await TestResultModel.findOneAndUpdate(
-                { test_id,user_id, "anwsers.question_id": question_id },
+                { test_id, user_id, "anwsers.question_id": question_id },
                 {
                     // Nếu tồn tại, cập nhật lại trường `is_correct`
                     $set: { "anwsers.$.is_correct": is_correct }
@@ -46,7 +46,7 @@ export const addQuestion = async (user_id,test_id, type, data) => {
             // Nếu không tìm thấy câu trả lời với `question_id`, thêm mới câu trả lời vào mảng
             if (!result) {
                 result = await TestResultModel.findOneAndUpdate(
-                    { test_id ,user_id},
+                    { test_id, user_id },
                     {
                         $push: { anwsers: data }
                     },
@@ -88,7 +88,7 @@ export const addQuestion = async (user_id,test_id, type, data) => {
 
     const dataO = result.toObject();
 
-    const total_correct = dataO.anwsers.filter(item => item.is_correct === true).length;
+    const total_correct = dataO.anwsers?.some(item => item?.rating) ? 1 : dataO.anwsers.filter(item => item.is_correct === true).length;
     const total_incorrect = dataO.anwsers.filter(item => item.is_correct === false).length;
 
 
@@ -96,7 +96,7 @@ export const addQuestion = async (user_id,test_id, type, data) => {
     const test = await TestModel.findById(test_id)?.populate('questions').exec();
     const total_questions_of_test = test?.toObject().questions?.[0]?.total_question;
     const fb = await TestResultModel.findOneAndUpdate(
-        { test_id ,user_id},
+        { test_id, user_id },
         {
             $set: {
                 total_correct,
@@ -192,13 +192,13 @@ export const getAllTestResult = async (user_id) => {
 }
 
 
-export const bookmarkTestResult = async (user_id,test_id, note_bookmark,status) => {
+export const bookmarkTestResult = async (user_id, test_id, note_bookmark, status) => {
 
     try {
         const result = await TestResultModel.findOneAndUpdate(
-            { test_id ,user_id},
+            { test_id, user_id },
             {
-                $set: { bookmark: status, note_bookmark}
+                $set: { bookmark: status, note_bookmark }
             },
             {
                 new: true

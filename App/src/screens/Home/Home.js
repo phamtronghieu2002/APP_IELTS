@@ -14,17 +14,15 @@ import {
 } from 'react-native';
 import MainLayout from '../../layouts/MainLayout';
 import { storeData, getData, removeData } from '../../utils/asyncStore';
-import axios from '..//..//axios/axiosInstance'
 import configs from '../../configs';
 import { getCategories } from '../../services/categoryServices';
 import { _groupCategories } from '../../utils/constant';
 import { useColorScheme } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
 import Loading from '../../components/Loading/Loading';
-import VoiceRecord from '../../components/VoiceRecord/VoiceRecord';
-import Recorder from '../../components/recorder/Recorder';
-import BottomSheetExample from '../../components/Modal/ModalBookmark';
 import { ModalConfirm } from '../../components/Modal/ModalConfirm';
+import AudioPlayer2 from '../../components/recorder/AudioPlayer2';
+import FloatButton from '../../components/FloatButton/FloatButton';
 const Home = ({ navigation, route }) => {
 
 
@@ -102,16 +100,19 @@ const Home = ({ navigation, route }) => {
       <Loading />
     ) : (
       <MainLayout>
+
+     
         <Text className="text-red-600 text-xl font-bold">
           IELTS Practice Test
         </Text>
-        <ModalConfirm 
-        navigation={navigation}
+        <ModalConfirm
+          navigation={navigation}
         />
         {/* / */}
         <View
           className="wrapper_items mt-4 flex flex-row justify-between flex-wrap  dark:bg-white">
           {
+
             categories?.skills?.map((item, index) =>
               <Pressable
                 key={index}
@@ -162,6 +163,9 @@ const Home = ({ navigation, route }) => {
           categories?.practices?.map((item, index) =>
             <Pressable
               key={index}
+              onPress={() => {
+                navigation.navigate(configs?.screenName?.lesson, { category: item })
+              }}
               style={{
                 marginBottom: 10,
                 shadowColor: "#000",
@@ -202,7 +206,8 @@ const Home = ({ navigation, route }) => {
         <Text className="text-red-600 text-xl font-bold mt-3">
           IELTS Prep
         </Text>
-        
+        {/* <AudioPlayer2 audioUri="https://res.cloudinary.com/dvywo60td/video/upload/v1731143491/cpc54mijizs2qqntpd2d.wav" /> */}
+
         <View className="wrapper_items mt-4 flex flex-row justify-between flex-wrap">
           {
             categories?.prepare?.map((item, index) =>
@@ -237,7 +242,10 @@ const Home = ({ navigation, route }) => {
               </Pressable>)
           }
         </View>
-
+ 
+        <FloatButton
+        navigation={navigation}
+        />
       </MainLayout>
     )
   );

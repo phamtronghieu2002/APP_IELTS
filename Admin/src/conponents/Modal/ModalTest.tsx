@@ -80,12 +80,12 @@ const ModalForm: FC<{
       const q = await createQuestion(formData)
       dispath({
         type: "SET_QUESTION",
-        payload: test_id,
+        payload: q?.data,
       })
 
       dispath({
         type: "SET_TEST_ID",
-        payload: q?.data,
+        payload: test_id,
       })
 
       await addQuestionToTest(test_id, q?.data?._id)
@@ -219,11 +219,21 @@ const ModalForm: FC<{
               <label htmlFor="">Nhập đề bài</label>
             )}
             {type_category === "Listening" ? (
-              <UploadAudio
-                setUrl={(url: string) => {
-                  handleSetFormData("audio_url", url)
-                }}
-              />
+             <>   <UploadAudio
+             setUrl={(url: string) => {
+               handleSetFormData("audio_url", url)
+             }}
+           />
+                 <label htmlFor="">Transcript</label>
+            {/* text area antd */}
+            <TextArea
+              value={formData?.question_text}
+              onChange={(e) => {
+                handleSetFormData("question_text", e.target.value)
+              }}
+              rows={4}
+            />
+           </>
             ) : (
               type_category != "Vocabulary" && (
                 <TinyMCEEditor

@@ -6,7 +6,7 @@ import axios from '../axios/axiosInstance'
 // data  = {
 //      "test_id":"66fd603e5b85cd6ba68394a1"
 // }
-export const addTestResult = async (data) => {
+export const createTestResult = async (data) => {
      return axios.post('/testResult', data);
 
 }

@@ -35,6 +35,11 @@ import Review from "../screens/Statistic/components/Review";
 import { setOpenModal } from "../fetures/settingSlice";
 import Comment from "../screens/Comment/Comment";
 import { handleSendEmail } from "../utils";
+import VocabularyLeaning from "../components/Vocabulary/VocabularyLeaning";
+import OverviewVocabulary from "../screens/Overview/OverviewVocabulary";
+import VocabularyPlay from "../components/Vocabulary/VocabularyPlay";
+import Grammar from "../components/Grammar/Grammar";
+import Dictionary from "../screens/Dictionary/Dictionary";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -146,6 +151,11 @@ export const screensStack = [
         options: { title: "Welcome MyTab", headerShown: false },
     },
 
+    {
+        name: configs.screenName.dictionary,
+        component: Dictionary,
+        options: { title: "Welcome MyTab", headerShown: false },
+    },
 
     {
         name: configs.screenName.profile,
@@ -166,6 +176,30 @@ export const screensStack = [
     {
         name: configs.screenName.login,
         component: Login,
+        options: { title: "Welcome Logins", headerShown: false, },
+
+    },
+    {
+        name: configs.screenName.vocabulary_leaning,
+        component: VocabularyLeaning,
+        options: { title: "Welcome Logins", headerShown: false, },
+
+    },
+    {
+        name: configs.screenName.overview_vocabulary,
+        component: OverviewVocabulary,
+        options: { title: "Welcome Logins", headerShown: false, },
+
+    },
+    {
+        name: configs.screenName.vocabulary_play,
+        component: VocabularyPlay,
+        options: { title: "Welcome Logins", headerShown: false, },
+
+    },
+    {
+        name: configs.screenName.Grammar,
+        component: Grammar,
         options: { title: "Welcome Logins", headerShown: false, },
 
     },

@@ -22,6 +22,7 @@ import ActionBar from "../../ActionBar/ActionBar";
 import AudioPlayerUI from "../../AudioPlayer/AudioPlayerUI";
 import { Skeleton } from "moti/skeleton";
 import SkeletonPlaceholder from "../../Skeleton/Skeleton";
+import FloatButton from "../../FloatButton/FloatButton";
 const ReadingTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
@@ -150,6 +151,7 @@ const ReadingTest = ({ navigation, route }) => {
     <SafeAreaView
 
     >
+       
       <HeaderScreen
         onPress={refresh}
         label={route?.params?.nameTest}
@@ -171,6 +173,7 @@ const ReadingTest = ({ navigation, route }) => {
             borderRadius={15}
           />
         </View>
+        <FloatButton />
         <ScrollView>
           <View className="container p-7 pb-10">
             <View
@@ -309,15 +312,15 @@ const ReadingTest = ({ navigation, route }) => {
             }}
           />}
 
+  
         </ScrollView>
-
+     
       </>}
 
       {
 
         loading && <SkeletonPlaceholder />
       }
-
 
     </SafeAreaView>
   );

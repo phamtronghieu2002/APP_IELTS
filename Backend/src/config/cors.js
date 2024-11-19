@@ -4,10 +4,10 @@
  * "A bit of fragrance clings to the hand that gives flowers!"
  */
 
-import { WHITELIST_DOMAINS } from '~/utils/constants'
-import  env  from '~/config/env'
-import { StatusCodes } from 'http-status-codes'
-import ApiError from '~/utils/ApiError'
+const { WHITELIST_DOMAINS } = require('~/utils/constants');
+const env = require('~/config/env');
+const { StatusCodes } = require('http-status-codes');
+const ApiError = require('~/utils/ApiError');
 
 // Cấu hình CORS Option trong dự án thực tế (Video số 62 trong chuỗi MERN Stack Pro)
  const corsOptions = {

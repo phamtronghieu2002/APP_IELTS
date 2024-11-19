@@ -26,7 +26,7 @@ Router.post('/writing', async (req, res, next) => {
   const { topic, text } = req.body;
 
   const jsonSchema = {
-      title: "Đánh giá bài viết theo chủ đề",
+      title: "Đánh giá bài viết Ielts theo chủ đề",
       description:
         `Đề bài: "${topic}" Bài viết: "${text}"`,
       type: "array",
@@ -72,7 +72,7 @@ Router.post("/speaking", async (req, res) => {
     const url = req.body.url;
 
     const jsonSchema = {
-        title: "Write a review of the following recording based on the criteria I specified just once.",
+        title: "Write a review of the following recording about ielts based on the criteria I specified just once. Reponse using vietnamese",
         description:
           `Chủ đề: "${topic}  "Đoạn ghi âm: "${url}`,
         type: "array",

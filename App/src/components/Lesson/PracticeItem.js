@@ -19,14 +19,11 @@ const PraticeItem = ({
 
 
 }) => {
-
-
-
     const handlePress = () => {
 
         onPress?.();
     }
-    const colorPercent = percent_correct??0 > 0 ? percent_correct??0?.toFixed(0) < 100 ? 'border-red-400 text-red-500':"border-green-500 text-green-500" : 'bg-light-200';
+    const colorPercent = percent_correct ?? 0 > 0 ? ((percent_correct ?? 0?.toFixed(0) == 100) ? "border-green-500 text-green-500" : 'border-red-400 text-red-500') : 'bg-light-200';
     return (
         <View
             onPressIn={(e) => e.stopPropagation()}  // Stop the event from reaching parent
@@ -34,12 +31,12 @@ const PraticeItem = ({
 
             className='p-3 pb-0 pt-0'>
             <Pressable
-                 style={
+                style={
                     {
                         borderBottomColor: '#f9f1f3',
-                         borderBottomWidth: 1,
+                        borderBottomWidth: 1,
                     }
-                 }
+                }
                 onPress={handlePress}
                 className="pt-3 pb-3 flex flex-row items-center min-h-[40px]">
                 <IconO

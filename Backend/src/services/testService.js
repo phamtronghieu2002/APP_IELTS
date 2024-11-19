@@ -1,5 +1,8 @@
 
+import TestResultModel from '~/models/TestResultModel.js';
 import testModel from '../models/TestsModel.js';
+import CategoriesModel from '~/models/CategoriesModel.js';
+import LessonModel from '~/models/LessonModel.js';
 
 const addtest = async (test) => {
     const newtest = new testModel(test);
@@ -11,6 +14,12 @@ const addtest = async (test) => {
 };
 
 const deleteTest = async (id) => {
+    await TestResultModel.deleteMany({ test_id: id });
+    const test = await testModel.findById(id).populate('questions').exec();
+    const total_question = test.questions[0]?.total_question || 0;
+    const cate_id = test.cate_id;
+    await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: -total_question } }, { new: true });
+    await LessonModel.updateMany({ tests: id }, { $pull: { tests: id }, $inc: { total_question: -total_question } });
     return {
         data: await testModel.findByIdAndDelete(id),
         message: "test deleted successfully",

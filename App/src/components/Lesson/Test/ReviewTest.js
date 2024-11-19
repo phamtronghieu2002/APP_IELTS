@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import configs from "../../../configs";
 import { use } from "i18next";
 import ActionBar from "../../ActionBar/ActionBar";
+import FloatButton from "../../FloatButton/FloatButton";
 const ReviewTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
@@ -109,12 +110,11 @@ const ReviewTest = ({ navigation, route }) => {
 
 
   const handleSetAnswers = (answer) => {
-    if(answer?.length)
-    {
+    if (answer?.length) {
       setAnswers(answer);
       return;
     }
-    setAnswers([...answers, answer])  
+    setAnswers([...answers, answer])
   };
 
 
@@ -265,7 +265,7 @@ const ReviewTest = ({ navigation, route }) => {
         </View>
         {showNextQuestion && <ActionBar
           total_question={answers?.length}
-          total_correct ={
+          total_correct={
             answers?.filter((item) => item.is_correct)?.length
           }
           onPressNext={() => {
@@ -301,8 +301,8 @@ const ReviewTest = ({ navigation, route }) => {
           }}
         />}
 
-      </ScrollView>
 
+      </ScrollView>
     </SafeAreaView>
   );
 };

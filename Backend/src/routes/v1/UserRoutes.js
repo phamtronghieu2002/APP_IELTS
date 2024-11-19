@@ -7,8 +7,9 @@ import { userValidation } from "~/validations/userValidation";
 
 
 Router.post("/",userValidation, (req, res, next) => {
-
     return res.status(StatusCodes.OK).json({ message: "Welcome to the User API" });
 });
+
+
 
 export default Router;
