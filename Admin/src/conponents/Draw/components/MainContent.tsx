@@ -37,9 +37,9 @@ const MainContent: FC<MainContentProps> = ({
     question_select?.question_type || drawStore?.question_type
   const question = drawStore?.question
 
-  const [question_text, setQuestionText] = useState<string>(
-    data_voc?.sound_voc || "",
-  )
+  const [question_text, setQuestionText] = useState<string>("")
+
+  const sound_voc = data_voc?.sound_voc
   const [explain, setExplain] = useState<string>("")
 
   useEffect(() => {
@@ -155,6 +155,7 @@ const MainContent: FC<MainContentProps> = ({
               <div className="wp">
                 <HandleGetDeBai
                   content={
+                    sound_voc ||
                     question?.question_text ||
                     question?.audio_url ||
                     question?.vocURL

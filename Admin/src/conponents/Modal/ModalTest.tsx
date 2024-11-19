@@ -52,6 +52,7 @@ const ModalForm: FC<{
   const editorRef = useRef<any>(null) // Store the editor instance
   const [audioUrl, setAudioUrl] = useState<string | null>("")
   const question = drawStore?.question
+
   const [formData, setFormData] = useState<any>({
     name_test: "",
     question_text: type != "add" ? question?.question_text : "",
@@ -60,15 +61,59 @@ const ModalForm: FC<{
     questions: [],
   })
 
+  const [errors, setErrors] = useState<any>({})
+
+  console.log("errors >>>", errors)
+
   const handleSetFormData = (name: string, value: string) => {
     setFormData({
       ...formData,
       [name]: value,
     })
   }
+  const validation = () => {
+    if (type_category === "Vocabulary") {
+      if (!formData?.description) {
+        setErrors({
+          description: !formData?.description ? "Không được để trống !" : "",
+        })
+        return false
+      }
+    } else {
+      if (type_category === "Listening") {
+        if (
+          !formData?.question_text ||
+          !formData?.description ||
+          !formData?.audio_url
+        ) {
+          setErrors({
+            question_text: !formData?.question_text
+              ? "Không được để trống !"
+              : "",
+            description: !formData?.description ? "Không được để trống !" : "",
+            audio_url: !formData?.audio_url ? "Vui Lòng chọn files !" : "",
+          })
+          return false
+        }
+      } else {
+        if (!formData?.question_text || !formData?.description) {
+          setErrors({
+            question_text: !formData?.question_text
+              ? "Không được để trống !"
+              : "",
+            description: !formData?.description ? "Không được để trống !" : "",
+          })
+          return false
+        }
+      }
+    }
+
+    return true
+  }
 
   const handleAdd = async (fb: any) => {
     try {
+      if (!validation()) return
       const { name_test } = formData
       const res = await createTest({
         name_test,
@@ -127,7 +172,7 @@ const ModalForm: FC<{
   }
   const handleDelete = async (fb: any) => {
     try {
-      await deleteTest(data?._id)
+      await deleteTest(data?._id, type_category)
       refresh?.()
 
       api?.message?.success("xóa  bài test  thành công !!")
@@ -219,41 +264,50 @@ const ModalForm: FC<{
               <label htmlFor="">Nhập đề bài</label>
             )}
             {type_category === "Listening" ? (
-             <>   <UploadAudio
-             setUrl={(url: string) => {
-               handleSetFormData("audio_url", url)
-             }}
-           />
-                 <label htmlFor="">Transcript</label>
-            {/* text area antd */}
-            <TextArea
-              value={formData?.question_text}
-              onChange={(e) => {
-                handleSetFormData("question_text", e.target.value)
-              }}
-              rows={4}
-            />
-           </>
+              <>
+                {" "}
+                <UploadAudio
+                  setUrl={(url: string) => {
+                    handleSetFormData("audio_url", url)
+                  }}
+                />
+                <div className="text-rose-500">{errors?.audio_url}</div>
+                <label htmlFor="">Transcript</label>
+                {/* text area antd */}
+                <TextArea
+                  value={formData?.question_text}
+                  onChange={(e) => {
+                    handleSetFormData("question_text", e.target.value)
+                  }}
+                  rows={4}
+                />
+                <div className="text-rose-500">{errors?.question_text}</div>
+              </>
             ) : (
               type_category != "Vocabulary" && (
-                <TinyMCEEditor
-                  initialValue={formData?.question_text}
-                  onChange={(e: any) => {
-                    handleSetFormData("question_text", e)
-                  }}
-                  ref={editorRef}
-                />
+                <>
+                  <TinyMCEEditor
+                    initialValue={formData?.question_text}
+                    onChange={(e: any) => {
+                      handleSetFormData("question_text", e)
+                    }}
+                    ref={editorRef}
+                  />
+                  <div className="text-rose-500"> {errors?.question_text}</div>
+                </>
               )
             )}
             <label htmlFor="">Miêu tả</label>
             {/* text area antd */}
             <TextArea
+              placeholder="Nhập miêu tả"
               value={formData?.description}
               onChange={(e) => {
                 handleSetFormData("description", e.target.value)
               }}
               rows={4}
             />
+            <div className="text-rose-500">{errors?.description}</div>
           </div>
 
           <div className="flex items-end justify-end">

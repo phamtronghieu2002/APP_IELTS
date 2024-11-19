@@ -13,14 +13,12 @@ interface TipsProps {
 
 const Tips: FC<TipsProps> = ({ category_id }) => {
   const [tips, setTips] = useState<any[]>([])
+  const [error, setError] = useState<any>(null)
   const [selectedTip, setselectedTip] = useState<any>(null)
-  console.log("tips", tips)
 
   const fetchTips = async () => {
     const res = await getTips(category_id)
-    console.log("====================================")
-    console.log("res", res)
-    console.log("====================================")
+
     const data = res.data?.contents
 
     const options = data?.map((item: any) => ({
@@ -28,7 +26,6 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
       value: item.id_tip,
       label: item.name_tip,
     }))
-    console.log("options", options)
 
     setTips(options)
   }
@@ -37,14 +34,29 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
     fetchTips()
   }, [])
 
+  const validation = () => {
+    const is_valid = selectedTip?.content ? true : false
+    if (!is_valid) {
+      setError("Tên tip không được để trống")
+      return false
+    }
+    setError(null)
+    return true
+  }
+
   useEffect(() => {
     if (tips?.length > 0) {
       if (!selectedTip) {
         setselectedTip(tips?.[0])
         return
+      } else {
+        const data = tips?.find((item) => item.id_tip === selectedTip?.id_tip)
+        if (!data) {
+          setselectedTip(tips?.[0])
+        } else {
+          setselectedTip(data)
+        }
       }
-      // set phần tử cuối
-      setselectedTip(tips?.[tips?.length - 1])
     }
   }, [tips])
 
@@ -55,6 +67,7 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
 
   const handleSave = async () => {
     try {
+      if(!validation()) return
       await updateTip({
         cate_id: category_id,
         contents: {
@@ -156,6 +169,9 @@ const Tips: FC<TipsProps> = ({ category_id }) => {
           initialValue={selectedTip?.content}
           height={450}
         />
+        <div className="text-rose-500">
+          {error}
+        </div>
         <div className="actions flex item-center justify-end">
           <Button
             onClick={handleSave}

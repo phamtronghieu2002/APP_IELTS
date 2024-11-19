@@ -128,7 +128,7 @@ const ModalForm: FC<{
   }
   const handleDelete = async (fb: any) => {
     try {
-      await deleteTest(data?._id)
+      await deleteTest(data?._id,type_category)
       refresh?.()
 
       api?.message?.success("xóa  bài test  thành công !!")
@@ -190,9 +190,10 @@ const ModalForm: FC<{
     })
   }
 
+
   return (
     <MainContent
-    data_voc={data}
+      data_voc={data}
       onSubmit={onFinish}
       className="w-full"
       lesson_id={lesson_id}
