@@ -21,6 +21,7 @@ const env = {
   JWT_ACCESS_TOKEN_SECRET: process.env.JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
   GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+  CLIENT_URL:process.env.CLIENT_URL,
 };
 
 module.exports = env;

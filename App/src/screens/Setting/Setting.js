@@ -18,7 +18,7 @@ import Notify from '../../components/Notify/Notify';
 import { Switch } from 'react-native-switch';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
-import { getData, storeData } from '../../utils/asyncStore';
+import { getData, removeData, storeData } from '../../utils/asyncStore';
 import { i18nContext } from '../../providers/I18nProvider';
 
 import { useColorScheme } from 'react-native';
@@ -30,40 +30,52 @@ const Setting = () => {
   const [switchLightMode, setSwitchLightMode] = useState(false);
   const { i18n, t } = useContext(i18nContext);
 
-
-  const [lang, setLang] = useState(null);
   const [items, setItems] = useState([
     { label: 'Vietnamese', value: 'vi' },
     { label: 'English', value: 'en' }
   ]);
 
-  const onHandleLightMode = (value) => {
-    // const theme_mode = value ? 'dark' : 'light';
+  const [lang, setLang] = useState("vi");
 
-    // toggleTheme(theme_mode);
+  const onHandleLightMode = (value) => {
+
   };
+  console.log("lang state", lang);
 
   const onHandleTime = (value) => { console.log(value) };
 
 
 
   const onHandleLanguage = async (value) => {
+    try {
 
-    setLang(value);
-    i18n.changeLanguage(value);
-    storeData("lang", value);
+      console.log("value", value);
 
+      await storeData("langs", { value });
+      setLang(value);
+      i18n.changeLanguage(value);
+
+    } catch (error) {
+
+    }
 
   };
 
   useEffect(() => {
-    getData("lang").then((res) => {
-      setLang(res);
-    })
-    getData("theme").then((res) => {
-      setSwitchLightMode(res === 'dark' ? true : false);
-    })
+
+
+    const handleLang = async () => {
+      const currentLang = await getData("langs");
+      console.log("currentLang >>>>>>", currentLang);
+
+      if (currentLang) {
+        setLang(currentLang?.value ?? "vi");
+      }
+    }
+    handleLang();
   }, []);
+
+
 
 
   const selectedItem = {
@@ -94,8 +106,8 @@ const Setting = () => {
             </View>
             <View className="mr-2">
               <Switch
-                
-               
+
+
                 circleSize={20}
                 backgroundActive={'#06ba39'}
                 activeText={''}
@@ -109,7 +121,7 @@ const Setting = () => {
             </View>
           </View>
           <Notify
-         
+
             textStyle="text-sm ml-[-30px]"
             circleSize={20}
             rounded={''}

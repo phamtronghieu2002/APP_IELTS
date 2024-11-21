@@ -21,7 +21,7 @@ export default function AudioPlayerUI({
 
 
   async function loadSound() {
-    const audio_path = `${process.env.EXPO_PUBLIC_API_URL}/files/${audio_url}`;
+    const audio_path = `${audio_url}`;
     const { sound } = await Audio.Sound.createAsync(
       { uri: audio_path },
       { shouldPlay: false, rate: speed, volume }
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     borderWidth: 1,
-    
+
   },
   title: {
     fontSize: 18,

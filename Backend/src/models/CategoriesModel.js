@@ -32,7 +32,7 @@ const CategoriesSchema = new mongoose.Schema(
         },
         type: {
             type: String,
-            enum: ['Reading', 'Speaking', 'Listening', 'Writing', 'Grammar', 'Vocabulary','About'],
+            enum: ['Reading', 'Speaking', 'Listening', 'Writing', 'Grammar', 'Vocabulary','About','Exam'],
             require: false,
         },
 

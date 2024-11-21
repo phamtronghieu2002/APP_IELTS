@@ -107,11 +107,11 @@ export const _app = {
 
   setUserAuthed: (isAuth: boolean) => {
     const dispatch = store.dispatch
-    dispatch(
-      setUserAccess({
-        isAuth,
-      }),
-    )
+    // dispatch(
+    //   setUserAccess({
+    //     isAuth,
+    //   }),
+    // )
   },
 
   getInitialData: {
@@ -189,10 +189,10 @@ export const _app = {
     },
 
     all: async () => {
-      const userInfoPromise = _app.getInitialData?.userInfo()
-      const menuPromise = _app.getInitialData?.menu()
+      // const userInfoPromise = _app.getInitialData?.userInfo()
+ 
       const categoriesPromise = _app.getInitialData?.categories()
-      return Promise.all([userInfoPromise, menuPromise,categoriesPromise])
+      return Promise.all([categoriesPromise])
     },
   },
 

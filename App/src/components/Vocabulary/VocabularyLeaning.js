@@ -47,7 +47,7 @@ const VocabularyLeaning = ({ navigation, route }) => {
                   <Image
                     className="w-16 h-16 mr-3 rounded-lg"
                     source={{
-                      uri: `${process.env.EXPO_PUBLIC_API_URL}/files/${item.img_voc}`,
+                      uri: `${item.img_voc}`,
                     }}
                   />
                   <View className="flex-1">
@@ -59,7 +59,7 @@ const VocabularyLeaning = ({ navigation, route }) => {
                 <Text className="text-gray-700 mt-2">Giải thích: {item.explain_voc}</Text>
                 <Text className="text-gray-800 font-semibold mb-2">Ví dụ: {item.exm_voc}</Text>
                 <AudioPlayer2
-                  url={`${process.env.EXPO_PUBLIC_API_URL}/files/${item.sound_voc}`}
+                  url={`${item.sound_voc}`}
                   isPlaying={currentPlaying === index} // Chỉ phát nếu trạng thái trùng
                   onPlay={() => handlePlay(index)} // Bắt sự kiện phát
                 />

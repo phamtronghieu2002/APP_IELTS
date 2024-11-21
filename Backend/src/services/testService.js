@@ -5,6 +5,8 @@ import CategoriesModel from '~/models/CategoriesModel.js';
 import LessonModel from '~/models/LessonModel.js';
 
 const addtest = async (test) => {
+    console.log("test >>>>>>>>", test);
+    
     const newtest = new testModel(test);
     return {
         data: await newtest.save(),
@@ -19,7 +21,7 @@ const deleteTest = async (id, type_category) => {
     const total_question = test.questions[0]?.total_question || 0;
 
 
- console.log("type_category", type_category);
+
  
 
 

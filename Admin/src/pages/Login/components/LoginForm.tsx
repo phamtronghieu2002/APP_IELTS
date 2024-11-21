@@ -7,6 +7,7 @@ import { loginService } from "../../../services/userServices"
 import { api, history } from "../../../_helper"
 import { routeConfig } from "../../../configs/routeConfig"
 import storage from "../../../utils/storage"
+import { login } from "../../../services/authService"
 
 export const LoginForm: React.FC = () => {
   const { t } = useTranslation()
@@ -22,7 +23,7 @@ export const LoginForm: React.FC = () => {
     
     setIsLoading(true)
     try {
-      const fb: any = await loginService({username: 'viettin', password: 'vt2022'})
+      const fb: any = await login(vals)
       api?.message?.success(fb?.message)
       gotoApp()
     } catch (error: any) {

@@ -62,10 +62,32 @@ const QuestionEditor: React.FC<{
               }
             })
           : []
-
+      
+          const renderFillInTheBlanks = (question: Question) => {
+            const { question_text, answers } = question
+        
+            let filledText = question_text
+            
+            answers.forEach((answer, index) => {
+              filledText = filledText.replace(
+                `[FILL][${answer.is_correct}][${answer.explain}]`,
+                `(${index + 1})[___]`,
+              )
+            })
+        
+            return filledText
+          }
+        
         return {
           question_type: "fill_in_blank",
-          question_text: questionBlock,
+          question_text: renderFillInTheBlanks(
+            {
+              question_text: questionBlock,
+              answers,
+              explain: null,
+              question_type: "fill_in_blank",
+            }
+          ),
           explain: null,
           answers,
         }
@@ -245,11 +267,12 @@ const QuestionEditor: React.FC<{
 }
 
 const QuestionPreview: React.FC<{
+  action?: any
   questions: Question[]
   lesson_id: string
   setLoading: any
   loading: any
-}> = ({ questions, lesson_id, setLoading, loading }) => {
+}> = ({ questions, lesson_id, setLoading, loading,action }) => {
   const { drawStore, dispath } = useContext<any>(context)
   const question_select = drawStore?.sub_question_select
 
@@ -258,13 +281,8 @@ const QuestionPreview: React.FC<{
     const { question_text, answers } = question
 
     let filledText = question_text
-    answers.forEach((answer, index) => {
-      filledText = filledText.replace(
-        `[FILL][${answer.is_correct}][${answer.explain}]`,
-        `(${index + 1})[___]`,
-      )
-    })
 
+ 
     return filledText
   }
 
@@ -337,6 +355,7 @@ const QuestionPreview: React.FC<{
         explain,
       )
     }
+    action?.closeModal()
     setLoading(false)
   }
   return (
@@ -403,8 +422,9 @@ const QuestionPreview: React.FC<{
 }
 
 const QuestionManager: React.FC<{
+  action?: any
   lesson_id: string
-}> = ({ lesson_id }) => {
+}> = ({ lesson_id,action }) => {
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(false)
   return (
@@ -412,6 +432,7 @@ const QuestionManager: React.FC<{
       {loading && <MaskLoader />}
       <QuestionEditor onQuestionsChange={setQuestions} />
       <QuestionPreview
+        action={action}
         setLoading={setLoading}
         loading={loading}
         lesson_id={lesson_id}

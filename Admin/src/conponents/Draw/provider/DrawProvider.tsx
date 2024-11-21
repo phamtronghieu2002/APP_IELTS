@@ -67,7 +67,7 @@ const DrawProvider: React.FC<DrawProviderProps> = ({ children }) => {
       case "REFRESH":
         setDrawStore((prev: any) => ({
           ...prev,
-          freshKey: Math.random(),
+          freshKey: action?.payload ??Math.random(),
         }))
         break
       case "SET_TYPE_ACTION":

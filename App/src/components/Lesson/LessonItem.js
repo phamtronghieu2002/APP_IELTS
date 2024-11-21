@@ -13,6 +13,7 @@ import configs from '../../configs';
 import { addTestResult, createTestResult } from '../../services/testResultServices';
 
 const LessonItem = ({
+    isExam = false,
     tests,
     icon,
     name_lesson,
@@ -20,7 +21,8 @@ const LessonItem = ({
     percent_correct,
     category,
     navigation,
-    refresh
+    refresh,
+    onPress
 }) => {
 
 
@@ -37,6 +39,11 @@ const LessonItem = ({
     });
 
     const toggleDropdown = () => {
+        if (isExam) {
+
+            onPress?.();
+            return;
+        }
         if (expanded) {
             // Collapse
             Animated.timing(animation, {
@@ -90,9 +97,7 @@ const LessonItem = ({
 
 
         } catch (error) {
-            console.log('====================================');
-            console.log("Error handlePressTestItem: ", error);
-            console.log('====================================');
+    
         }
 
 
@@ -111,17 +116,21 @@ const LessonItem = ({
                     </Text>
                 </View>
                 <View className="right">
-                    <Text>{expanded ?
-                        <IconE
-                            name='chevron-thin-up'
-                            size={13}
-                        />
-                        :
-                        <IconE
-                            name='chevron-thin-down'
-                            size={13}
-                        />
-                    }</Text>
+
+                    {
+                        isExam ? <></> : <Text>{expanded ?
+                            <IconE
+                                name='chevron-thin-up'
+                                size={13}
+                            />
+                            :
+                            <IconE
+                                name='chevron-thin-down'
+                                size={13}
+                            />
+                        }</Text>
+                    }
+
                 </View>
             </View>
 

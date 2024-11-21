@@ -43,17 +43,13 @@ const Sidebar: FC<SidebarProps> = ({
     try {
       setLoadingQuestion(true)
       const res = await getTestById(test_id || "")
+
       const questions = res.data?.questions?.[0]?.questions || []
       setLoadingQuestion(false)
       setQuestions(questions)
       dispath({
         type: "SET_QUESTION",
         payload: res.data?.questions?.[0],
-      })
-
-      dispath({
-        type: "SET_QUESTION_SELECT",
-        payload: questions?.[0],
       })
 
       if (isFirst) {
@@ -69,7 +65,9 @@ const Sidebar: FC<SidebarProps> = ({
   const fetchTest = async () => {
     setLoadingTest(true)
     const res = await getLessonById(lesson_id)
-    const tests = res.data?.tests
+    const tests = res.data?.tests?.filter(
+      (test: any) => test.type_category === type_category,
+    )
     setLoadingTest(false)
     setTests(() => {
       return tests?.map((test: any) => ({
@@ -82,7 +80,7 @@ const Sidebar: FC<SidebarProps> = ({
 
   useEffect(() => {
     fetchTest()
-  }, [])
+  }, [lesson_id])
 
   // Cập nhật testSelected khi danh sách tests thay đổi
   useEffect(() => {
@@ -106,6 +104,8 @@ const Sidebar: FC<SidebarProps> = ({
 
   const onChange = (test: any) => {
     dispath({ type: "SET_TEST_ID", payload: test._id })
+    dispath({ type: "REFRESH", payload: 0 })
+
     setTestSelected(test)
   }
 
@@ -229,7 +229,6 @@ const Sidebar: FC<SidebarProps> = ({
                       fetchQuestions(testSelected._id, true)
                     }}
                     lesson_id={lesson_id}
-                 
                     modalProps={{
                       height: 100,
                     }}

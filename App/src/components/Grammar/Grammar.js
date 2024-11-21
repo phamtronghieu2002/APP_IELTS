@@ -6,6 +6,8 @@ import { getTestById } from "../../services/testService";
 import { _testTypes } from "../../utils/constant";
 import RadioButtonForm from "../RadioButton/RadioButtonForm";
 import ActionBar from "../ActionBar/ActionBar";
+import configs from "../../configs";
+import { useDispatch, useSelector } from "react-redux";
 
 const Grammar = ({ navigation, route, headershow = true }) => {
 
@@ -18,7 +20,7 @@ const Grammar = ({ navigation, route, headershow = true }) => {
   const test_id = route?.params?.test_id;
   const refresh = route?.params?.cb;
   const name_test = route?.params?.nameTest;
-  
+
   const [test, setTest] = React.useState({});
 
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ const Grammar = ({ navigation, route, headershow = true }) => {
       const data = response.data;
       setLoading(false);
       setTest(data);
-      
+
       setQuestions(data.questions[0]);
     } catch (error) {
       console.error(error);
@@ -43,9 +45,11 @@ const Grammar = ({ navigation, route, headershow = true }) => {
       setCountProgress(countProgress + 1); // Cập nhật progress
     }
   };
-  
+
   const [answers, setAnswers] = React.useState([]);
 
+  const testStore = useSelector((state) => state.test);
+  const dispatch = useDispatch();
 
 
   const handleSetAnswers = (answer) => {
@@ -57,13 +61,14 @@ const Grammar = ({ navigation, route, headershow = true }) => {
   };
 
   const handleProgressUpdate = () => {
-    console.log("handleProgressUpdate");
+    setCountProgress((prevCount) => prevCount + 1);
+
   };
 
   React.useEffect(() => {
     fetchTestById();
   }, [test_id]);
-console.log("choiceQuestions", questions?.questions);
+
   return (
     <SafeAreaView className="flex-1">
       {headershow && (
@@ -95,52 +100,61 @@ console.log("choiceQuestions", questions?.questions);
 
           <ScrollView>
             <View className="container p-7 pb-10">
-              { questions?.questions?.map((item, index) => {
-                  if (index === currentQuestionIndex) {
-                    return (
-                      <View key={index}>
-                        <View
-                          style={{
-                            shadowColor: "#000",
-                            shadowOffset: {
-                              width: 0,
-                              height: 2,
-                            },
-                            shadowOpacity: 0.25,
-                            shadowRadius: 3.84,
-                            elevation: 5,
-                          }}
-                          className="rounded-md bg-white p-5 pb-1"
-                        >
-                          <RadioButtonForm
-                        item={item}
-                        test_id={test_id}
-                        test={test}
-                        onProgressUpdate={handleProgressUpdate}
-                        onHandleSetAnswers={handleSetAnswers}
-                        handelShowChoiceNextQuestion={() => setShowNextQuestion(true)}
-                      />
-                        </View>
+              {questions?.questions?.map((item, index) => {
+                if (index === currentQuestionIndex) {
+                  return (
+                    <View key={index}>
+                      <View
+                        style={{
+                          shadowColor: "#000",
+                          shadowOffset: {
+                            width: 0,
+                            height: 2,
+                          },
+                          shadowOpacity: 0.25,
+                          shadowRadius: 3.84,
+                          elevation: 5,
+                        }}
+                        className="rounded-md bg-white p-5 pb-1"
+                      >
+                        <RadioButtonForm
+                          item={item}
+                          test_id={test_id}
+                          test={test}
+                          onProgressUpdate={handleProgressUpdate}
+                          onHandleSetAnswers={handleSetAnswers}
+                          handelShowChoiceNextQuestion={() => setShowNextQuestion(true)}
+                        />
                       </View>
-                    );
-                  }
-                })}
+                    </View>
+                  );
+                }
+              })}
             </View>
             <View className="h-20"></View>
           </ScrollView>
 
           {showNextQuestion && <ActionBar
-              navigation={navigation}
-              classNames={"mb-0"}
-              total_question={answers?.length}
-              total_correct={
-                answers?.filter((item) => item.is_correct)?.length
+            navigation={navigation}
+            classNames={"mb-0"}
+            total_question={answers?.length}
+            total_correct={
+              answers?.filter((item) => item.is_correct)?.length
+            }
+            onPressNext={() => {
+              console.log("countProgress", countProgress);
+              console.log("questions.total_question", questions.total_question);
+              if (countProgress == questions.total_question) {
+                console.log('====================================');
+
+                console.log('====================================');
+                navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
+
               }
-              onPressNext={() => {
-                handleNextQuestion();   
-                setShowNextQuestion(false) 
-              }}
-            />}
+
+              setShowNextQuestion(false)
+            }}
+          />}
 
         </>
       )}

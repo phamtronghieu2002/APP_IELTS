@@ -12,84 +12,88 @@ import { MaskLoader } from "../../../../conponents/Loader"
 import DrawLesson from "../../../../conponents/Draw/DrawLesson"
 
 import { IconC } from "../../../../conponents/IconC"
-const columns = [
-  {
-    title: "STT",
-    dataIndex: "stt",
-    key: "stt",
-    sorter: (a: any, b: any) => a.name_lesson.length - b.name_lesson.length,
-  },
-  {
-    title: "Tên bài học",
-    dataIndex: "name_lesson",
-    key: "name_lesson",
-    sorter: (a: any, b: any) => a.name_lesson.length - b.name_lesson.length,
-  },
-  {
-    title: "Tổng số câu hỏi",
-    dataIndex: "total_question",
-    key: "total_question",
-    sorter: (a: any, b: any) => a.total_question - b.total_question,
-  },
-  {
-    title: "Tổng số bài test",
-    dataIndex: "total_test",
-    key: "total_test",
-    sorter: (a: any, b: any) => a.total_test - b.total_test,
-  },
-  {
-    title: "Thao tác",
-    dataIndex: "actions",
-    key: "actions",
-    render(value: any, record: any, index: any) {
-      return (
-        <div className="flex flex-row gap-1">
-          <ModalLesson
-            title={`Sửa bài học ${record?.name_lesson}`}
-            button={
-              <Button
-                type="link"
-                className="bg-blue-500 text-white p-2 rounded"
-              >
-                <IconC name={`FaEdit`}  size={20}/>
-              </Button>
-            }
-            type="update"
-            data={record}
-          />
-          <ModalLesson
-            modalProps={{
-              width: 550,
-            }}
-            title={`Xóa bài học ${record?.name_lesson}`}
-            button={
-              <Button className=" border-0 text-white p-2  !text-rose-700">
-                <IconC name={`LiaTrashAlt`}   size={20}/>
-              </Button>
-            }
-            type="delete"
-            data={record}
-          />
-          <DrawLesson
-            button={
-              <Button
-                type="link"
-                className="bg-blue-500 text-white p-2 rounded"
-              >
-                Quản lý bài test
-              </Button>
-            }
-            title="Cài đặt bài học"
-            data={record}
-          />
-        </div>
-      )
-    },
-  },
-]
 
 const Lesson: FC<ContentProps> = ({ category_id, type_category }) => {
+
+  const columns = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      sorter: (a: any, b: any) => a.name_lesson.length - b.name_lesson.length,
+    },
+    {
+      title: "Tên bài học",
+      dataIndex: "name_lesson",
+      key: "name_lesson",
+      sorter: (a: any, b: any) => a.name_lesson.length - b.name_lesson.length,
+    },
+    {
+      title: "Tổng số câu hỏi",
+      dataIndex: "total_question",
+      key: "total_question",
+      sorter: (a: any, b: any) => a.total_question - b.total_question,
+    },
+    {
+      title: "Tổng số bài test",
+      dataIndex: "total_test",
+      key: "total_test",
+      sorter: (a: any, b: any) => a.total_test - b.total_test,
+    },
+    {
+      title: "Thao tác",
+      dataIndex: "actions",
+      key: "actions",
+      render(value: any, record: any, index: any) {
+        return (
+          <div className="flex flex-row gap-1">
+            <ModalLesson
+              title={`Sửa bài học ${record?.name_lesson}`}
+              button={
+                <Button
+                  type="link"
+                  className="bg-blue-500 text-white p-2 rounded"
+                >
+                  <IconC name={`FaEdit`}  size={20}/>
+                </Button>
+              }
+              type="update"
+              data={record}
+            />
+            <ModalLesson
+              modalProps={{
+                width: 550,
+              }}
+              title={`Xóa bài học ${record?.name_lesson}`}
+              button={
+                <Button className=" border-0 text-white p-2  !text-rose-700">
+                  <IconC name={`LiaTrashAlt`}   size={20}/>
+                </Button>
+              }
+              type="delete"
+              data={record}
+            />
+            <DrawLesson
+              button={
+                <Button
+                  type="link"
+                  className="bg-blue-500 text-white p-2 rounded"
+                >
+                  Quản lý bài test
+                </Button>
+              }
+              title="Cài đặt bài học"
+              data={record}
+            />
+          </div>
+        )
+      },
+    },
+  ]
+  
   const [lessons, setLessons] = useState<any>([])
+
+
   const { storeCategories, dispath } = useContext(context)
   const [loading, setLoading] = useState(false)
 

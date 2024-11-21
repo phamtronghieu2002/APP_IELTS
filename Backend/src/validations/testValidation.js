@@ -9,6 +9,7 @@ module.exports = {
             const data = req.body;
             const validData = joi.object({
                 name_test: joi.string().required(),
+                type_category: joi.string().required(),
             });
 
             await checkValidation(validData, data);

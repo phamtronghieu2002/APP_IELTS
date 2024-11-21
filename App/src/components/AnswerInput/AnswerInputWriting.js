@@ -15,6 +15,7 @@ import {
 } from "../../services/testResultServices";
 import { _testTypes } from "../../utils/constant";
 import DeleteButton from "../DeleteButton/DeleteButton";
+import Toast from "react-native-toast-message";
 
 const AnswerInputWriting = ({ test_id, data }) => {
   const [userAnswer, setUserAnswer] = useState("");
@@ -28,8 +29,11 @@ const AnswerInputWriting = ({ test_id, data }) => {
   const [count, setCount] = useState(0);
   const [isCounting, setIsCounting] = useState(false);
 
-  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+  console.log("responseList >>>>", responseList[0]?.rating);
+
+
+    
   useEffect(() => {
     let interval;
     if (isCounting) {
@@ -68,8 +72,16 @@ const AnswerInputWriting = ({ test_id, data }) => {
         text: userAnswer,
         topic: data.question_text,
       });
+      console.log("Rating response >>>>>>", response);
+
       return response;
     } catch (error) {
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Gemini Error !!!`",
+
+      });
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -86,7 +98,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
           time: count,
           countWord: countWord,
           userAnswer: userAnswer,
-          rating: rating,
+          rating: rating?.[0] ?? {},
         };
         setResponseList((prevList) => [...prevList, newResponse]);
         handleChooseAnswer(newResponse);
@@ -118,7 +130,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
         time: item.time,
         countWord: item.countWord,
         userAnswer: item.userAnswer,
-        rating: item.rating,
+        rating: item?.rating?.[0] ?? {},
       }));
       setResponseList(newResponses);
       setExpandedItems(Array(newResponses.length).fill(false));
@@ -134,10 +146,10 @@ const AnswerInputWriting = ({ test_id, data }) => {
   }, [reload]); // Trigger fetch on reload change
 
   const handleDelete = async (test_id, question_id) => {
-    setIsDeleting(true);
-    fetchGetRating();
+
     try {
-      await delay(5000);
+
+      setIsDeleting(true);
       await deleteQuestionInTestResult(test_id, question_id);
     } catch (error) {
       console.log("error >>>>", error);
@@ -184,8 +196,10 @@ const AnswerInputWriting = ({ test_id, data }) => {
         </View>
       )}
 
-      {responseList.map((item, index) => (
-        <View key={index} className="mt-3 p-2 border-t border-gray-300">
+      {responseList?.map((item, index) => (
+
+
+        item?.rating ? <View key={index} className="mt-3 p-2 border-t border-gray-300">
           <View className="flex flex-row justify-between items-center mt-1">
             <View className="pr-2">
               <Text className="font-bold text-xl text-green-500">Response {index + 1}</Text>
@@ -200,24 +214,24 @@ const AnswerInputWriting = ({ test_id, data }) => {
           <Text className="font-bold italic mt-1">User Answer: {item.userAnswer}</Text>
           <Text className="font-bold italic mt-1">Word Count: {item.countWord}</Text>
           <Text className="font-bold italic text-red-800 mt-1 mb-2">
-            Point: {item.rating.ielts_writing_score_rating}
+            Point: {item.rating?.ielts_writing_score_rating}
           </Text>
           <View>
             {expandedItems[index] ? (
               <View>
                 <Text className="font-bold text-lg text-red-500">Rating your response:</Text>
                 <Text className="font-bold italic">1. Grammar Errors</Text>
-                <Text>{item.rating.grammar_errors}</Text>
+                <Text>{item.rating?.grammar_errors}</Text>
                 <Text className="font-bold italic">2. Vocabulary Errors</Text>
-                <Text>{item.rating.vocabulary_errors}</Text>
+                <Text>{item.rating?.vocabulary_errors}</Text>
                 <Text className="font-bold italic">3. Sentence Structure Errors</Text>
-                <Text>{item.rating.sentence_structure_errors}</Text>
+                <Text>{item.rating?.sentence_structure_errors}</Text>
                 <Text className="font-bold italic">4. Coherence Errors</Text>
-                <Text>{item.rating.coherence_errors}</Text>
+                <Text>{item.rating?.coherence_errors}</Text>
                 <Text className="font-bold italic">5. Cohesion Errors</Text>
-                <Text>{item.rating.cohesion_errors}</Text>
+                <Text>{item.rating?.cohesion_errors}</Text>
                 <Text className="font-bold italic">6. Solutions To Improve Writing</Text>
-                <Text>{item.rating.detailed_solutions_to_improve_writing}</Text>
+                <Text>{item.rating?.detailed_solutions_to_improve_writing}</Text>
               </View>
             ) : (
               <Text>...</Text>
@@ -228,7 +242,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
               {expandedItems[index] ? "Show Less" : "Show More"}
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> : null
       ))}
 
       <MainButton title="Rate my answer" roundedfull onPress={handleRatingAnswer} />

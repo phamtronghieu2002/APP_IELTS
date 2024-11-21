@@ -76,6 +76,9 @@ const ChoiceQuestion: FC<ChoiceQuestionProps> = ({
   initNumber = 4,
   onSubmit,
 }) => {
+  console.log('====================================');
+  console.log("data >>>>>", data);
+  console.log('====================================');
   const { drawStore, dispath } = useContext<any>(context)
   const initQuestionChoice = useMemo(() => {
     return Array.from({ length: initNumber }, (_, index) => {

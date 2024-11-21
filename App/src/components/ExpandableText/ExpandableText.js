@@ -78,24 +78,27 @@ const ExpandableText = ({ text, initialHeight = 200, type, name, classnames, isT
                                 }
                             }}
                         >
-                                <AudioPlayerUI 
+                            <AudioPlayerUI
                                 audio_url={text}
-                                />
+                            />
                         </View>
                     )}
                 </Animated.View>
+
+            </ScrollView>
+            <View className=" mt-3">
                 {!collapsed && (
-                    <TouchableOpacity onPress={toggleExpand} className="flex items-center mt-3">
+                    <TouchableOpacity onPress={toggleExpand} className="flex items-center">
 
                         {
-                            isToggle && <Text style={{ color: 'blue', marginTop: 10 }}>
+                            isToggle && <Text style={{ color: 'blue' }}>
                                 {!expanded ? 'Show More' : 'Show Less'}
                             </Text>
                         }
 
                     </TouchableOpacity>
                 )}
-            </ScrollView>
+            </View>
         </View>
     );
 };

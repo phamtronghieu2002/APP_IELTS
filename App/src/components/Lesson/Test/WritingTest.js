@@ -12,14 +12,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import SwitchSelector from "react-native-switch-selector";
 import ExpandableWriting from "../../ExpandableWriting/ExpandableWriting";
 import FloatButton from "../../FloatButton/FloatButton";
+import ActionBar from "../../ActionBar/ActionBar";
 
-const WritingTest = ({ navigation, route }) => {
+const WritingTest = ({ navigation, route, dataStasitic, headershow = true, onNextPart, part, isFinish }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
 
   const [questions, setQuestions] = React.useState({});
-  const test_id = route?.params?.test_id;
+  const test_id = route?.params?.test_id || dataStasitic?.test_id;
 
   const fetchTestById = async () => {
     try {
@@ -36,7 +37,7 @@ const WritingTest = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       fetchTestById();
-    }, [test_id]) // Thêm test_id vào dependencies nếu cần
+    }, [part, test_id]) // Thêm test_id vào dependencies nếu cần
   );
 
   const [selectedValue, setSelectedValue] = React.useState(0);
@@ -47,8 +48,14 @@ const WritingTest = ({ navigation, route }) => {
   return (
     <SafeAreaView>
       <FloatButton />
-      <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
-      <ScrollView className="p-7">
+      {
+        headershow && (
+          <HeaderScreen
+
+            label={route?.params?.nameTest} navigation={navigation} />
+        )
+      }
+      <ScrollView className="pl-5 pr-5">
         <View
           style={{
             shadowColor: "#000",
@@ -78,19 +85,7 @@ const WritingTest = ({ navigation, route }) => {
               />
             </View>
             <View className="h-px bg-gray-600 my-3" />
-            <View style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            }}
-              className="rounded-lg pl-3 pr-3">
-              <ExpandableWriting text={questions?.question_text} />
-            </View>
+            <ExpandableText text={questions?.question_text} type={"text"} />
           </View>
         </View>
         <View
@@ -145,8 +140,26 @@ const WritingTest = ({ navigation, route }) => {
               <ExpandableText text={questions?.questions?.[0].explain} type={"text"} name="Model" />
             </View>
           )}
+
         </View>
+
       </ScrollView>
+
+      {
+        1 ? <ActionBar
+          navigation={navigation}
+          classNames={"mb-0 mt-3"}
+          total_question={1}
+          total_correct={
+            1
+          }
+          onPressNext={() => {
+            onNextPart();
+          }
+
+          }
+        /> :<></>
+      }
     </SafeAreaView>
   );
 };
