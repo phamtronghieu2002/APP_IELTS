@@ -8,13 +8,15 @@ import {
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Audio } from "expo-av";
-import { Ionicons } from "@expo/vector-icons"; // For Play/Stop icon
+import { Ionicons } from "@expo/vector-icons";
 
 const AudioPlayer2 = ({ url, isPlaying, onPlay }) => {
   const [sound, setSound] = useState(null);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFinished, setIsFinished] = useState(false);
+  const [isPlayingState, setIsPlayingState] = useState(false);
 
   useEffect(() => {
     loadAudio();
@@ -22,13 +24,6 @@ const AudioPlayer2 = ({ url, isPlaying, onPlay }) => {
       unloadAudio();
     };
   }, []);
-
-  useEffect(() => {
-    // Dừng âm thanh khi `isPlaying` là `false`
-    if (!isPlaying && sound) {
-      sound.pauseAsync();
-    }
-  }, [isPlaying]);
 
   const loadAudio = async () => {
     setIsLoading(true);
@@ -54,16 +49,33 @@ const AudioPlayer2 = ({ url, isPlaying, onPlay }) => {
     if (status.isLoaded) {
       setPosition(status.positionMillis);
       setDuration(status.durationMillis);
+      if (status.didJustFinish) {
+        setIsFinished(true);
+      }
     }
   };
 
-  const togglePlayPause = async () => {
+  const handlePlay = async () => {
+    setIsPlayingState(true);
     if (!sound) return;
-    if (isPlaying) {
+    await sound.playAsync();
+    setIsFinished(false);
+    onPlay();
+  };
+
+  const handlePause = async () => {
+    setIsPlayingState(false);
+    if (sound) {
       await sound.pauseAsync();
-    } else {
+    }
+  };
+
+  const handleReplay = async () => {
+    if (sound) {
+      await sound.setPositionAsync(0);
       await sound.playAsync();
-      onPlay(); // Gọi callback để thông báo rằng âm thanh này đang phát
+      setIsFinished(false);
+      onPlay();
     }
   };
 
@@ -85,13 +97,15 @@ const AudioPlayer2 = ({ url, isPlaying, onPlay }) => {
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <View style={styles.container}>
-          <TouchableOpacity onPress={togglePlayPause}>
-            <Ionicons
-              name={isPlaying ? "stop" : "play"}
-              size={30}
-              color="#FF6B6B"
-            />
-          </TouchableOpacity>
+          {isFinished ? (
+            <TouchableOpacity onPress={handleReplay}>
+              <Ionicons name="refresh" size={30} color="#FF6B6B" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={isPlayingState ? handlePause : handlePlay}>
+              <Ionicons name={isPlayingState ? "pause" : "play"} size={30} color="#FF6B6B" />
+            </TouchableOpacity>
+          )}
           <Text style={styles.timeText}>{formatTime(position)}</Text>
           <Slider
             style={styles.slider}
@@ -125,20 +139,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginTop: 15,
     justifyContent: "center",
-  },
-  playPauseButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FF6B6B",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
-  playPauseText: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "bold",
   },
   timeText: {
     fontSize: 14,

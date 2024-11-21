@@ -39,14 +39,14 @@ const RadioButton = ({
         />
       </View>
       {label && (
-        <Text style={styles.label}>
+        <View style={{width:'90%', paddingLeft:16}}>
           <RenderHtml
             contentWidth={width}
             source={{
               html: label,
             }}
           />
-        </Text>
+        </View>
       )}
     </Pressable>
   );
@@ -57,11 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 5,
-  },
-  label: {
-    marginLeft: 12,
-    fontSize: 16,
-    color: "#333",
+    width: '100%',
   },
 });
 

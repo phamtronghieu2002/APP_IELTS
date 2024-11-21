@@ -7,6 +7,7 @@ import { _testTypes } from "../../utils/constant";
 import RadioButtonForm from "../RadioButton/RadioButtonForm";
 import ActionBar from "../ActionBar/ActionBar";
 import configs from '../../configs';
+import AudioPlayer2 from "../recorder/AudioPlayer2";
 
 const VocabularyPlay = ({ navigation, route, headershow = true }) => {
 
@@ -64,7 +65,11 @@ const VocabularyPlay = ({ navigation, route, headershow = true }) => {
   React.useEffect(() => {
     fetchTestById();
   }, [test_id]);
-console.log("choiceQuestions", questions?.questions);
+
+  const [currentPlaying, setCurrentPlaying] = useState(null);
+  const handlePlay = (index) => {
+    setCurrentPlaying(index); // Cập nhật trạng thái đang phát
+  };
   return (
     <SafeAreaView className="flex-1">
       {headershow && (
@@ -113,7 +118,12 @@ console.log("choiceQuestions", questions?.questions);
                           }}
                           className="rounded-md bg-white p-5 pb-1"
                         >
-                          <RadioButtonForm
+                        <AudioPlayer2
+                                    url={item.audio_url}
+                                    isPlaying={currentPlaying === index}
+                                    onPlay={() => handlePlay(index)}
+                                    />
+                        <RadioButtonForm
                         item={item}
                         test_id={test_id}
                         test={test}
