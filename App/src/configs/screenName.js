@@ -1,3 +1,4 @@
+import Exam from "../screens/Exam/Exam";
 import PracticeTest from "../screens/PraticeTest/PraticeTest";
 
 const screenName = {
@@ -39,6 +40,9 @@ const screenName = {
     Grammar:"Grammar",
     comment: "Comment",
     dictionary: "Dictionary",
+    Exam: "Exam",
+    lesson_exam: "LessonExam",
+    overview_exam: "OverviewExam",
 }
 export default screenName;
 

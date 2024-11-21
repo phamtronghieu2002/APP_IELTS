@@ -5,7 +5,8 @@ const ApiError = require('~/utils/ApiError');
 const handleAddTest = async (req, res, next) => {
     try {
         const data = req.body;
-  
+        console.log("data >>", data);
+        
 
         const result = await testServices?.addtest(data);
         return res.status(StatusCodes.CREATED).json(result);
@@ -47,7 +48,8 @@ const handleDeleteQuestionTest = async (req, res, next) => {
 const handleDeleteTest = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const result = await testServices?.deleteTest(id);
+        const type_category = req.body.type_category;
+        const result = await testServices?.deleteTest(id,type_category);
         return res.status(StatusCodes.OK).json(result);
     } catch (error) {
         next(new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, error.message, error.stack));

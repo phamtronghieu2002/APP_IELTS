@@ -129,16 +129,14 @@ const deleteQuestion = async (question_id, sub_q, lesson_id) => {
 
         const sub_id = sub_q?.question_id;
         const countDelete = sub_q?.question_type == "fill_in_blank" ? sub_q?.options?.length : 1;
-        console.log('====================================');
-        console.log("countDelete >>>>>>>>>>>", countDelete);
-        console.log('====================================');
+      
         const result = await questionModel.updateOne(
             { _id: question_id },
             {
                 $pull: {
                     questions: { question_id: sub_id }
                 },
-                $inc: { total_question: countDelete }
+                $inc: { total_question: - countDelete }
             },
             { new: true }
         );
@@ -154,14 +152,12 @@ const deleteQuestion = async (question_id, sub_q, lesson_id) => {
 
         let total_question = 0;
         lesson.tests.forEach(test => {
-            console.log('====================================');
-            console.log("tests >>>>>>>>>>>", test);
-            console.log('====================================');
+       
             total_question += test.questions[0]?.total_question || 0;
         });
 
 
-        await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: countDelete } }, { new: true });
+        await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: -countDelete } }, { new: true });
 
 
 

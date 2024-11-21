@@ -26,7 +26,7 @@ import { Skeleton } from "moti/skeleton";
 import SkeletonPlaceholder from "../../Skeleton/Skeleton";
 import FloatButton from "../../FloatButton/FloatButton";
 import ScriptButton from "../../ScriptButton/ScriptButton";
-const ReadingTest = ({ navigation, route }) => {
+const ListeningTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
@@ -154,7 +154,7 @@ const ReadingTest = ({ navigation, route }) => {
     <SafeAreaView
 
     >
-       
+
       <HeaderScreen
         onPress={refresh}
         label={route?.params?.nameTest}
@@ -323,9 +323,9 @@ const ReadingTest = ({ navigation, route }) => {
             }}
           />}
 
-  
+
         </ScrollView>
-     
+
       </>}
 
       {
@@ -337,4 +337,4 @@ const ReadingTest = ({ navigation, route }) => {
   );
 };
 
-export default ReadingTest;
+export default ListeningTest;

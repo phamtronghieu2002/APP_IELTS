@@ -25,8 +25,9 @@ import BottomSheetExample from "../../Modal/ModalBookmark";
 import Placeholder from "../../Skeleton/Skeleton";
 import Skeleton from "../../Skeleton/Skeleton";
 import FloatButton from "../../FloatButton/FloatButton";
+import { setScore } from "../../../fetures/examSlice";
 
-const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNextPart, part, isFinish }) => {
+const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNextPart, part, isFinish,isExam=false}) => {
 
   const { width } = useWindowDimensions();
 
@@ -40,7 +41,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
   const refresh = route?.params?.cb;
   // hieu viet them
   const name_test = route?.params?.nameTest || dataStasitic?.name_test;
-  const type = route?.params?.type;
+  const type = route?.params?.type ;
 
   const testResults = route?.params?.testResults || dataStasitic?.testResults;
 
@@ -48,6 +49,8 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
 
   const [is_doing, setIsDoing] = React.useState(false);
   // 
+  const dispatch = useDispatch();
+  
 
 
 
@@ -63,7 +66,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
       const choices = data.questions[0].questions.filter(
         (item) => item.question_type === "choice"
       );
-      if(!choices.length){
+      if (!choices.length) {
         setPartQuestion(1);
       }
       setChoiceQuestions(choices);
@@ -95,15 +98,15 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
     const sub_questions = questions?.questions;
     if (sub_questions?.length > 0) {
       if (testResults?.length > 0 && !is_doing) {
-        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id ||( a.parrent_question_id === item.question_id)));
+        const question_filter = sub_questions.filter((item) => testResults?.some((a) => a.question_id === item.question_id || (a.parrent_question_id === item.question_id)));
 
         if (question_filter?.[0]?.question_type == "fill_in_blank") {
           setPartQuestion(1);
         } else {
           setPartQuestion(0);
         }
-    
- 
+
+
 
         questions.questions = question_filter;
         questions.total_question = count_total_question(questions);
@@ -134,6 +137,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
 
 
 
+
   const handleSetAnswers = (answer) => {
     if (answer?.length) {
       setAnswers(answer);
@@ -144,7 +148,8 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
 
 
   const testStore = useSelector((state) => state.test);
-  const dispatch = useDispatch();
+
+
 
 
 
@@ -152,14 +157,24 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
     setCountProgress((prevCount) => prevCount + 1);
   };
   const handelShowNextQuestion = () => {
- 
-    if (isFinish && countProgress +1 == questions.total_question) {
+    console.log("countProgress +1 >>>>", countProgress + 1);
+    console.log("questions.total_question >>>>>", questions.total_question);
+
+
+
+    if (isFinish && countProgress + 1 == questions.total_question) {
       setShowNextQuestion(false);
       return
     }
     setShowNextQuestion(true);
   };
+
+
   const handelShowChoiceNextQuestion = () => {
+    console.log("partQuestion >>>>", partQuestion);
+    console.log("countChoiceAnswer +1 >>>>", countChoiceAnswer + 1);
+    console.log("choiceQuestions.length >>>>", choiceQuestions.length);
+
     if (isFinish && countProgress + 1 == questions.total_question) {
       setShowNextQuestion(false);
       return
@@ -178,7 +193,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
     <SafeAreaView
       className="flex-1"
     >
-        <FloatButton />
+      <FloatButton />
 
       {
         headershow &&
@@ -324,10 +339,13 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
                 answers?.filter((item) => item.is_correct)?.length
               }
               onPressNext={() => {
-
                 setAnswers([]);
-
-
+                console.log('====================================');
+                console.log("countProgress", countProgress);
+                console.log('====================================');
+                console.log("questions.total_question", questions.total_question);
+                console.log('====================================');
+                console.log('====================================');
                 if (countProgress == questions.total_question) {
                   if (type) {
                     navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
@@ -340,6 +358,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
                     onNextPart();
                     setCurrentQuestion_fill_in_blank(0);
                     setShowNextQuestion(false);
+                    setCountChoiceAnswer(0);
                   }
 
                 }

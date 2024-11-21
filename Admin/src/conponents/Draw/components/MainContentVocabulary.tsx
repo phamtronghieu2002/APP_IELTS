@@ -94,7 +94,7 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
           <img
             width={50}
             height={50}
-            src={_app?.getImageUrl(record?.img_voc)}
+            src={record?.img_voc}
             alt=""
           />
         )
@@ -105,7 +105,7 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
       dataIndex: "sound_voc",
       key: "sound_voc",
       render: (value: any, record: any, index: any) => {
-        const audio = new Audio(_app?.getImageUrl(record?.sound_voc))
+        const audio = new Audio((record?.sound_voc))
 
         const playAudio = () => {
           audio.play()

@@ -16,6 +16,7 @@ import Speaking from "../pages/Manager/ManagerCategories/Speaking/Speaking"
 import Writing from "../pages/Manager/ManagerCategories/Writing/Writing"
 import Grammar from "../pages/Manager/ManagerCategories/Grammar/Grammar"
 import Vocabulary from "../pages/Manager/ManagerCategories/Vocabulary/Vocabulary"
+import Exam from "../pages/Manager/ManagerCategories/Exam/Exam"
 
 export interface IRoute {
   path: string
@@ -52,6 +53,11 @@ export const routes: IRoute[] = [
   {
     path: routeConfig?.manager_listening,
     component: Listening,
+    layout: MainLayout,
+  },
+  {
+    path: routeConfig?.manager_exam,
+    component: Exam,
     layout: MainLayout,
   },
   {

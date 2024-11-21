@@ -4,7 +4,7 @@ import { routeConfig } from "../../configs/routeConfig"
 
 export const RootPage: React.FC = () => {
   useEffect(() => {
-    history.navigate?.(routeConfig?.manager_remind)
+    history.navigate?.(routeConfig?.manager)
   }, [])
   return null
 }

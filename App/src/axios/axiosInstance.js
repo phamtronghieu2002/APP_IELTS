@@ -1,6 +1,7 @@
 import axios from "axios";
 import env from "../configs/env";
 import { getToken } from "../utils/token";
+import axiosRetry from 'axios-retry';
 axios.defaults.withCredentials = true;
 
 const instance = axios.create({
@@ -35,6 +36,12 @@ instance.interceptors.response.use(
   }
 );
 
+axiosRetry(instance, {
+  retries: 20, retryDelay: (retryCount) => {
+
+    return retryCount * 100; // time interval between retries
+  },
+});
 
 
 

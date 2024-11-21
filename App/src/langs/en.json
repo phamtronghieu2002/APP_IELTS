@@ -43,5 +43,12 @@
       "bookmarkQuestion": "Bookmark Question"
     }
      
+  },
+  "lesson":{
+      "correct":"correct",
+      "incorrect":"incorrect",
+      "question":"question",
+      "showmore":"Show more",
+      "explain":"Explain"
   }
 }

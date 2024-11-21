@@ -47,17 +47,16 @@ const ModalForm: FC<{
   refresh?: any
 }> = ({ action, type, data, lesson_id, refresh, type_category }) => {
   const { drawStore, dispath } = useContext<any>(context)
-  console.log("type", type != "add")
 
   const formRef = useRef<FormInstance<any>>(null)
   const editorRef = useRef<any>(null) // Store the editor instance
   const [audioUrl, setAudioUrl] = useState<string | null>("")
   const question = drawStore?.question
   const [formData, setFormData] = useState<any>({
-    name_test: "",
+    name_test:"",
     question_text: type != "add" ? question?.question_text : "",
     description: type != "add" ? question?.description : "",
-    audio_url: "",
+    audio_url:data?.sound_voc || "",
     questions: [],
   })
 
@@ -128,7 +127,7 @@ const ModalForm: FC<{
   }
   const handleDelete = async (fb: any) => {
     try {
-      await deleteTest(data?._id)
+      await deleteTest(data?._id,type_category)
       refresh?.()
 
       api?.message?.success("xóa  bài test  thành công !!")
@@ -190,9 +189,10 @@ const ModalForm: FC<{
     })
   }
 
+
   return (
     <MainContent
-    data_voc={data}
+      data_voc={data}
       onSubmit={onFinish}
       className="w-full"
       lesson_id={lesson_id}

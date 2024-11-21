@@ -4,6 +4,7 @@ import { UploadOutlined } from "@ant-design/icons"
 import type { UploadProps } from "antd"
 import axios from "..//..//..//services/axiosInstance"
 import { _app } from "../../../utils/_app"
+import { MaskLoader } from "../../Loader"
 
 interface UploadAudioProps {
   setUrl: (url: string) => void
@@ -13,9 +14,9 @@ interface UploadAudioProps {
 const UploadAudio: FC<UploadAudioProps> = ({ setUrl, initialUrl }) => {
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(
-    initialUrl ? _app?.getImageUrl(initialUrl) : null,
+    initialUrl ? initialUrl : null,
   )
-
+  const [loading, setLoading] = useState<boolean>(false)
 
   const beforeUpload = (file: File) => {
     const isAudio = file.type.startsWith("audio/")
@@ -50,13 +51,15 @@ const UploadAudio: FC<UploadAudioProps> = ({ setUrl, initialUrl }) => {
     formData.append("audio", audioFile)
 
     try {
+      setLoading(true)
       const response: any = await axios.post("/audio/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
 
-      setUrl(response?.file.filename)
+      setLoading(false)
+      setUrl(response?.url)
 
       message.success("Upload successful!")
     } catch (error) {
@@ -78,6 +81,7 @@ const UploadAudio: FC<UploadAudioProps> = ({ setUrl, initialUrl }) => {
           </audio>
         </div>
       )}
+      {loading && <MaskLoader />}
     </div>
   )
 }

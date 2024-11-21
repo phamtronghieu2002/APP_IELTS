@@ -33,18 +33,18 @@ export const AuthHoc: React.FC<IProps> = ({ children }) => {
   }
 
   useEffect(() => {
-    const refeshToken = storage.getRefreshToken()
+    // const refeshToken = storage.getRefreshToken()
 
-    if (!refeshToken) {
-      history?.navigate?.(routeConfig?.login)
-    }
+    // if (!refeshToken) {
+    //   history?.navigate?.(routeConfig?.login)
+    // }
 
     initData()
   }, [])
 
-  if (!isAuth) {
-    return <InitialScreen />
-  }
+  // if (false) {
+  //   return <InitialScreen />
+  // }
 
   return (
     <>

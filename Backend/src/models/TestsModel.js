@@ -36,6 +36,10 @@ const TestSchema = new mongoose.Schema(
             required: false,
             default: false,
         },
+        type_category: {
+            type: String,
+            required: true,
+        },
     },
     { timestamps: true },
     { versionKey: false },

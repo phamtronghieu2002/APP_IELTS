@@ -87,7 +87,7 @@ const ModalForm: FC<{
           uid: "-1", // unique id for the file
           name: "image.png", // name of the file
           status: "done", // status of the upload (done/finished)
-          url: _app?.getImageUrl(data?.img_voc), // URL of the image
+          url: data?.img_voc, // URL of the image
         },
       ])
     }
@@ -108,7 +108,7 @@ const ModalForm: FC<{
 
       setFormData({
         ...formData,
-        img_voc: res?.file?.filename,
+        img_voc: res?.url,
       })
 
       onSuccess(res.data) // Đảm bảo thành công

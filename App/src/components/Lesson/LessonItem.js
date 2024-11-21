@@ -13,6 +13,7 @@ import configs from '../../configs';
 import { addTestResult, createTestResult } from '../../services/testResultServices';
 
 const LessonItem = ({
+    isExam = false,
     tests,
     icon,
     name_lesson,
@@ -20,7 +21,8 @@ const LessonItem = ({
     percent_correct,
     category,
     navigation,
-    refresh
+    refresh,
+    onPress
 }) => {
 
 
@@ -37,6 +39,11 @@ const LessonItem = ({
     });
 
     const toggleDropdown = () => {
+        if (isExam) {
+
+            onPress?.();
+            return;
+        }
         if (expanded) {
             // Collapse
             Animated.timing(animation, {
@@ -65,30 +72,32 @@ const LessonItem = ({
 
     const handlePressTestItem = async (test) => {
         try {
+
+            const is_doing = test?.testResults?.[0]?.anwsers?.length > 0 ? true : false;
+            if (!is_doing) {
+                const res = await createTestResult({
+                    test_id: test?._id,
+                });
+            }
+
+
             if (category?.type == 'Vocabulary') {
+
                 navigation?.navigate(configs?.screenName?.overview_vocabulary, { test_id: test?._id, name_test: test?.name_test, type: category?.type, testResults: test?.testResults });
             } else {
-                const is_doing = test?.testResults?.[0]?.anwsers?.length > 0 ? true : false;
+
                 if (is_doing && category?.type != 'Speaking' && category?.type != 'Writing') {
                     navigation?.navigate(configs?.screenName?.overview, { test_id: test?._id, name_test: test?.name_test, type: category?.type, testResults: test?.testResults });
                 } else {
-                    const res = await createTestResult({
-                        test_id: test?._id,
-                    });
+
                     navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id, type: category?.type, cb: refresh });
                 }
-                const res = await createTestResult({
-                    test_id: test?._id,
-                })
 
-                navigation?.navigate(category?.type, { nameTest: test?.name_test, test_id: test?._id, type: category?.type, cb: refresh })
             }
 
 
         } catch (error) {
-            console.log('====================================');
-            console.log("Error handlePressTestItem: ", error);
-            console.log('====================================');
+    
         }
 
 
@@ -107,17 +116,21 @@ const LessonItem = ({
                     </Text>
                 </View>
                 <View className="right">
-                    <Text>{expanded ?
-                        <IconE
-                            name='chevron-thin-up'
-                            size={13}
-                        />
-                        :
-                        <IconE
-                            name='chevron-thin-down'
-                            size={13}
-                        />
-                    }</Text>
+
+                    {
+                        isExam ? <></> : <Text>{expanded ?
+                            <IconE
+                                name='chevron-thin-up'
+                                size={13}
+                            />
+                            :
+                            <IconE
+                                name='chevron-thin-down'
+                                size={13}
+                            />
+                        }</Text>
+                    }
+
                 </View>
             </View>
 

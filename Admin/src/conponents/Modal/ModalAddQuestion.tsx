@@ -46,7 +46,7 @@ const ModalForm: FC<ModalFormProps> = ({
 }) => {
   return (
     <div>
-      <QuestionManager lesson_id={lesson_id} />
+      <QuestionManager lesson_id={lesson_id} action={action}/>
     </div>
   )
 }
