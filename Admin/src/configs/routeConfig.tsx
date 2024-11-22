@@ -16,6 +16,7 @@ export const routeConfig = {
   manager_user: "/mananger/user",
   manager_policy: "/mananger/app",
   manager_term: "/mananger/term",
+  manager_exam: "/mananger/exam",
   
 
 

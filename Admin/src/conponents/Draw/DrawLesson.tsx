@@ -21,11 +21,11 @@ interface DrawLessonProps {
   data: any
 }
 
-interface ContentDrawProps {
+interface ContentDrawLessonProps {
   data?: any
 }
 
-const ContentDraw: FC<ContentDrawProps> = ({ data }) => {
+export const ContentDrawLesson: FC<ContentDrawLessonProps> = ({ data }) => {
   const lesson_id = data?._id
   const category_id = data?.category_id
   const type_category = data?.type_category
@@ -61,7 +61,7 @@ const DrawLesson: FC<DrawLessonProps> = ({ button, title, data }) => {
       children={(action) => (
         <DrawProvider>
           {" "}
-          <ContentDraw {...action} data={data} />{" "}
+          <ContentDrawLesson {...action} data={data} />{" "}
         </DrawProvider>
       )}
     />

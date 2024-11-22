@@ -117,6 +117,7 @@ const ModalForm: FC<{
       const { name_test } = formData
       const res = await createTest({
         name_test,
+        type_category: type_category,
       })
       const test = res.data
       const test_id = test?._id

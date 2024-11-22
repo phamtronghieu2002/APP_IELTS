@@ -52,10 +52,12 @@ const Notify = ({ textStyle = "text-lg", Icon, rounded, border = 'border', title
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
 
+  console.log("swich value >>>>>>>>", switchValue);
 
   const initTime = async () => {
     // removeData('time');
     const time = await getData('time');
+
 
     if (!time?.active) {
       cancelAllScheduledNotifications();
@@ -64,8 +66,10 @@ const Notify = ({ textStyle = "text-lg", Icon, rounded, border = 'border', title
     if (time) {
 
       const current_time = time?.timeSetting;
+      const isOn = time?.active;
 
       setTime(new Date(current_time));
+      setSwitchValue(isOn);
       const getHour = current_time.getHours();
       const getMinute = current_time.getMinutes();
       run(getHour, getMinute);
@@ -81,6 +85,10 @@ const Notify = ({ textStyle = "text-lg", Icon, rounded, border = 'border', title
 
     initTime();
   }, [switchValue]);
+
+
+
+
   useEffect(() => {
     if (switchValue && time) {
       const getHour = time.getHours();

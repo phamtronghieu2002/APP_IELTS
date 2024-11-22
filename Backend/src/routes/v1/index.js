@@ -16,6 +16,7 @@ import gptRoute from "./GPTRoute";
 import learningTimeRoute from "./LearningTimeRoute";
 import commentRoute from "./CommentRoute";
 import statisticRoute from "./StasiticRoute";
+import accountRoute from "./AccounRoute";
 import { veryfyUser } from "~/middlewares/authMiddleware";
 const initAPIRoutes = (app) => {
 
@@ -36,6 +37,8 @@ const initAPIRoutes = (app) => {
       app.use("/api/v1/learning_time", learningTimeRoute);
       app.use("/api/v1/comment", commentRoute);
       app.use("/api/v1/statistic",statisticRoute );
+      app.use("/api/v1/account",accountRoute );
+
 
 }
 

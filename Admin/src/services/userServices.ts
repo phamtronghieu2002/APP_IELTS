@@ -4,16 +4,16 @@ import { API_URL } from "./API"
 import { _const } from "../_constant"
 import storage from "../utils/storage"
 import { serverInstance } from "../axios/serverInstance"
+import { login } from "./authService"
 // import "./transfer"
 // import { USER_DATA } from "../data/old/user"
 
 export const loginService = async (body: any) => {
-  const API = API_URL.login
   return new Promise(async (resolve, reject) => {
     try {
-      const fb: any = await serverInstanceNoAuth.post(API, body)
-      const refeshToken = fb?.data?.[0]?.refreshToken 
-      const accessToken = fb?.data?.[0]?.token
+      const fb: any = await login(body)
+      const refeshToken = fb?.data?.accessToken
+      const accessToken = fb?.data?.accessToken
 
       storage.setToken(accessToken, refeshToken)
 

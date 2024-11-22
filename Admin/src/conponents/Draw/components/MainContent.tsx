@@ -39,9 +39,9 @@ const MainContent: FC<MainContentProps> = ({
 
   const [question_text, setQuestionText] = useState<string>("")
 
-  const sound_voc = data_voc?.sound_voc
+  const sound_voc = data_voc?.sound_voc || ""
   const [explain, setExplain] = useState<string>("")
-
+  _log("question_select >>>>>>>>>", question_select)
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
@@ -81,6 +81,7 @@ const MainContent: FC<MainContentProps> = ({
         lesson_id,
         questions: {
           question_type,
+          audio_url: sound_voc,
           description: "",
           question_id: sub_question_id,
           question_text,
@@ -96,10 +97,7 @@ const MainContent: FC<MainContentProps> = ({
       dispath?.({
         type: "REFRESH",
       })
-      dispath?.({
-        type: "SET_QUESTION_SELECT",
-        payload: result?.questions,
-      })
+
       if (is_save_new) {
         dispath?.({
           type: "SET_CONFIRM_CREATE_TYPE_QUESTION",
@@ -108,9 +106,18 @@ const MainContent: FC<MainContentProps> = ({
           type: "SET_QUESTION_SELECT",
           payload: null,
         })
+      } else {
+        dispath?.({
+          type: "SET_QUESTION_SELECT",
+          payload: result?.questions,
+        })
       }
       onSubmit?.()
-    } catch (error) {}
+    } catch (error) {
+      console.log("====================================")
+      console.log("error >>>", error)
+      console.log("====================================")
+    }
   }
   const HandleGetDeBai: FC<{ content: string }> = ({ content }) => {
     if (type_category != "Listening" && type_category != "Vocabulary") {
@@ -118,10 +125,7 @@ const MainContent: FC<MainContentProps> = ({
     } else if (type_category == "Listening" || type_category == "Vocabulary") {
       // trả về audio
       return (
-        <audio
-          controls
-          src={`${import.meta.env.VITE_SERVER_IELTS_DOMAIN}/files/${content}`}
-        >
+        <audio controls src={content}>
           Your browser does not support the audio tag.
         </audio>
       )
@@ -140,7 +144,7 @@ const MainContent: FC<MainContentProps> = ({
           <>
             <h3 className="font-bold text-lg">{getTitle()}</h3>
             <div className="mt-3">
-              {type_category == "Listening" || type_category == "Reading" ? (
+              {type_category == "Listening" || type_category == "Speaking" ? (
                 <>
                   <p className="font-medium">Loại câu hỏi</p>
                   <div className="flex gap-3 items-center mt-3 mb-3">
@@ -156,8 +160,8 @@ const MainContent: FC<MainContentProps> = ({
                 <HandleGetDeBai
                   content={
                     sound_voc ||
-                    question?.question_text ||
                     question?.audio_url ||
+                    question?.question_text ||
                     question?.vocURL
                   }
                 />
@@ -199,7 +203,9 @@ const MainContent: FC<MainContentProps> = ({
             {question_type !== _questionType?.fill_in_blanks && (
               <div className="explain">
                 <label htmlFor="" className="font-bol block mb-3">
-                  Giải thích đáp án đúng
+                  {type_category == "Writing" || type_category == "Speaking"
+                    ? "Đáp án mẫu"
+                    : "Giải thích đáp án đúng"}
                 </label>
                 <TinyMCEEditor
                   initialValue={question_select?.explain}

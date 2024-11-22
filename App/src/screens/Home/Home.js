@@ -164,6 +164,11 @@ const Home = ({ navigation, route }) => {
             <Pressable
               key={index}
               onPress={() => {
+                if(item?.type === 'Exam'){
+                  navigation.navigate(configs?.screenName?.lesson_exam, { category: item })
+
+                    return
+                }
                 navigation.navigate(configs?.screenName?.lesson, { category: item })
               }}
               style={{
@@ -195,9 +200,7 @@ const Home = ({ navigation, route }) => {
                 <Text className="font-bold">
                   {item?.name_category}
                 </Text>
-                <Text className="text-xs text-gray-500 mt-1">
-                  3000 words
-                </Text>
+               
               </View>
             </Pressable>
           )

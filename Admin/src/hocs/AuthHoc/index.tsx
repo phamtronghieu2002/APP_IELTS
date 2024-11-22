@@ -42,9 +42,7 @@ export const AuthHoc: React.FC<IProps> = ({ children }) => {
     initData()
   }, [])
 
-  if (!isAuth) {
-    return <InitialScreen />
-  }
+
 
   return (
     <>

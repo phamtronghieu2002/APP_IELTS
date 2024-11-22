@@ -11,8 +11,9 @@ import SwitchSelector from "react-native-switch-selector";
 import ExpandableWriting from "../../ExpandableWriting/ExpandableWriting";
 import Recorder from "../../recorder/Recorder";
 import RecoderResponse from "../../recorder/RecoderResponse";
+import ActionBar from "../../ActionBar/ActionBar";
 
-const SpeakingTest = ({ navigation, route }) => {
+const SpeakingTest = ({ navigation, route, dataStasitic, headershow = true, onNextPart, part, isFinish }) => {
 
   const { width } = useWindowDimensions();
 
@@ -21,7 +22,7 @@ const SpeakingTest = ({ navigation, route }) => {
   const [voice, setVoice] = React.useState();
 
   const [questions, setQuestions] = React.useState({});
-  const test_id = route?.params?.test_id;
+  const test_id = route?.params?.test_id || dataStasitic?.test_id;
 
   const fetchTestById = async () => {
     try {
@@ -38,7 +39,7 @@ const SpeakingTest = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       fetchTestById();
-    }, [test_id]) // Thêm test_id vào dependencies nếu cần
+    }, [part,test_id]) // Thêm test_id vào dependencies nếu cần
   );
 
   const [selectedValue, setSelectedValue] = React.useState(0);
@@ -48,8 +49,10 @@ const SpeakingTest = ({ navigation, route }) => {
   ];
 
   return (
-    <SafeAreaView>
-      <HeaderScreen label={route?.params?.nameTest} navigation={navigation} />
+    <SafeAreaView>{
+      headershow ? <HeaderScreen label={route?.params?.nameTest} navigation={navigation} /> : <></>
+      }
+
       <ScrollView className="p-7">
         <View
           style={{
@@ -73,7 +76,7 @@ const SpeakingTest = ({ navigation, route }) => {
       <View style={styles.questionContainer}>
       <RenderHtml
                 contentWidth={width}
-                source={{ html: questions?.description }}
+                source={{ html: questions?.question_text }}
                 // Thêm style cho RenderHtml
                 style={{
                   maxHeight: "100%",
@@ -137,6 +140,21 @@ const SpeakingTest = ({ navigation, route }) => {
           )}
         </View>
       </ScrollView>
+      {
+        1 ? <ActionBar
+          navigation={navigation}
+          classNames={"mb-0 mt-3"}
+          total_question={1}
+          total_correct={
+            1
+          }
+          onPressNext={() => {
+            onNextPart();
+          }
+
+          }
+        /> :<></>
+      }
     </SafeAreaView>
   );
 };

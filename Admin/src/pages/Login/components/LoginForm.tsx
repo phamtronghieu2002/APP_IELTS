@@ -22,7 +22,7 @@ export const LoginForm: React.FC = () => {
     
     setIsLoading(true)
     try {
-      const fb: any = await loginService({username: 'viettin', password: 'vt2022'})
+      const fb: any = await loginService(vals)
       api?.message?.success(fb?.message)
       gotoApp()
     } catch (error: any) {

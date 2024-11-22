@@ -4,6 +4,8 @@ import {
   Text,
   ScrollView,
   SafeAreaView,
+  Pressable,
+  TouchableOpacity,
 } from "react-native";
 import * as Progress from "react-native-progress";
 import HeaderScreen from "../../Header/HeaderScreen";
@@ -23,7 +25,8 @@ import AudioPlayerUI from "../../AudioPlayer/AudioPlayerUI";
 import { Skeleton } from "moti/skeleton";
 import SkeletonPlaceholder from "../../Skeleton/Skeleton";
 import FloatButton from "../../FloatButton/FloatButton";
-const ReadingTest = ({ navigation, route }) => {
+import ScriptButton from "../../ScriptButton/ScriptButton";
+const ListeningTest = ({ navigation, route }) => {
   const { width } = useWindowDimensions();
 
   const [test, setTest] = React.useState({});
@@ -151,7 +154,7 @@ const ReadingTest = ({ navigation, route }) => {
     <SafeAreaView
 
     >
-       
+
       <HeaderScreen
         onPress={refresh}
         label={route?.params?.nameTest}
@@ -189,6 +192,14 @@ const ReadingTest = ({ navigation, route }) => {
               }}
               className="rounded-md bg-white p-5 mb-3"
             >
+              <View className="flex-row mb-5 justify-between">
+                <Text className="font-bold">
+                  Audio Recording
+                </Text>
+                {countProgress==questions.total_question &&
+                <ScriptButton text={questions.question_text} />
+                }
+                </View>
               <AudioPlayerUI
                 audio_url={questions?.audio_url}
               />
@@ -312,9 +323,9 @@ const ReadingTest = ({ navigation, route }) => {
             }}
           />}
 
-  
+
         </ScrollView>
-     
+
       </>}
 
       {
@@ -326,4 +337,4 @@ const ReadingTest = ({ navigation, route }) => {
   );
 };
 
-export default ReadingTest;
+export default ListeningTest;

@@ -40,6 +40,9 @@ import OverviewVocabulary from "../screens/Overview/OverviewVocabulary";
 import VocabularyPlay from "../components/Vocabulary/VocabularyPlay";
 import Grammar from "../components/Grammar/Grammar";
 import Dictionary from "../screens/Dictionary/Dictionary";
+import Exam from "../screens/Exam/Exam";
+import LessonExam from "../components/Lesson/LessonExam";
+import OverviewExam from "../screens/Overview/OverviewExam";
 export const screensStack = [
     {
         name: configs.screenName.introduce,
@@ -198,8 +201,26 @@ export const screensStack = [
 
     },
     {
+        name: configs.screenName.lesson_exam,
+        component: LessonExam,
+        options: { title: "Welcome Logins", headerShown: false, },
+
+    },
+    {
+        name: configs.screenName.overview_exam,
+        component: OverviewExam,
+        options: { title: "Welcome Logins", headerShown: false, },
+
+    },
+    {
         name: configs.screenName.Grammar,
         component: Grammar,
+        options: { title: "Welcome Logins", headerShown: false, },
+
+    },
+    {
+        name: configs.screenName.Exam,
+        component: Exam,
         options: { title: "Welcome Logins", headerShown: false, },
 
     },

@@ -16,6 +16,7 @@ import { _testTypes } from "../../utils/constant";
 import DeleteButton from "../DeleteButton/DeleteButton";
 import { AiVoiceTest } from "../../services/RatingVoice";
 import AudioPlayer from "./AudioPlayer";
+import Toast from "react-native-toast-message";
 
 const RecoderResponse = ({ test_id, voice}) => {
   const [responseList, setResponseList] = useState([]);
@@ -52,11 +53,18 @@ const RecoderResponse = ({ test_id, voice}) => {
       const response = await AiVoiceTest({
         url: voice,
       });
+       
+      console.log("Rating response >>>>>>", response);
       
  
       return response;
     } catch (error) {
-      console.error(error);
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Gemini Error !!!`",
+      
+      });
     } finally {
       setIsLoading(false);
     }
@@ -123,7 +131,7 @@ const RecoderResponse = ({ test_id, voice}) => {
     setIsDeleting(true);
     fetchGetRating();
     try {
-      await delay(5000);
+   
       const fb = await deleteQuestionInTestResult(test_id, question_id);
       const data = fb.data;
       console.log("Status", data);
@@ -182,21 +190,21 @@ const RecoderResponse = ({ test_id, voice}) => {
                     Rating your response :
                   </Text>
                   <Text className="font-bold italic">1. Tone on the voice recording</Text>
-                  <Text>{item.rating.tone}</Text>
+                  <Text>{item.rating?.tone}</Text>
                 </View>
                 <View>
                   <Text className="font-bold italic">2. Grammar on the voice recording</Text>
-                  <Text>{item.rating.Grammar}</Text>
+                  <Text>{item.rating?.Grammar}</Text>
                 </View>
                 <View>
                   <Text className="font-bold italic">
                     3. Pronunciation on the voice recording
                   </Text>
-                  <Text>{item.rating.pronunciation}</Text>
+                  <Text>{item.rating?.pronunciation}</Text>
                 </View>
                 <View>
                   <Text className="font-bold italic">4. Tempo on the voice recording</Text>
-                  <Text>{item.rating.tempo}</Text>
+                  <Text>{item.rating?.tempo}</Text>
                 </View>
               </View>
             ) : (
