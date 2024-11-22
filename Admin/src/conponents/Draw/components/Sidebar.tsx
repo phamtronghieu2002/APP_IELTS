@@ -93,6 +93,8 @@ const Sidebar: FC<SidebarProps> = ({
       const test = tests.find((item) => item._id === testSelected._id)
 
       setTestSelected(test)
+    }else{
+      dispath({ type: "SET_TEST_ID", payload: null })
     }
   }, [tests])
 
@@ -172,7 +174,7 @@ const Sidebar: FC<SidebarProps> = ({
                   type_category={type_category}
                   refresh={() => {
                     fetchTest()
-                    setTestSelected({})
+                    setTestSelected(null)
                   }}
                   lesson_id={lesson_id}
                   modalProps={{

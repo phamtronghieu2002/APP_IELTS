@@ -33,7 +33,8 @@ const MainContent: FC<MainContentProps> = ({
   const { drawStore, dispath } = useContext<any>(context)
   const [loading, setLoading] = useState<boolean>(true)
   const question_select = drawStore?.sub_question_select
-  const question_type = question_select?.question_type || drawStore?.question_type
+  const question_type =
+    question_select?.question_type || drawStore?.question_type
   const question = drawStore?.question
 
   const [question_text, setQuestionText] = useState<string>("")
@@ -80,7 +81,7 @@ const MainContent: FC<MainContentProps> = ({
         lesson_id,
         questions: {
           question_type,
-          audio_url : sound_voc,
+          audio_url: sound_voc,
           description: "",
           question_id: sub_question_id,
           question_text,
@@ -105,7 +106,7 @@ const MainContent: FC<MainContentProps> = ({
           type: "SET_QUESTION_SELECT",
           payload: null,
         })
-      }else{
+      } else {
         dispath?.({
           type: "SET_QUESTION_SELECT",
           payload: result?.questions,
@@ -113,9 +114,9 @@ const MainContent: FC<MainContentProps> = ({
       }
       onSubmit?.()
     } catch (error) {
-      console.log('====================================');
-      console.log("error >>>", error);
-      console.log('====================================');
+      console.log("====================================")
+      console.log("error >>>", error)
+      console.log("====================================")
     }
   }
   const HandleGetDeBai: FC<{ content: string }> = ({ content }) => {
@@ -143,7 +144,7 @@ const MainContent: FC<MainContentProps> = ({
           <>
             <h3 className="font-bold text-lg">{getTitle()}</h3>
             <div className="mt-3">
-              {type_category == "Listening" || type_category == "Reading" ? (
+              {type_category == "Listening" || type_category == "Speaking" ? (
                 <>
                   <p className="font-medium">Loại câu hỏi</p>
                   <div className="flex gap-3 items-center mt-3 mb-3">
@@ -202,7 +203,9 @@ const MainContent: FC<MainContentProps> = ({
             {question_type !== _questionType?.fill_in_blanks && (
               <div className="explain">
                 <label htmlFor="" className="font-bol block mb-3">
-                  Giải thích đáp án đúng
+                  {type_category == "Writing" || type_category == "Speaking"
+                    ? "Đáp án mẫu"
+                    : "Giải thích đáp án đúng"}
                 </label>
                 <TinyMCEEditor
                   initialValue={question_select?.explain}

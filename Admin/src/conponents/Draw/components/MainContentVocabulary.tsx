@@ -10,6 +10,7 @@ import { render } from "@testing-library/react"
 import { _app } from "../../../utils/_app"
 import { IconC } from "../../IconC"
 import ModalQuestionVoc from "../../Modal/ModalQuestionVoc"
+import Notify from "./Notify"
 
 interface MainContentVocabularyProps {
   type_category: string
@@ -25,9 +26,7 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
   const [keyword, setKeyword] = useState<string>("")
   const [vocs, setVocs] = useState<any>([])
   const test_id = drawStore?.test_id
-  console.log('====================================');
-  console.log('test_id >>>>>>>>>>>>>>>>', test_id);
-  console.log('====================================');
+
   const fetchVocByTestId = async (keyword?: string) => {
     try {
       setLoading(true)
@@ -90,14 +89,7 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
       dataIndex: "img_voc",
       key: "img_voc",
       render: (value: any, record: any, index: any) => {
-        return (
-          <img
-            width={50}
-            height={50}
-            src={record?.img_voc}
-            alt=""
-          />
-        )
+        return <img width={50} height={50} src={record?.img_voc} alt="" />
       },
     },
     {
@@ -105,7 +97,7 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
       dataIndex: "sound_voc",
       key: "sound_voc",
       render: (value: any, record: any, index: any) => {
-        const audio = new Audio((record?.sound_voc))
+        const audio = new Audio(record?.sound_voc)
 
         const playAudio = () => {
           audio.play()
@@ -176,7 +168,7 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
                       dispath({
                         type: "SET_QUESTION_SELECT",
                         payload: questions_voc,
-                      }) 
+                      })
                       dispath({
                         type: "SET_QUESTION_VOC",
                         payload: record?.sound_voc,
@@ -198,7 +190,11 @@ const MainContentVocabulary: FC<MainContentVocabularyProps> = ({
     },
   ]
 
-  return (
+  return !test_id ? (
+    <div className="flex justify-center w-[60%]">
+      <Notify />
+    </div>
+  ) : (
     <div className="flex-1 pl-3">
       {loading && <MaskLoader />}
       <TableC

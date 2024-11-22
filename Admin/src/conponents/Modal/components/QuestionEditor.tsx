@@ -139,7 +139,7 @@ const QuestionEditor: React.FC<{
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "Hướng dẫn Điền từ",
+      label: "Hướng dẫn Tự luận",
       children: (
         <div>
           <p>
