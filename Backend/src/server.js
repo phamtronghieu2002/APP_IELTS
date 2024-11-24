@@ -26,8 +26,8 @@ configViewEngine(app);
 app.use(express.static(path.join(__dirname, "public")));
 app.use('/files', express.static(filesDirectory));
 //config body parse
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' })); // Cho phép request body JSON đến 50MB
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' })); // Ch
 
 //configs cors
 app.use(cors(corsOptions))
