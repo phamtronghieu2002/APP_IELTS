@@ -237,20 +237,7 @@ export const screensStack = [
 export const screensDrawer = (t) => [
     // tôi cần chỗ này 
 
-    {
-        label: t?.('draw.profile'),
-        name: configs.screenName.profile,
-        component: Profile,
-        options: {
-            title: "Welcome Profile", headerShown: true,
-            drawerIcon: ({ focused, color, size }) => (
-                <Icon name="user" size={size} color={color} />
-            ),
-            headerShown: false
-        },
 
-
-    },
     {
         label: t?.('draw.feedback'),
         name: configs.screenName.feedback,

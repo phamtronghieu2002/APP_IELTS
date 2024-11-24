@@ -157,8 +157,6 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
     setCountProgress((prevCount) => prevCount + 1);
   };
   const handelShowNextQuestion = () => {
-    console.log("countProgress +1 >>>>", countProgress + 1);
-    console.log("questions.total_question >>>>>", questions.total_question);
 
 
 
@@ -171,9 +169,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
 
 
   const handelShowChoiceNextQuestion = () => {
-    console.log("partQuestion >>>>", partQuestion);
-    console.log("countChoiceAnswer +1 >>>>", countChoiceAnswer + 1);
-    console.log("choiceQuestions.length >>>>", choiceQuestions.length);
+ 
 
     if (isFinish && countProgress + 1 == questions.total_question) {
       setShowNextQuestion(false);
@@ -340,12 +336,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
               }
               onPressNext={() => {
                 setAnswers([]);
-                console.log('====================================');
-                console.log("countProgress", countProgress);
-                console.log('====================================');
-                console.log("questions.total_question", questions.total_question);
-                console.log('====================================');
-                console.log('====================================');
+              
                 if (countProgress == questions.total_question) {
                   if (type) {
                     navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })

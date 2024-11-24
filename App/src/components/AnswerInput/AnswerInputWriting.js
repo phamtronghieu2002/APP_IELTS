@@ -30,10 +30,9 @@ const AnswerInputWriting = ({ test_id, data }) => {
   const [isCounting, setIsCounting] = useState(false);
 
 
-  console.log("responseList >>>>", responseList[0]?.rating);
 
 
-    
+
   useEffect(() => {
     let interval;
     if (isCounting) {
@@ -72,7 +71,6 @@ const AnswerInputWriting = ({ test_id, data }) => {
         text: userAnswer,
         topic: data.question_text,
       });
-      console.log("Rating response >>>>>>", response);
 
       return response;
     } catch (error) {
@@ -130,7 +128,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
         time: item.time,
         countWord: item.countWord,
         userAnswer: item.userAnswer,
-        rating: item?.rating?.[0] ?? {},
+        rating: item?.rating?.[0] || (item?.rating ?? {}),
       }));
       setResponseList(newResponses);
       setExpandedItems(Array(newResponses.length).fill(false));

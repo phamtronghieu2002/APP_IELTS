@@ -142,12 +142,7 @@ const Grammar = ({ navigation, route, headershow = true }) => {
               answers?.filter((item) => item.is_correct)?.length
             }
             onPressNext={() => {
-              console.log("countProgress", countProgress);
-              console.log("questions.total_question", questions.total_question);
               if (countProgress == questions.total_question) {
-                console.log('====================================');
-
-                console.log('====================================');
                 navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
 
               }

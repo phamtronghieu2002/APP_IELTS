@@ -49,7 +49,6 @@ const Setting = () => {
   const onHandleLanguage = async (value) => {
     try {
 
-      console.log("value", value);
 
       await storeData("langs", { value });
       setLang(value);
@@ -66,7 +65,6 @@ const Setting = () => {
 
     const handleLang = async () => {
       const currentLang = await getData("langs");
-      console.log("currentLang >>>>>>", currentLang);
 
       if (currentLang) {
         setLang(currentLang?.value ?? "vi");

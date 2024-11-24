@@ -113,6 +113,11 @@ Router.post("/upload/dinarycloud", uploadFile?.single("audio"), async (req, res)
     const result = await cloudinary.uploader.upload(req.file.path,
       { resource_type: "video" }
     )
+    console.log(
+      "result >>>>>>>>>>>>>>>",
+      result);
+
+
     return res.status(200).json(result);
   } catch (error) {
     console.log(error);

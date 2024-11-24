@@ -144,7 +144,7 @@ export default class Recorder extends Component {
 
       if (response.ok) {
         const data = await response.json();
-        this.props.setVoice(data.url);
+        this.props.setVoice(data.secure_url);
         this.setState({ save: true, audioFile: '' });
 
       } else {
