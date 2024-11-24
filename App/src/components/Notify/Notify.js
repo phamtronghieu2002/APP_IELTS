@@ -32,7 +32,6 @@ Notifications.setNotificationHandler({
 });
 
 export const convertTimeToHHMM = (date) => {
-  console.log("date", date);
 
   const hours = date?.getHours?.()?.toString?.()?.padStart(2, '0');
   const minutes = date?.getMinutes?.()?.toString?.()?.padStart(2, '0');
@@ -52,7 +51,6 @@ const Notify = ({ textStyle = "text-lg", Icon, rounded, border = 'border', title
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
 
-  console.log("swich value >>>>>>>>", switchValue);
 
   const initTime = async () => {
     // removeData('time');
@@ -105,7 +103,6 @@ const Notify = ({ textStyle = "text-lg", Icon, rounded, border = 'border', title
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
     });
 
     return () => {

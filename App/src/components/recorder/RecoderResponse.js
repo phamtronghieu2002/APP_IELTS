@@ -18,7 +18,7 @@ import { AiVoiceTest } from "../../services/RatingVoice";
 import AudioPlayer from "./AudioPlayer";
 import Toast from "react-native-toast-message";
 
-const RecoderResponse = ({ test_id, voice}) => {
+const RecoderResponse = ({ test_id, voice }) => {
   const [responseList, setResponseList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -53,17 +53,13 @@ const RecoderResponse = ({ test_id, voice}) => {
       const response = await AiVoiceTest({
         url: voice,
       });
-       
-      console.log("Rating response >>>>>>", response);
-      
- 
       return response;
     } catch (error) {
       Toast.show({
         type: "error",
         position: "top",
         text1: "Gemini Error !!!`",
-      
+
       });
     } finally {
       setIsLoading(false);
@@ -79,6 +75,7 @@ const RecoderResponse = ({ test_id, voice}) => {
           rating: rating,
           url: voice,
         };
+        
         setResponseList((prevList) => [...prevList, newResponse]);
         handleChooseAnswer(newResponse);
       } catch (error) {
@@ -94,7 +91,7 @@ const RecoderResponse = ({ test_id, voice}) => {
       })
         .then((fb) => {
           const data = fb.data;
-     
+
         })
         .catch((err) => {
           console.log("error >>>>", err);
@@ -109,7 +106,7 @@ const RecoderResponse = ({ test_id, voice}) => {
     getTestResult(test_id)
       .then((fb) => {
         const data = fb.data;
- 
+
         const newResponses = data.anwsers.map((item) => ({
           question_id: item.question_id,
           rating: item.rating,
@@ -126,12 +123,12 @@ const RecoderResponse = ({ test_id, voice}) => {
   useEffect(() => {
     fetchGetRating();
   }, [reload]); // Trigger fetch on reload change
-  
+
   const handleDelete = async (test_id, question_id) => {
     setIsDeleting(true);
     fetchGetRating();
     try {
-   
+
       const fb = await deleteQuestionInTestResult(test_id, question_id);
       const data = fb.data;
       console.log("Status", data);
@@ -146,15 +143,15 @@ const RecoderResponse = ({ test_id, voice}) => {
 
   return (
     <View>
-        {voice && (
-          <Pressable
+      {voice && (
+        <Pressable
           onPress={handleRatingVoice}
           className="bg-red-300 rounded-full py-2 px-4 flex-row items-center justify-center active:bg-red-400"
           disabled={isLoading}
         >
-            <Text className="text-white font-bold">Rating Voice</Text>
+          <Text className="text-white font-bold">Rating Voice</Text>
         </Pressable>
-        )}
+      )}
       {/* Hiển thị Loading */}
       {isLoading && (
         <View className="flex items-center">
@@ -169,6 +166,7 @@ const RecoderResponse = ({ test_id, voice}) => {
         </View>
       )}
       {responseList.map((item, index) => (
+      
         <View key={index} className="mt-3 p-2 border-t border-gray-300">
           <View className="flex flex-row justify-between items-center mt-1">
             <Text className="font-bold text-xl text-green-500">
@@ -181,9 +179,9 @@ const RecoderResponse = ({ test_id, voice}) => {
           <View>
             {expandedItems[index] ? (
               <View>
-                <AudioPlayer url={item.url} />
+                <AudioPlayer url={item?.url} />
                 <View>
-                <Text className="font-bold text-2lg text-red-500">
+                  <Text className="font-bold text-2lg text-red-500">
                     Warning: This is the rating of the AI system, not the real rating of the teacher !
                   </Text>
                   <Text className="font-bold text-lg text-red-500">

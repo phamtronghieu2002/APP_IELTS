@@ -131,8 +131,6 @@ const ListeningTest = ({ navigation, route }) => {
   const testStore = useSelector((state) => state.test);
   const dispatch = useDispatch();
 
-
-
   const handleProgressUpdate = () => {
     setCountProgress((prevCount) => prevCount + 1);
   };

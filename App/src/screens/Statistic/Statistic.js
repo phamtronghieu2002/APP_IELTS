@@ -225,7 +225,7 @@ const Statistic = ({ navigation, route }) => {
                                                 alignItems: 'center',
                                             }}
                                         >
-                                            <Text className="text-xs">
+                                            <Text className="text-xs text-lime-50">
                                                 7 days ago
                                             </Text>
                                         </LinearGradient>

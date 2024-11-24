@@ -11,7 +11,6 @@ const Dictionary = ({ navigation }) => {
 
             <Text className="text-white">
                 112222222222222222222222222222222222222
-
             </Text>
 
             <View style={styles.webviewContainer}>
