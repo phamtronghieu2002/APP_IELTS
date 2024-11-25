@@ -23,10 +23,10 @@ jobs:
       # 3. Triển khai code lên EC2
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@<EC2_PUBLIC_IP> << 'EOF'
-          cd /home/ubuntu/APP_IELTS/Backend
-          git pull origin master
-          npm install
-          npm run build
-          pm2 restart all
-          EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@<EC2_PUBLIC_IP> "
+            cd /home/ubuntu/APP_IELTS/Backend &&
+            git pull origin master &&
+            npm install &&
+            npm run build &&
+            pm2 restart all
+          "
