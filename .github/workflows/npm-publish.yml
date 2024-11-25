@@ -23,7 +23,7 @@ jobs:
       # 3. Triển khai code lên EC2
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@ec2-52-221-180-99.ap-southeast-1.compute.amazonaws.com"
+          ssh -o StrictHostKeyChecking=no ubuntu@52.221.180.99"
             cd /home/ubuntu/APP_IELTS/Backend &&
             git pull origin master &&
             npm install &&
