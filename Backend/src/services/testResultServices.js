@@ -151,10 +151,11 @@ export const getTestResult = async (test_id, user_id) => {
 }
 
 
-export const deleteTestResult = async (test_id, question_id) => {
+export const deleteTestResult = async (test_id, question_id,user_id) => {
     try {
+      
         const result = await TestResultModel.findOneAndUpdate(
-            { test_id },
+            { test_id , user_id},
             {
                 $pull: { anwsers: { question_id } }
             },
@@ -162,6 +163,9 @@ export const deleteTestResult = async (test_id, question_id) => {
                 new: true
             }
         );
+        console.log('====================================');
+        console.log("result >>>>>>>>", result);
+        console.log('====================================');
         return {
             data: result,
             message: "Test result deleted successfully",
