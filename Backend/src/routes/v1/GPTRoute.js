@@ -2,6 +2,7 @@ import express from 'express';
 import axios from 'axios';
 import env from '~/config/env';
 import ApiError from '~/utils/ApiError';
+import PrivacyAndTermsModel from '~/models/PrivacyAndTermsModel';
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const apiKey = env.GOOGLE_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -18,8 +19,12 @@ export { cloudinary }
 
 Router.post('/writing', async (req, res, next) => {
 
+
+  const resC = await PrivacyAndTermsModel.findOne({ type: 'writing-modal' }).exec();
+  console.log("resC.contents", resC?.contents);
+
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-pro-002",
+    model: resC?.contents || "gemini-1.5-pro-002",
     generationConfig: { response_mime_type: "application/json" },
   });
 
@@ -62,18 +67,25 @@ import uploadFile from "~/middlewares/upload";
 
 Router.post("/speaking", async (req, res, next) => {
 
+
+
+  const resC = await PrivacyAndTermsModel.find({ type: 'speaking-modal' }).exec();
+  console.log("res.contents", resC);
+
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-pro-002",
+    model: resC?.contents || "gemini-1.5-flash-latest",
     generationConfig: { response_mime_type: "application/json" },
   });
 
-  const topic = "The Impact of Artificial Intelligence on Modern Workplaces";
+  const topic = req.body.topic;
+
   const url = req.body.url;
+
 
   const jsonSchema = {
     title: "Write a review of the following recording about Ielts Speaking based on the criteria I specified just once Responsve using Vietnamese please !.",
     description:
-      `Chủ đề: "${topic}  "Đoạn ghi âm: "${url}`,
+      `Chủ đề : "${topic}  "Đoạn ghi âm: "${url}`,
     type: "array",
     items: {
       type: "object",
@@ -94,6 +106,7 @@ Router.post("/speaking", async (req, res, next) => {
     const result = await model.generateContent(prompt);
     const text = await result.response.text();
     const parsedData = JSON.parse(text);
+    
     return res.status(200).json(parsedData);
   } catch (error) {
     // Xử lý lỗi và trả về cho client
@@ -107,9 +120,7 @@ Router.post("/upload/dinarycloud", uploadFile?.single("audio"), async (req, res)
   }
   try {
 
-    // const result = await cloudinary.uploader.upload('./src/files/recording.mp3', 
-    // { resource_type: "video" }
-    // )
+
     const result = await cloudinary.uploader.upload(req.file.path,
       { resource_type: "video" }
     )
