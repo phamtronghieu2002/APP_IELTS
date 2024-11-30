@@ -1,6 +1,7 @@
 const env = require("~/config/env");
 
 const WHITELIST_DOMAINS = [
+  'https://admin-ktln.onrender.com',
   'http://localhost:5111',
   "http://localhost:5000",
   "https://yourdomain.com",
