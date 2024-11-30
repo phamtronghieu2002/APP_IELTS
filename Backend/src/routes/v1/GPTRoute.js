@@ -63,7 +63,7 @@ import uploadFile from "~/middlewares/upload";
 Router.post("/speaking", async (req, res, next) => {
 
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash-latest",
+    model: "gemini-1.5-pro-002",
     generationConfig: { response_mime_type: "application/json" },
   });
 
