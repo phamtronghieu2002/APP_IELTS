@@ -13,7 +13,7 @@ Router.post("/addAnwser",veryfyUser, addAnwserToToTestResultValidation, testResu
 Router.post("/bookmark",veryfyUser, testResultController?.handleBookmarkTestResult);
 Router.get("/", veryfyUser, testResultController?.handleGetTestResult);
 Router.get("/all", veryfyUser, testResultController?.handleGetAllTestResult);
-Router.delete("/", testResultController?.handleDeleteTestResult);
+Router.delete("/",veryfyUser, testResultController?.handleDeleteTestResult);
 
 
 
