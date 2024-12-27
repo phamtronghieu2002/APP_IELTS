@@ -5,6 +5,7 @@ import {
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
+  Image
 } from "react-native";
 import MainButton from "../Button/MainButton";
 import { AiWritingTest } from "../../services/RatingWriting";
@@ -16,6 +17,7 @@ import {
 import { _testTypes } from "../../utils/constant";
 import DeleteButton from "../DeleteButton/DeleteButton";
 import Toast from "react-native-toast-message";
+
 
 const AnswerInputWriting = ({ test_id, data }) => {
   const [userAnswer, setUserAnswer] = useState("");
@@ -148,6 +150,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
     try {
 
       setIsDeleting(true);
+
       await deleteQuestionInTestResult(test_id, question_id);
     } catch (error) {
       console.log("error >>>>", error);
@@ -200,7 +203,7 @@ const AnswerInputWriting = ({ test_id, data }) => {
         item?.rating ? <View key={index} className="mt-3 p-2 border-t border-gray-300">
           <View className="flex flex-row justify-between items-center mt-1">
             <View className="pr-2">
-              <Text className="font-bold text-xl text-green-500">Response {index + 1}</Text>
+              <Text className="font-bold text-xl text-green-500 mb-3">Response {index + 1}</Text>
               <Text className="font-bold text-4lg text-red-500">
                 Warning: This is the rating of the AI system, not the real rating of the teacher !
               </Text>
@@ -211,12 +214,12 @@ const AnswerInputWriting = ({ test_id, data }) => {
           <Text className="font-bold italic mt-1">Time: {formatTime(item.time)}</Text>
           <Text className="font-bold italic mt-1">User Answer: {item.userAnswer}</Text>
           <Text className="font-bold italic mt-1">Word Count: {item.countWord}</Text>
-          <Text className="font-bold italic text-red-800 mt-1 mb-2">
+          <Text className="font-bold italic text-red-800 mt-1 mb-2 text-2xl">
             Point: {item.rating?.ielts_writing_score_rating}
           </Text>
           <View>
             {expandedItems[index] ? (
-              <View>
+              <View className="flex flex-col gap-3">
                 <Text className="font-bold text-lg text-red-500">Rating your response:</Text>
                 <Text className="font-bold italic">1. Grammar Errors</Text>
                 <Text>{item.rating?.grammar_errors}</Text>
@@ -243,7 +246,16 @@ const AnswerInputWriting = ({ test_id, data }) => {
         </View> : null
       ))}
 
-      <MainButton title="Rate my answer" roundedfull onPress={handleRatingAnswer} />
+      <MainButton classNames={"mt-4"} roundedfull onPress={handleRatingAnswer}>
+        <View className="flex flex-row gap-3">
+          <Text className="text-lime-50">
+            Rating answer using AI
+          </Text>
+          <Image 
+      
+          src="https://res.cloudinary.com/dzpj1y0ww/image/upload/v1733327560/chat-gpt_1_xws88j.png" alt="robot" className="w-6 h-6" />
+        </View>
+      </MainButton>
     </View>
   );
 };

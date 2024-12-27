@@ -36,7 +36,7 @@ app.use(cors(corsOptions))
 // connection to database
 
 mongoose
-  .connect(env?.MONGODB_URI,{ useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(env?.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("Connected to MongoDB");
   });
@@ -50,9 +50,6 @@ initAPIRoutes(app);
 
 
 
-
-//config error handling middleware
-app.use(errorHandlingMiddleware);
 
 
 

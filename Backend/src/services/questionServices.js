@@ -7,26 +7,28 @@ const addQuestion = async (data) => {
     const question_id = data?.question_id;
     const lesson_id = data?.lesson_id;
 
+
+  
     // Tìm document với question_id
     let is_fill_in_blank = false;
     if (question_id) {
         const existingQuestionDoc = await questionModel.findOne({ _id: question_id || "" });
 
         let count_question_fill_in_blank = 0;
-
+ 
         if (existingQuestionDoc) {
             const newQuestion = data?.questions;
             is_fill_in_blank = newQuestion?.question_type === "fill_in_blank";
 
-            if (is_fill_in_blank) {
-                count_question_fill_in_blank = newQuestion?.options?.length;
-            }
+       
 
             // Kiểm tra xem câu hỏi với `question_id` đã tồn tại trong mảng `questions` chưa
             const existingQuestionIndex = existingQuestionDoc.questions.findIndex(
                 (q) => q.question_id === newQuestion.question_id
             );
 
+
+       
             let updatedQuestions;
 
             if (existingQuestionIndex !== -1) {
@@ -34,12 +36,24 @@ const addQuestion = async (data) => {
                 updatedQuestions = existingQuestionDoc.questions.map((q, index) =>
                     index === existingQuestionIndex ? newQuestion : q
                 );
+
+                if (is_fill_in_blank) {
+                        const newLength = newQuestion?.options?.length;
+                       const  oldLength = existingQuestionDoc.questions[existingQuestionIndex]?.options?.length;
+                    count_question_fill_in_blank = newLength - oldLength ;
+                }
+
             } else {
                 // Nếu chưa tồn tại, push câu hỏi mới vào mảng `questions`
                 updatedQuestions = [...existingQuestionDoc.questions, newQuestion];
+                count_question_fill_in_blank= newQuestion?.options?.length;
+
             }
 
             // Cập nhật document với mảng `questions` mới và tăng số lượng câu hỏi
+
+
+   
             const result = await questionModel.findOneAndUpdate(
                 { _id: question_id },
                 {
@@ -62,8 +76,7 @@ const addQuestion = async (data) => {
 
             const cate_id = lesson.cate_id;
             // tăng total_question của cate_id
-
-            await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question: is_fill_in_blank ? count_question_fill_in_blank : existingQuestionIndex !== -1 ? 0 : 1 } }, { new: true });
+            await CategoriesModel.findByIdAndUpdate(cate_id, { $inc: { total_question:  is_fill_in_blank ? count_question_fill_in_blank : existingQuestionIndex !== -1 ? 0 : 1  } }, { new: true });
 
 
             let total_question = 0;
@@ -129,7 +142,7 @@ const deleteQuestion = async (question_id, sub_q, lesson_id) => {
 
         const sub_id = sub_q?.question_id;
         const countDelete = sub_q?.question_type == "fill_in_blank" ? sub_q?.options?.length : 1;
-      
+
         const result = await questionModel.updateOne(
             { _id: question_id },
             {
@@ -152,7 +165,7 @@ const deleteQuestion = async (question_id, sub_q, lesson_id) => {
 
         let total_question = 0;
         lesson.tests.forEach(test => {
-       
+
             total_question += test.questions[0]?.total_question || 0;
         });
 

@@ -71,7 +71,7 @@ const WritingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
         >
 
           <View className="rounded-lg">
-            <Text className="text-base font-semibold mb-2  pt-5">123</Text>
+            <Text className="text-base font-semibold mb-2  pt-5">Reading Part</Text>
             <View className="flex-1 max-w-full max-h-40 overflow-hidden">
               <RenderHtml
                 contentWidth={width}

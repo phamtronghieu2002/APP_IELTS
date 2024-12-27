@@ -98,7 +98,12 @@ export default function AudioPlayerUI({
       };
     }, [sound])
   );
-
+  function formatTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`; // Đảm bảo giây luôn có 2 chữ số
+  }
   return (
     <View style={styles.container}>
 
@@ -124,10 +129,11 @@ export default function AudioPlayerUI({
         />
 
         <View style={styles.timeContainer}>
-          <Text style={styles.timeText}>{Math.floor(position / 1000)}s</Text>
+          <Text style={styles.timeText}>{formatTime(position)}</Text>
           <Text style={styles.timeText}>/</Text>
-          <Text style={styles.timeText}>{Math.floor(duration / 1000)}s</Text>
+          <Text style={styles.timeText}>{formatTime(duration)}</Text>
         </View>
+
 
         <View style={styles.controls}>
           <TouchableOpacity onPress={skipBackward}>

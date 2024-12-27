@@ -93,6 +93,7 @@ const Statistic = ({ navigation, route }) => {
         try {
             const res = await getAllTestResult();
             const filters = res?.data?.filter(item => item?.test_id?.type_category === "Reading" || item?.test_id?.type_category === "Listening")
+         
             setTestResult(filters);
         } catch (error) {
             console.log(error);
@@ -114,7 +115,7 @@ const Statistic = ({ navigation, route }) => {
         let total = 0;
 
 
-        testResult?.map((item) => {
+        testResult?.forEach((item) => {
             total += item?.total_incorrect;
         });
         return total;

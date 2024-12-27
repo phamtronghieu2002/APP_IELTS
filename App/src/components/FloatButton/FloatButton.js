@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Modal, View, Text, ActivityIndicator } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import IonA from 'react-native-vector-icons/FontAwesome';
-import WebView from 'react-native-webview'; // Import WebView
-import configs from '../../configs';
 import Dictionary from '../../screens/Dictionary/Dictionary';
 
 const FloatButton = ({ navigation }) => {

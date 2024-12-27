@@ -8,6 +8,8 @@ import RadioButtonForm from "../RadioButton/RadioButtonForm";
 import ActionBar from "../ActionBar/ActionBar";
 import configs from '../../configs';
 import AudioPlayer2 from "../recorder/AudioPlayer2";
+import { useSelector } from "react-redux";
+
 
 const VocabularyPlay = ({ navigation, route, headershow = true }) => {
 
@@ -66,6 +68,7 @@ const VocabularyPlay = ({ navigation, route, headershow = true }) => {
     fetchTestById();
   }, [test_id]);
 
+  const testStore = useSelector((state) => state.test);
   const [currentPlaying, setCurrentPlaying] = useState(null);
   const handlePlay = (index) => {
     setCurrentPlaying(index); // Cập nhật trạng thái đang phát
@@ -102,7 +105,10 @@ const VocabularyPlay = ({ navigation, route, headershow = true }) => {
           <ScrollView>
             <View className="container p-7 pb-10">
               { questions?.questions?.map((item, index) => {
+                
                   if (index === currentQuestionIndex) {
+                    console.log("item", item);
+                    
                     return (
                       <View key={index}>
                         <View
@@ -124,6 +130,7 @@ const VocabularyPlay = ({ navigation, route, headershow = true }) => {
                                     onPlay={() => handlePlay(index)}
                                     />
                         <RadioButtonForm
+                        index={index}
                         item={item}
                         test_id={test_id}
                         test={test}
@@ -138,9 +145,7 @@ const VocabularyPlay = ({ navigation, route, headershow = true }) => {
                 })}
             </View>
             <View className="h-20"></View>
-          </ScrollView>
-
-          {showNextQuestion && <ActionBar
+            {showNextQuestion && <ActionBar
               navigation={navigation}
               classNames={"mb-0"}
               total_question={questions?.total_question}
@@ -151,10 +156,13 @@ const VocabularyPlay = ({ navigation, route, headershow = true }) => {
                 handleNextQuestion();   
                 setShowNextQuestion(false)
                 if (currentQuestionIndex === questions?.questions?.length - 1) {
-                  navigation?.navigate(configs?.screenName?.overview_vocabulary, { test_id: test_id, name_test: name_test, type:"Vocabulary", testResults: testResults });
+                  navigation?.navigate(configs?.screenName?.overview_vocabulary, { test_id: test_id, name_test: name_test, type:"Vocabulary", testResults: [testStore?.testResults]  });
                 }
               }}
             />}
+          </ScrollView>
+
+      
 
         </>
       )}

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, SafeAreaView, StyleSheet} from "react-native";
+import { View, Text, ScrollView, SafeAreaView, StyleSheet } from "react-native";
 import HeaderScreen from "../../Header/HeaderScreen";
 import { getTestById } from "../../../services/testService";
 import ExpandableText from "../../ExpandableText/ExpandableText";
@@ -39,7 +39,7 @@ const SpeakingTest = ({ navigation, route, dataStasitic, headershow = true, onNe
   useFocusEffect(
     React.useCallback(() => {
       fetchTestById();
-    }, [part,test_id]) // Thêm test_id vào dependencies nếu cần
+    }, [part, test_id]) // Thêm test_id vào dependencies nếu cần
   );
 
   const [selectedValue, setSelectedValue] = React.useState(0);
@@ -51,7 +51,7 @@ const SpeakingTest = ({ navigation, route, dataStasitic, headershow = true, onNe
   return (
     <SafeAreaView>{
       headershow ? <HeaderScreen label={route?.params?.nameTest} navigation={navigation} /> : <></>
-      }
+    }
 
       <ScrollView className="p-7">
         <View
@@ -68,13 +68,13 @@ const SpeakingTest = ({ navigation, route, dataStasitic, headershow = true, onNe
           className="rounded-md bg-white p-5 mb-3"
         >
           <View style={styles.container}>
-      <Text style={styles.partText}>Part 1</Text>
-      <Text style={styles.directions}>
-        Directions: You will have <Text style={styles.highlight}>15 seconds</Text> to prepare and{' '}
-        <Text style={styles.highlight}>60 seconds</Text> to respond to each question.
-      </Text>
-      <View style={styles.questionContainer}>
-      <RenderHtml
+            <Text style={styles.partText}>Part 1</Text>
+            <Text style={styles.directions}>
+              Directions: You will have <Text style={styles.highlight}>15 seconds</Text> to prepare and{' '}
+              <Text style={styles.highlight}>60 seconds</Text> to respond to each question.
+            </Text>
+            <View style={styles.questionContainer}>
+              <RenderHtml
                 contentWidth={width}
                 source={{ html: questions?.question_text }}
                 // Thêm style cho RenderHtml
@@ -84,8 +84,8 @@ const SpeakingTest = ({ navigation, route, dataStasitic, headershow = true, onNe
                   overflow: "hidden", // Ẩn nội dung vượt quá
                 }}
               />
-      </View>
-    </View>
+            </View>
+          </View>
         </View>
         <View
           style={{
@@ -129,7 +129,7 @@ const SpeakingTest = ({ navigation, route, dataStasitic, headershow = true, onNe
             <View className="mb-5 border-b-2 border-gray-200 pb-3">
               <Recorder setVoice={setVoice} />
               <View>
-                <RecoderResponse voice={voice} test_id={test_id} />
+                <RecoderResponse topic={questions?.question_text} voice={voice} test_id={test_id} />
               </View>
             </View>
           )}
@@ -153,7 +153,7 @@ const SpeakingTest = ({ navigation, route, dataStasitic, headershow = true, onNe
           }
 
           }
-        /> :<></>
+        /> : <></>
       }
     </SafeAreaView>
   );

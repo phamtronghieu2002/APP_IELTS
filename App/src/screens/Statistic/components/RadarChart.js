@@ -6,12 +6,17 @@ const IeltsRadarChart = ({
     dataProps = []
 }) => {
 
+    const filteredData = dataProps.filter(item =>
+        !['Tip', 'Exam', 'About', 'Vocabulary'].some(exclude =>
+            item.label.startsWith(exclude)
+        )
+    );
 
     const data = {
         dataSets: [
             {
                 label: "IELTS Skills",
-                values: dataProps?.map((item) => item.value),
+                values: filteredData.map((item) => item.value),
                 config: {
                     color: "rgba(255, 215, 0, 1)",
                     drawFilled: true,
@@ -28,6 +33,12 @@ const IeltsRadarChart = ({
         ]
     };
 
+    const maxValue =
+        filteredData
+            .map(item => item.value)
+            .reduce((a, b) => Math.max(a, b), 0);
+
+
     const chartDescription = {
         text: "",
         textSize: 12,
@@ -35,7 +46,8 @@ const IeltsRadarChart = ({
     };
 
     const xAxis = {
-        valueFormatter: dataProps?.map((item) => item.label),
+        valueFormatter: filteredData?.map((item) => item.label),
+
         textSize: 10,
         position: "TOP",
         textColor: "red",
@@ -46,7 +58,7 @@ const IeltsRadarChart = ({
     const yAxis = {
         enabled: true, // Bật yAxis lên để kiểm soát tốt hơn
         axisMinimum: 0,
-        axisMaximum: 100,
+        axisMaximum: maxValue ? maxValue + 10 : 100,
         drawLabels: false, // Ẩn label số của yAxis
         drawGridLines: true,
         gridColor: "rgba(255,255,255,0.2)"

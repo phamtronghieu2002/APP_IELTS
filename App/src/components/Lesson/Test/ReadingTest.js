@@ -44,6 +44,11 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
   const type = route?.params?.type ;
 
   const testResults = route?.params?.testResults || dataStasitic?.testResults;
+  
+
+
+  console.log(" dataStasitic?.testResults ===========s", dataStasitic?.testResults);
+  
 
   const [loading, setLoading] = React.useState(false);
 
@@ -264,11 +269,11 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
               >
                 {partQuestion == 0 && (
                   <Text className="mb-10">
-                    Lựa chọn các đáp án sau sao cho phù hợp
+                    Lựa chọn các đáp án chính xác
                   </Text>
                 )}
 
-                <View className="mb-5 border-b-2 border-gray-200 pb-3">
+                <View className="mb-5 pb-3">
                   {/* {question_type == "fill_in_blank" && (
                   <Text className="">{questions?.questions?.[currentQuestion].description}</Text>
                 )}
@@ -281,6 +286,7 @@ const ReadingTest = ({ navigation, route, dataStasitic, headershow = true, onNex
                   {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
                     return partQuestion == 0 ? <View key={index}>
                       <RadioButtonForm
+                        index={index}
                         item={item}
                         test_id={test_id}
                         test={test}

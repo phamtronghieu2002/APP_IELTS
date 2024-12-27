@@ -97,7 +97,7 @@ const QuestionEditor: React.FC<{
         const questionText = lines[0] || ""
         const explainLine = lines.find((line) => line.startsWith("+GT:")) || ""
         const explain = explainLine.replace("+GT:", "").trim()
-
+  
         const answers = lines
           .slice(1)
           .filter((line) => !line.startsWith("+GT:"))

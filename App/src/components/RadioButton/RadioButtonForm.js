@@ -16,6 +16,7 @@ import { setTestStore } from "../../fetures/testSlice";
 
 const RadioButtonForm = ({
   item,
+  index,
   onProgressUpdate,
   handelShowChoiceNextQuestion,
   onHandleSetAnswers,
@@ -57,7 +58,7 @@ const RadioButtonForm = ({
           })
             .then((fb) => {
               const data = fb.data;
-          
+
               dispatch(setTestStore({ testResults: data }));
             })
             .catch((err) => {
@@ -80,10 +81,21 @@ const RadioButtonForm = ({
   };
   return (
     <View>
-      <View className="">
+      <View 
+      style={{
+        borderBottomColor: "#e3e3e3",
+        borderBottomWidth: 1,
+        paddingBottom: 10,
+
+      }}
+      className="mb-10">
         {/* <Text className="font-bold text-lg">{`questions ${countQuestion}-${countlastQuestion}`}</Text>
         <Text className="mb-10">{description}</Text> */}
+        <Text className="">
+          {`(${index+1})`}
+        </Text>
         <RenderHtml
+
           contentWidth={width}
           source={{
             html: item.question_text,
@@ -93,7 +105,7 @@ const RadioButtonForm = ({
           return (
             <View
               key={index}
-              className="mb-1">
+              className="mb-1 mt-3">
               <RadioButton
 
                 isShowAnswer={answers?.some(

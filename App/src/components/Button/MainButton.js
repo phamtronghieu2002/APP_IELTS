@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 const MainButton = ({
-     onPress, title, style, classNames, width, height, roundedfull, disabled,backgroundColor='red',classNamesText}) => {
+     onPress, title, style, classNames, width, height, roundedfull, disabled,backgroundColor='red',classNamesText,children}) => {
     return (
         <Pressable
             className={[roundedfull ? 'rounded-full' : 'rounded-lg', classNames]}
@@ -29,7 +29,9 @@ const MainButton = ({
             }, style]}
             disabled={disabled}
             onPress={onPress}>
-            <Text className={`text-lime-50 text-[16px] ${classNamesText}`}>{title}</Text>
+                {children ||    <Text className={`text-lime-50 text-[16px] ${classNamesText}`}>{title}</Text> }
+         
+          
         </Pressable>
     );
 };

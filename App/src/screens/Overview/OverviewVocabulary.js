@@ -60,7 +60,7 @@ const OverviewVocabulary = ({ navigation, route }) => {
 
                         size={150}
                         width={13}
-                        fill={Number(testResults?.[0]?.percent_test_correct?.toFixed(0))}
+                        fill={testResults?.[0]?.percent_test_correct ? Number(testResults?.[0]?.percent_test_correct?.toFixed(0))  : 0}
                         tintColor="red"
                         lineCap='round'
                         onAnimationComplete={() => {}}
@@ -75,7 +75,7 @@ const OverviewVocabulary = ({ navigation, route }) => {
                                     <Text
                                         className="text-red-400 font-bold text-lg text-center"
                                         style={{ fontSize: 20 }}>
-                                        {`${fill.toFixed(0)}%`}
+                                        {`${fill?.toFixed(0)??0}%`}
                                     </Text>
                                     <Text className="text-center text-sm">
                                         Correct
@@ -138,21 +138,10 @@ const OverviewVocabulary = ({ navigation, route }) => {
                             <View className="flex-1 items-center justify-center flex-row gap-7 pl-10">
                                 <Text className="text-green-500 font-bold text-lg">
                                     {
-                                        testResults?.[0]?.total_correct
+                                        testResults?.[0]?.total_correct ?? 0
                                     }
                                 </Text>
-                                <Pressable className="" onPress={() => {
-                               
-
-                                    const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === true);
-                                    navigation.navigate(type, { type,nameTest: name_test, test_id: id_test, testResults: correct_anwser });
-
-
-                                }}>
-                                    <Text className="text-red-400 text-lg">
-                                        Practice now
-                                    </Text>
-                                </Pressable>
+                    
                             </View>
                         </View>
                     </View>
@@ -185,19 +174,11 @@ const OverviewVocabulary = ({ navigation, route }) => {
                             <View className="flex-1 items-center justify-center flex-row gap-7 pl-10">
                                 <Text className="text-red-600 font-bold text-lg">
                                     {
-                                        testResults?.[0]?.total_incorrect
+                                        testResults?.[0]?.total_incorrect ??0
 
                                     }
                                 </Text>
-                                <Pressable className="" onPress={() => {
-                                    const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === false);
-                                    navigation.navigate(type, {type, nameTest: name_test, test_id: id_test, testResults: correct_anwser });
-
-                                }}>
-                                    <Text className="text-red-400 text-lg">
-                                        Practice now
-                                    </Text>
-                                </Pressable>
+                   
                             </View>
                         </View>
                     </View>
