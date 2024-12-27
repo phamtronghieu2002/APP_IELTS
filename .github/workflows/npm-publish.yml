@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master # Chỉ chạy khi có thay đổi trên nhánh master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Thiết lập SSH để kết nối EC2
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      # 3. Triển khai code lên EC2
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@52.221.180.99 "
+            cd /home/ubuntu/APP_IELTS/Backend &&
+            git pull origin master &&
+            npm install &&
+            npm run build &&
+            pm2 restart all
+          "

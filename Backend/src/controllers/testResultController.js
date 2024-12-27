@@ -71,7 +71,8 @@ export const handleDeleteTestResult = async (req, res, next) => {
     try {
     const test_id = req.query.test_id;
     const question_id = req.query?.question_id;
-    const user_id = req.user_id;
+   
+     const user_id = req.user_id;
     const result = await testServices?.deleteTestResult(test_id,
     question_id,user_id);
    

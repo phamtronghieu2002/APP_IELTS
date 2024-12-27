@@ -153,9 +153,7 @@ export const getTestResult = async (test_id, user_id) => {
 
 export const deleteTestResult = async (test_id, question_id,user_id) => {
     try {
-        console.log('====================================');
-        console.log(test_id, question_id);
-        console.log('====================================');
+      
         const result = await TestResultModel.findOneAndUpdate(
             { test_id , user_id},
             {

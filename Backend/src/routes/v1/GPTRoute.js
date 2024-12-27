@@ -81,12 +81,6 @@ Router.post("/speaking", async (req, res, next) => {
 
   const url = req.body.url;
 
-  console.log('====================================');
-  console.log("url >>>>>>>", url);
-  console.log('====================================');
-  console.log('====================================');
-  console.log("topic", topic);
-  console.log('====================================');
   const jsonSchema = {
     title: "Write a review of the following recording about Ielts Speaking based on the criteria I specified just once Responsve using Vietnamese please !.",
     description:
@@ -111,9 +105,7 @@ Router.post("/speaking", async (req, res, next) => {
     const result = await model.generateContent(prompt);
     const text = await result.response.text();
     const parsedData = JSON.parse(text);
-    console.log('====================================');
-    console.log("parsedData", parsedData);
-    console.log('====================================');
+    
     return res.status(200).json(parsedData);
   } catch (error) {
     // Xử lý lỗi và trả về cho client
@@ -127,9 +119,7 @@ Router.post("/upload/dinarycloud", uploadFile?.single("audio"), async (req, res)
   }
   try {
 
-    // const result = await cloudinary.uploader.upload('./src/files/recording.mp3', 
-    // { resource_type: "video" }
-    // )
+
     const result = await cloudinary.uploader.upload(req.file.path,
       { resource_type: "video" }
     )
