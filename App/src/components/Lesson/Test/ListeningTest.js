@@ -194,10 +194,10 @@ const ListeningTest = ({ navigation, route }) => {
                 <Text className="font-bold">
                   Audio Recording
                 </Text>
-                {countProgress==questions.total_question &&
-                <ScriptButton text={questions.question_text} />
+                {countProgress == questions.total_question &&
+                  <ScriptButton text={questions.question_text} />
                 }
-                </View>
+              </View>
               <AudioPlayerUI
                 audio_url={questions?.audio_url}
               />
@@ -234,6 +234,7 @@ const ListeningTest = ({ navigation, route }) => {
                 {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
                   return partQuestion == 0 ? <View key={index}>
                     <RadioButtonForm
+                      index={index}
                       item={item}
                       test_id={test_id}
                       test={test}
@@ -284,6 +285,7 @@ const ListeningTest = ({ navigation, route }) => {
             </View>
           </View>
           {showNextQuestion && <ActionBar
+            navigation={navigation}
             total_question={answers?.length}
             total_correct={
               answers?.filter((item) => item.is_correct)?.length

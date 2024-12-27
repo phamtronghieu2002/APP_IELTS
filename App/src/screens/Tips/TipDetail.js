@@ -55,7 +55,7 @@ const TipDetail = ({ navigation, route }) => {
                                 key={index}>
                                 <Icon name="light-bulb" size={20} />
                                 <Text
-                                    className="text-lg font-bold ml-3"
+                                    className="text-lg font-bold ml-3  pr-5"
                                 >{tip.name_tip}</Text>
                             </Pressable>
                         )

@@ -19,29 +19,49 @@ const AudioPlayer2 = ({ url, isPlaying, onPlay }) => {
   const [isPlayingState, setIsPlayingState] = useState(false);
 
   useEffect(() => {
+    if (!url) {
+      console.error("URL không hợp lệ.");
+      return;
+    }
+
     loadAudio();
+
     return () => {
-      unloadAudio();
+      unloadAudio(); // Dọn dẹp khi component bị hủy.
     };
-  }, []);
+  }, [url]);
 
   const loadAudio = async () => {
-    setIsLoading(true);
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: url },
-      { shouldPlay: false }
-    );
-    sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-    const status = await sound.getStatusAsync();
-    setDuration(status.durationMillis || 0);
-    setSound(sound);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: url },
+        { shouldPlay: false }
+      );
+
+      sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+
+      const status = await sound.getStatusAsync();
+      setDuration(status.durationMillis || 0);
+      setSound(sound);
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Lỗi khi tải âm thanh:", error);
+      setIsLoading(false);
+    }
   };
 
   const unloadAudio = async () => {
     if (sound) {
-      await sound.unloadAsync();
-      setSound(null);
+      try {
+        await sound.unloadAsync();
+      } catch (error) {
+        console.error("Lỗi khi giải phóng âm thanh:", error);
+      } finally {
+        setSound(null);
+      }
     }
   };
 
@@ -49,39 +69,86 @@ const AudioPlayer2 = ({ url, isPlaying, onPlay }) => {
     if (status.isLoaded) {
       setPosition(status.positionMillis);
       setDuration(status.durationMillis);
+
       if (status.didJustFinish) {
         setIsFinished(true);
+        setIsPlayingState(false);
       }
+    } else if (status.error) {
+      console.error(`Lỗi phát âm thanh: ${status.error}`);
     }
   };
 
   const handlePlay = async () => {
-    setIsPlayingState(true);
-    if (!sound) return;
-    await sound.playAsync();
-    setIsFinished(false);
-    onPlay();
+    if (!sound) {
+      console.error("Âm thanh chưa được tải.");
+      return;
+    }
+
+    try {
+      const status = await sound.getStatusAsync();
+      if (!status.isPlaying) {
+        setIsPlayingState(true);
+        await sound.playAsync();
+        setIsFinished(false);
+        onPlay?.();
+      }
+    } catch (error) {
+      if (error.message.includes("Player does not exist")) {
+        console.error("Trạng thái âm thanh không tồn tại. Tải lại âm thanh...");
+        await unloadAudio();
+        await loadAudio();
+        await handlePlay();
+      } else {
+        console.error("Lỗi khi phát âm thanh:", error);
+      }
+    }
   };
 
   const handlePause = async () => {
-    setIsPlayingState(false);
-    if (sound) {
-      await sound.pauseAsync();
+    if (!sound) {
+      console.error("Không thể tạm dừng. Âm thanh không tồn tại.");
+      return;
+    }
+
+    try {
+      const status = await sound.getStatusAsync();
+      if (status.isPlaying) {
+        setIsPlayingState(false);
+        await sound.pauseAsync();
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạm dừng âm thanh:", error);
     }
   };
 
   const handleReplay = async () => {
-    if (sound) {
+    if (!sound) {
+      console.error("Âm thanh chưa được tải. Đang tải lại...");
+      await loadAudio();
+    }
+
+    try {
       await sound.setPositionAsync(0);
       await sound.playAsync();
       setIsFinished(false);
-      onPlay();
+      setIsPlayingState(true);
+      onPlay?.();
+    } catch (error) {
+      console.error("Lỗi khi phát lại âm thanh:", error);
     }
   };
 
   const handleSliderChange = async (value) => {
-    if (sound) {
+    if (!sound) {
+      console.error("Không thể thay đổi vị trí. Âm thanh không tồn tại.");
+      return;
+    }
+
+    try {
       await sound.setPositionAsync(value);
+    } catch (error) {
+      console.error("Lỗi khi thay đổi vị trí âm thanh:", error);
     }
   };
 
@@ -102,8 +169,14 @@ const AudioPlayer2 = ({ url, isPlaying, onPlay }) => {
               <Ionicons name="refresh" size={30} color="#FF6B6B" />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={isPlayingState ? handlePause : handlePlay}>
-              <Ionicons name={isPlayingState ? "pause" : "play"} size={30} color="#FF6B6B" />
+            <TouchableOpacity
+              onPress={isPlayingState ? handlePause : handlePlay}
+            >
+              <Ionicons
+                name={isPlayingState ? "pause" : "play"}
+                size={30}
+                color="#FF6B6B"
+              />
             </TouchableOpacity>
           )}
           <Text style={styles.timeText}>{formatTime(position)}</Text>

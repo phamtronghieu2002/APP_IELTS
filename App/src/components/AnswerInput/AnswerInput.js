@@ -86,13 +86,14 @@ const AnswerInputArea = ({
     )
   }
   return (
-    <View className="">
+    <View className="mt-10">
       <Text className="text-center mb-3  font-bold">
         {`Your answer ${currentquestion}`}
       </Text>
       {data.map((item, index) => {
         return (
           <View
+            className="mb-3"
             key={index}
           >
             <View
@@ -124,6 +125,7 @@ const AnswerInputArea = ({
       })
       }
       <MainButton
+
         title={"Check"}
         roundedfull
         onPress={checkAnswer}

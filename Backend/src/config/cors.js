@@ -28,6 +28,7 @@ const ApiError = require('~/utils/ApiError');
   },
 
   optionsSuccessStatus: 200,
+  
 
   credentials: true
 }

@@ -81,7 +81,6 @@ Router.post("/speaking", async (req, res, next) => {
 
   const url = req.body.url;
 
-
   const jsonSchema = {
     title: "Write a review of the following recording about Ielts Speaking based on the criteria I specified just once Responsve using Vietnamese please !.",
     description:

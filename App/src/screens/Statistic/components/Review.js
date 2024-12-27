@@ -35,7 +35,7 @@ const Review = ({ navigation, route }) => {
 
 
         const res = await getAllTestResult();
-        const feedback = res?.data
+        const feedback = res?.data?.filter(item => item?.test_id?.type_category === "Reading" || item?.test_id?.type_category === "Listening")
 
 
 
@@ -63,7 +63,7 @@ const Review = ({ navigation, route }) => {
         }
         const filteredResults = fb.filter(item => item?.length > 0);
 
-        
+
         // Filter `feedback` based on `filteredResults` and update `data`
         const updatedFeedback = feedback.filter((item, index) => fb[index]?.length > 0);
         setTestResults(filteredResults);
@@ -100,9 +100,15 @@ const Review = ({ navigation, route }) => {
                 navigation={navigation}
                 label={`Làm lại Test: ${data[part]?.test_id?.name_test || ''}`}
             />
-            <View className="content">
+            <View 
+            style={{
+                marginLeft:-15,
+                marginRight:-15
+            }}
+            className="content">
                 {
                     dataStasitic()?.test_id && <ReadingTest
+                        key={part}
                         part={part}
                         isFinish={part === data.length - 1}
                         onNextPart={() => {

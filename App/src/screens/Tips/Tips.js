@@ -27,7 +27,7 @@ const Tip = ({ navigation }) => {
     try {
       const response = await getCategories("skills")
       const data = await response.data;
-     
+
       setCategories(data);
     } catch (error) {
       console.error(error);

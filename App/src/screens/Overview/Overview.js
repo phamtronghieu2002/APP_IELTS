@@ -16,6 +16,7 @@ import { _testTypes } from '../../utils/constant';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Circle } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
+import { randomUUID } from 'expo-crypto';
 const Overview = ({ navigation, route }) => {
 
 
@@ -30,17 +31,6 @@ const Overview = ({ navigation, route }) => {
 
 
 
-
-
-    const practiceNow = async () => {
-        // try {
-        //     await addAnwserToTestResult(id_test, _testTypes?.renew, {
-        //         anwser: {}
-        //     });
-        // } catch (error) {
-        //     console.error(error);
-        // }
-    };
 
 
 
@@ -75,7 +65,7 @@ const Overview = ({ navigation, route }) => {
                                     <Text
                                         className="text-red-400 font-bold text-lg text-center"
                                         style={{ fontSize: 20 }}>
-                                        {`${fill.toFixed(0)}%`}
+                                        {`${fill?.toFixed(0) || 0}%`}
                                     </Text>
                                     <Text className="text-center text-sm">
                                         Correct
@@ -85,33 +75,7 @@ const Overview = ({ navigation, route }) => {
                         }
 
                     </AnimatedCircularProgress>
-                    {/* <CircularProgress
-                    
-                        titleStyle={{ fontSize: 15, fontWeight: '', color: 'gray' }}
-                        progressValueColor='red'
-                        progressValueFontSize={30}
-                        title='Correct'
-                        value={100}
-                        radius={100}
-                        inActiveStrokeOpacity={0.7}
-                        activeStrokeWidth={20}
-                        inActiveStrokeWidth={20}
-                        progressValueStyle={{ fontWeight: 'bold', color: 'black' }}
-                        activeStrokeSecondaryColor="red"
-                        inActiveStrokeColor="black"
-                        duration={500}
-                        valueSuffix="%"
-                        dashedStrokeConfig={{
-                            count: 50,
-                            width: 4,
 
-                        }}
-                        strokeColorConfig={[
-                            { color: '#ff707e', value: 0 },
-                            { color: '#db5c69', value: 50 },
-                            { color: '#800512', value: 100 },
-                        ]}
-                    /> */}
                     <View className="mt-10">
 
                         <Pressable
@@ -164,7 +128,8 @@ const Overview = ({ navigation, route }) => {
                                
 
                                     const correct_anwser = testResults?.[0]?.anwsers?.filter((item) => item.is_correct === true);
-                                    navigation.navigate(type, { type,nameTest: name_test, test_id: id_test, testResults: correct_anwser });
+
+                                    navigation.navigate(type, { type,nameTest: name_test, test_id: id_test, testResults: correct_anwser,part:randomUUID() });
 
 
                                 }}>

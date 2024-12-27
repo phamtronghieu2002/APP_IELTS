@@ -42,10 +42,8 @@ const Grammar = ({ navigation, route, headershow = true }) => {
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions?.questions?.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setCountProgress(countProgress + 1); // Cập nhật progress
     }
   };
-
   const [answers, setAnswers] = React.useState([]);
 
   const testStore = useSelector((state) => state.test);
@@ -118,6 +116,7 @@ const Grammar = ({ navigation, route, headershow = true }) => {
                         className="rounded-md bg-white p-5 pb-1"
                       >
                         <RadioButtonForm
+                          index={index}
                           item={item}
                           test_id={test_id}
                           test={test}
@@ -142,6 +141,8 @@ const Grammar = ({ navigation, route, headershow = true }) => {
               answers?.filter((item) => item.is_correct)?.length
             }
             onPressNext={() => {
+              handleNextQuestion();   
+              setShowNextQuestion(false)
               if (countProgress == questions.total_question) {
                 navigation?.navigate(configs?.screenName?.overview, { test_id, name_test, type, testResults: [testStore?.testResults] })
 

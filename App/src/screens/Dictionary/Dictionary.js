@@ -14,7 +14,7 @@ const Dictionary = ({ navigation }) => {
             </Text>
 
             <View style={styles.webviewContainer}>
-                <WebView source={{ uri: 'https://dict.laban.vn/' }} style={{ flex: 1 }} />
+                <WebView source={{ uri: 'https://translate.google.com/?hl=vi&sl=vi&tl=en&op=translate' }} style={{ flex: 1 }} />
             </View>
         </SafeAreaView>
     );

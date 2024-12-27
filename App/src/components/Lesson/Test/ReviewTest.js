@@ -214,6 +214,7 @@ const ReviewTest = ({ navigation, route }) => {
               {questions?.questions?.filter(item => item.question_type == "choice")?.map((item, index) => {
                 return partQuestion == 0 ? <View key={index}>
                   <RadioButtonForm
+                    index={index}
                     item={item}
                     test_id={test_id}
                     test={test}
@@ -264,6 +265,7 @@ const ReviewTest = ({ navigation, route }) => {
           </View>
         </View>
         {showNextQuestion && <ActionBar
+        navigation={navigation}
           total_question={answers?.length}
           total_correct={
             answers?.filter((item) => item.is_correct)?.length

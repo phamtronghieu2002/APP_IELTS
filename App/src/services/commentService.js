@@ -11,7 +11,7 @@ export const createComment = async (test_id, content) => {
 };
 
 export const replyComment = async (test_id, parent_id, content) => {
-    console.log("parent_id nhaaaaaaaaaaaaaa", parent_id);
+ 
     
     return axios.post(`/comment/reply`, {
         test_id,
